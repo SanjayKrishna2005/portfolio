@@ -1,0 +1,3339 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sanjay Krishna — AI Hardware, Silicon, Neuromorphic ASICs &amp; Computer Architecture</title>
+  <meta name="description" content="Portfolio of Sanjay Krishna — Hardware engineer working on AI hardware, edge accelerators, neuromorphic ASICs, event-driven spiking neural networks, and physical reverse engineering."/>
+
+  <!-- Typography -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:ital,wght@0,300..700;1,300..700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f9f9fa",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f4",
+            "surface-container": "#eeeeef",
+            "surface-container-high": "#e8e8e9",
+            "surface-container-highest": "#e2e2e3",
+            "on-surface": "#1a1c1d",
+            "on-surface-variant": "#45474b",
+            "outline": "#76777b",
+            "outline-variant": "#d0d7de",
+            "primary": "#0d1117",
+            "primary-amber": "#d97706",
+            "amber-accent": "#f59e0b",
+            "amber-light": "#fef3c7",
+            "secondary": "#3a4d6b",
+            "dark-bg": "#0d1117",
+            "dark-surface": "#161b22",
+            "dark-surface-high": "#21262d",
+            "dark-border": "#30363d",
+            "dark-text": "#e6edf3",
+            "dark-text-muted": "#8b949e"
+          },
+          fontFamily: {
+            "headline-lg": ["EB Garamond", "serif"],
+            "headline-sm": ["Geist", "sans-serif"],
+            "headline-md": ["Geist", "sans-serif"],
+            "body-lg": ["Geist", "sans-serif"],
+            "body-md": ["Geist", "sans-serif"],
+            "label-nav": ["JetBrains Mono", "monospace"],
+            "label-meta": ["JetBrains Mono", "monospace"],
+            "label-sm": ["JetBrains Mono", "monospace"],
+            "code-inline": ["JetBrains Mono", "monospace"],
+            "pixel": ["Silkscreen", "monospace"]
+          },
+          spacing: {
+            "space-xl": "3rem",
+            "space-lg": "1.75rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "margin": "3rem",
+            "margin-mobile": "1.25rem"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .bitmap-header {
+      font-family: 'Silkscreen', monospace;
+      letter-spacing: -0.04em;
+    }
+    ::selection {
+      background-color: #d97706;
+      color: #ffffff;
+    }
+    .crt-grid {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(217, 119, 6, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(217, 119, 6, 0.08) 1px, transparent 1px);
+    }
+    @keyframes pulse-amber {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.92); }
+    }
+    .status-pulse {
+      animation: pulse-amber 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Page View Transitions */
+    .page-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .page-view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Lithography Stepper Beam Scan Wipe */
+    #stepper-beam {
+      position: fixed;
+      left: 0;
+      top: -4px;
+      width: 100%;
+      height: 3px;
+      background: #f59e0b;
+      box-shadow: 0 0 15px 3px rgba(245, 158, 11, 0.8), 0 0 30px 6px rgba(217, 119, 6, 0.4);
+      z-index: 99;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .stepper-scan {
+      animation: stepper-wipe 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes stepper-wipe {
+      0% { top: 0%; opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Axon / Synaptic Border Spark on Card Hover */
+    .axon-card {
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .axon-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 0%;
+      width: 2px;
+      background: #d97706;
+      transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 8px rgba(217, 119, 6, 0.6);
+    }
+    .axon-card:hover::before {
+      height: 100%;
+    }
+
+    /* Cinematic Letterbox Mode */
+    .cinematic-bar-top, .cinematic-bar-bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: #000000;
+      z-index: 100;
+      transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .cinematic-bar-top { top: 0; }
+    .cinematic-bar-bottom { bottom: 0; }
+    body.cinematic-mode .cinematic-bar-top,
+    body.cinematic-mode .cinematic-bar-bottom {
+      height: 7vh;
+    }
+    body.cinematic-mode {
+      filter: contrast(1.08) saturate(0.92);
+    }
+
+    /* Engineer Name Bitstream Decode Style */
+    #engineer-name-display {
+      position: relative;
+      display: inline-block;
+      letter-spacing: -0.03em;
+      transition: text-shadow 0.2s ease;
+    }
+    #engineer-name-display:hover {
+      text-shadow: 0 0 20px rgba(217, 119, 6, 0.5), 0 0 2px rgba(217, 119, 6, 0.9);
+    }
+    .glyph-stream {
+      display: inline-block;
+      font-family: 'Silkscreen', monospace;
+      color: #d97706;
+      animation: glyphFlicker 0.12s infinite alternate;
+    }
+    @keyframes glyphFlicker {
+      0% { opacity: 0.6; filter: blur(0px); }
+      100% { opacity: 1; filter: blur(0.4px); text-shadow: 0 0 8px rgba(217, 119, 6, 0.8); }
+    }
+
+    /* Vintage Cassette Tape Reel Rotation */
+    @keyframes spinReel {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .tape-reel-spin {
+      animation: spinReel 1.8s linear infinite !important;
+    }
+    /* Reference-Style Hero Edge Fade / Silicon Bleed (As in uploaded sample) */
+    .hero-portrait-frame {
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 68%, rgba(0, 0, 0, 0) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 68%, rgba(0, 0, 0, 0) 100%);
+    }
+    .hero-portrait-img {
+      -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.25) 20%, rgba(0, 0, 0, 0.88) 48%, rgba(0, 0, 0, 1) 75%);
+      mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.25) 20%, rgba(0, 0, 0, 0.88) 48%, rgba(0, 0, 0, 1) 75%);
+      filter: contrast(1.06) brightness(0.97) saturate(0.94);
+      transition: filter 0.5s ease, transform 0.5s ease;
+    }
+    .hero-portrait-img:hover {
+      filter: contrast(1.10) brightness(1.02) saturate(1.0);
+      transform: scale(1.02);
+    }
+    .mobile-portrait-frame {
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%),
+                          linear-gradient(to left, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%),
+                          linear-gradient(to right, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%),
+                  linear-gradient(to left, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%),
+                  linear-gradient(to right, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+    }
+    .photo-vignette-bleed {
+      -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0) 74%);
+      mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0) 74%);
+    }
+  </style>
+</head>
+<body class="bg-surface dark:bg-dark-bg text-on-surface dark:text-dark-text antialiased selection:bg-amber-600 selection:text-white min-h-screen flex flex-col font-body-md text-body-md relative pb-32 transition-colors duration-200 overflow-x-hidden">
+
+  <!-- SILICON WAFER BACKGROUND ROUTING TRACES CANVAS -->
+  <canvas id="silicon-bg-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0 opacity-40 dark:opacity-60 transition-opacity"></canvas>
+
+  <!-- LITHOGRAPHY STEPPER BEAM -->
+  <div id="stepper-beam"></div>
+
+  <!-- CINEMATIC BARS -->
+  <div class="cinematic-bar-top"></div>
+  <div class="cinematic-bar-bottom"></div>
+
+  <!-- HIDDEN AUDIO ELEMENT FOR USER-PROVIDED BREAKING BAD THEME -->
+  <audio id="bb-audio-theme" preload="auto" src="breaking_bad_theme.mp3"></audio>
+
+  <!-- TOP APP BAR -->
+  <header class="w-full bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant/60 dark:border-dark-border/80 transition-colors">
+    <div class="w-full px-margin-mobile md:px-margin py-3 flex justify-between items-center max-w-[1200px] mx-auto relative z-10">
+      
+      <!-- Left Navigation Cluster (Switches Pages) -->
+      <nav class="flex items-center gap-3.5 md:gap-7">
+        <button id="nav-btn-home" onclick="navigateTo('home')" class="nav-link font-label-nav text-xs tracking-wider font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix text-amber-600 dark:text-amber-400">&gt;_</span>HOME
+        </button>
+        <button id="nav-btn-projects" onclick="navigateTo('projects')" class="nav-link font-label-nav text-xs tracking-wider text-on-surface-variant dark:text-dark-text-muted hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix hidden text-amber-600 dark:text-amber-400">&gt;_</span>PROJECTS
+        </button>
+        <button id="nav-btn-simulator" onclick="navigateTo('simulator')" class="nav-link font-label-nav text-xs tracking-wider text-on-surface-variant dark:text-dark-text-muted hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix hidden text-amber-600 dark:text-amber-400">&gt;_</span>SIMULATOR
+        </button>
+        <button id="nav-btn-blog" onclick="navigateTo('blog')" class="nav-link font-label-nav text-xs tracking-wider text-on-surface-variant dark:text-dark-text-muted hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix hidden text-amber-600 dark:text-amber-400">&gt;_</span>BLOG
+        </button>
+      </nav>
+
+      <!-- Right Navigation Cluster -->
+      <nav class="flex items-center gap-3 md:gap-5">
+        
+        <!-- Live Clock Domain Waveform (Click to cycle frequency) -->
+        <div onclick="cycleClockFrequency()" class="cursor-pointer hidden sm:flex items-center gap-2 bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border px-2 py-0.5 rounded font-label-sm text-[10px] text-on-surface-variant dark:text-dark-text hover:border-amber-500 transition-colors" title="Click to cycle clock domain frequency">
+          <canvas id="clock-canvas" width="48" height="12" class="block"></canvas>
+          <span id="clock-freq-label" class="font-mono text-amber-700 dark:text-amber-400 font-bold">10 MHz</span>
+        </div>
+
+        <button id="nav-btn-experience" onclick="navigateTo('experience')" class="nav-link font-label-nav text-xs tracking-wider text-on-surface-variant dark:text-dark-text-muted hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix hidden text-amber-600 dark:text-amber-400">&gt;_</span>EXPERIENCE
+        </button>
+        <button id="nav-btn-contact" onclick="navigateTo('contact')" class="nav-link font-label-nav text-xs tracking-wider text-on-surface-variant dark:text-dark-text-muted hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 transition-colors">
+          <span class="nav-prefix hidden text-amber-600 dark:text-amber-400">&gt;_</span>CONTACT
+        </button>
+
+        <!-- Terminal CLI Toggle -->
+        <button onclick="toggleTerminal()" class="hidden md:flex items-center gap-1 bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border px-2 py-0.5 rounded font-label-sm text-[11px] text-on-surface-variant dark:text-dark-text hover:border-amber-500 hover:text-amber-600 transition-colors" title="Toggle Silicon CLI Terminal">
+          <span class="material-symbols-outlined text-[13px] text-amber-600 dark:text-amber-400">terminal</span>
+          <span>TERM</span>
+        </button>
+
+        <!-- CV Download -->
+        <a class="bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 dark:border-amber-400/30 px-2.5 py-0.5 rounded font-label-sm text-[11px] hover:bg-amber-500 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 transition-all font-semibold" href="Meta_CV.pdf" target="_blank" rel="noopener noreferrer">
+          CV.PDF
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- MAIN CANVAS CONTAINER -->
+  <main class="w-full max-w-[1100px] mx-auto px-margin-mobile md:px-margin flex-1 flex flex-col pt-8 md:pt-12 relative z-10">
+
+    <!-- ========================================== -->
+    <!-- PAGE 1: HOME (Hook, Twenty Watts, Bio)    -->
+    <!-- ========================================== -->
+    <section id="page-home" class="page-view active w-full relative">
+      
+      <!-- Reference-Style Ambient Bleed Hero Portrait (Right Side, Soft Gradient Left & Bottom Fade) -->
+      <div id="hero-portrait-container" class="hidden sm:block absolute right-0 top-0 w-[340px] md:w-[420px] lg:w-[480px] h-[520px] md:h-[620px] pointer-events-none z-10 select-none hero-portrait-frame">
+        <img id="user-portrait-img" 
+             src="photo.jpg" 
+             onerror="handlePhotoFallback(this)" 
+             alt="Sanjay Krishna" 
+             class="w-full h-full object-cover object-top hero-portrait-img" />
+      </div>
+
+      <!-- Monolithic Display Title with Dual Bitstream Morph (SANJAY KRISHNA <-> TWENTY WATTS) -->
+      <div class="mb-10 select-none relative z-20">
+        
+        <!-- Mode Subtitle & Manual Morph Trigger -->
+        <div class="flex items-center justify-between max-w-[620px] mb-2.5 font-label-meta text-[11px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
+            <span id="morph-mode-label">AI HARDWARE ARCHITECT · SILICON RESEARCHER</span>
+          </div>
+          <button onclick="toggleTitleMorph(true)" class="font-mono text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 hover:bg-amber-500 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-950 transition-all flex items-center gap-1 shadow-sm" title="Click to morph title manually">
+            <span class="material-symbols-outlined text-[12px]">sync</span>
+            <span id="morph-btn-text">MORPH [20W]</span>
+          </button>
+        </div>
+
+        <!-- Giant Morphing H1 -->
+        <h1 id="hero-morph-title" class="text-[52px] sm:text-[76px] md:text-[92px] leading-[0.90] tracking-tighter uppercase font-extrabold text-primary dark:text-white font-headline-lg cursor-pointer group" onclick="toggleTitleMorph(true)" title="Click to trigger silicon bitstream morph">
+          <span id="title-line-1" class="transition-colors font-mono">010101</span><br/>
+          <span id="title-line-2" class="text-amber-600 dark:text-amber-500 group-hover:drop-shadow-[0_0_12px_rgba(245,158,11,0.5)] transition-all font-mono">0x4F9A</span>
+        </h1>
+
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-300/80 dark:border-amber-700/50 px-2.5 py-1 rounded text-xs font-label-meta text-amber-800 dark:text-amber-300">
+            <span class="w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
+            <span>CURRENTLY: Building precision-adaptive NPU · Reconfigurable protocol silicon</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Portrait Fallback (Centered with soft bottom fade) -->
+      <div id="mobile-portrait-container" class="sm:hidden mb-6 flex justify-start">
+        <div class="w-44 h-52 relative overflow-hidden mobile-portrait-frame">
+          <img src="photo.jpg" 
+               onerror="handlePhotoFallback(this)" 
+               alt="Sanjay Krishna" 
+               class="w-full h-full object-cover object-top" />
+        </div>
+      </div>
+
+      <!-- Narrative Section -->
+      <div class="flex flex-col gap-6 text-on-surface dark:text-dark-text font-body-lg text-body-lg leading-relaxed max-w-[680px] lg:max-w-[720px] relative z-20">
+        
+        <p class="text-2xl sm:text-3xl font-medium text-primary dark:text-white font-headline-lg">
+          Hi, I’m <span class="text-amber-600 dark:text-amber-400 font-bold">Sanjay Krishna</span>.
+        </p>
+
+        <p class="text-lg sm:text-xl text-primary dark:text-white font-semibold leading-snug">
+          I have a favourite chip, and it isn’t made of silicon. It’s the one you’re using to read this sentence.
+        </p>
+
+        <p>
+          Your brain runs on about <strong class="text-primary dark:text-white font-semibold">twenty watts</strong>, less than a dim light bulb. It learns without anyone writing the rules, and it only spends energy on things that actually matter. No chip I’ll ever build comes close. But I can’t stop trying to steal one small trick at a time, and that’s basically what this whole site is about.
+        </p>
+
+        <p class="italic text-on-surface dark:text-dark-text border-l-2 border-amber-500 pl-4 py-1 text-base sm:text-lg">
+          Each spike fades as it spreads, then everything goes quiet. That’s the trick I keep borrowing.
+        </p>
+
+        <p>
+          One of my chips is a <strong class="text-primary dark:text-white font-semibold">heart monitor with no processor</strong>. Eight tiny neurons sit completely quiet until a heartbeat arrives, and they wake up only when something looks off. Another is a <strong class="text-primary dark:text-white font-semibold">neural network accelerator</strong> that decides, on its own, how hard it needs to think about each part of a problem. I also built an <strong class="text-primary dark:text-white font-semibold">edge detector</strong> that’s allowed to be a little bit wrong, because being slightly wrong turned out to be much cheaper. And once, for fun, I took a <strong class="text-primary dark:text-white font-semibold">chip puzzle with no labels at all</strong>, rebuilt its logic from the layout, and found a bug that let a wrong answer unlock the prize.
+        </p>
+
+        <p>
+          When I’m not staring at chip layouts, I’m watching movies. I watch a lot of them. And yes, I’m a huge <span class="cursor-pointer font-medium hover:text-amber-600 dark:hover:text-amber-400 underline decoration-amber-500/60 underline-offset-4 transition-colors" onclick="triggerBreakingBadEasterEgg()" title="Chemistry is the study of change...">Breaking Bad</span> fan.
+        </p>
+
+        <!-- Navigation Prompt -->
+        <div class="my-1 py-3 px-4 flex flex-wrap items-center font-label-meta text-xs text-on-surface dark:text-dark-text font-semibold gap-1.5 border-l-2 border-amber-600 dark:border-amber-500 bg-surface-container-low dark:bg-dark-surface rounded-r">
+          <span class="text-amber-600 dark:text-amber-400 font-bold">&gt;</span>
+          <button onclick="navigateTo('projects')" class="text-primary dark:text-amber-300 underline underline-offset-2 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-950 px-1 py-0.5 rounded transition-colors font-medium">Projects</button>,
+          <button onclick="navigateTo('experience')" class="text-primary dark:text-amber-300 underline underline-offset-2 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-950 px-1 py-0.5 rounded transition-colors font-medium">experience</button>
+          <span>and</span>
+          <button onclick="navigateTo('blog')" class="text-primary dark:text-amber-300 underline underline-offset-2 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-950 px-1 py-0.5 rounded transition-colors font-medium">blog</button>
+          <span>pages are on the way.</span>
+          <span class="text-amber-600 dark:text-amber-400 font-bold">&lt;</span>
+        </div>
+
+        <!-- Right now (what im working on now) -->
+        <div class="flex flex-col gap-2.5 p-4 sm:p-5 rounded bg-surface-container-low dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border">
+          <span class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
+            Right now (what I'm working on now)
+          </span>
+          <ul class="flex flex-col gap-2 font-body-md text-sm sm:text-base text-on-surface dark:text-dark-text list-disc list-inside marker:text-amber-600 dark:marker:text-amber-400">
+            <li class="leading-relaxed">
+              <strong class="text-primary dark:text-white font-medium">Building a bigger NPU</strong> whose precision controller decides, layer by layer, how hard the chip needs to think.
+            </li>
+            <li class="leading-relaxed">
+              <strong class="text-primary dark:text-white font-medium">Sketching a chip</strong> that can turn into many different communication protocols after it’s been made. It’s barely an idea so far, but it’s the kind of idea I love.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Poke around & Direct Contact Callout -->
+        <div class="flex flex-col gap-3 font-body-md text-base">
+          <p>
+            Poke around. Everything here is something I built, broke, fixed, or got obsessed with. If you want to talk chips, brains, or movies, my email is right below.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="mailto:sanjaykrishna.a.2005@gmail.com" class="inline-flex items-center gap-2 bg-primary dark:bg-white text-white dark:text-gray-950 px-4 py-2 rounded text-xs font-label-meta font-semibold hover:bg-amber-600 dark:hover:bg-amber-400 transition-colors shadow-sm">
+              <span class="material-symbols-outlined text-[15px]">mail</span>
+              sanjaykrishna.a.2005@gmail.com
+            </a>
+            <button onclick="navigator.clipboard.writeText('sanjaykrishna.a.2005@gmail.com'); alert('Email copied to clipboard!');" class="inline-flex items-center gap-1.5 bg-surface-container dark:bg-dark-surface-high border border-outline-variant dark:border-dark-border px-3.5 py-2 rounded text-xs font-label-meta hover:border-amber-500 transition-colors">
+              <span class="material-symbols-outlined text-[14px]">content_copy</span>
+              Copy Email
+            </button>
+            <a href="Meta_CV.pdf" target="_blank" class="inline-flex items-center gap-1.5 bg-surface-container dark:bg-dark-surface-high border border-outline-variant dark:border-dark-border px-3.5 py-2 rounded text-xs font-label-meta hover:border-amber-500 transition-colors">
+              <span class="material-symbols-outlined text-[14px]">description</span>
+              Resume.pdf
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Metrics Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-outline-variant/60 dark:border-dark-border text-xs font-label-meta">
+          <div class="flex flex-col">
+            <span class="text-on-surface-variant dark:text-dark-text-muted text-[11px]">TINY TAPEOUT</span>
+            <strong class="text-amber-600 dark:text-amber-400 text-sm">959 / 1000 Cells</strong>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-on-surface-variant dark:text-dark-text-muted text-[11px]">IDLE POWER</span>
+            <strong class="text-amber-600 dark:text-amber-400 text-sm">&lt; 10 nW Floor</strong>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-on-surface-variant dark:text-dark-text-muted text-[11px]">AI SYSTOLIC NPU</span>
+            <strong class="text-amber-600 dark:text-amber-400 text-sm">135.8 mW @ 166MHz</strong>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-on-surface-variant dark:text-dark-text-muted text-[11px]">FPGA NIR SORT</span>
+            <strong class="text-amber-600 dark:text-amber-400 text-sm">20.94 µs Latency</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pull Quote -->
+      <div class="mt-14 pt-8 border-t border-outline-variant/60 dark:border-dark-border">
+        <blockquote class="border-l-2 border-amber-500 pl-4 py-1 italic font-headline-lg text-lg md:text-xl text-on-surface dark:text-dark-text">
+          "I have spent my life attempting to understand how twenty watts of warm tissue out-computes megawatts of cold silicon."
+          <span class="block not-italic font-label-meta text-xs text-outline dark:text-dark-text-muted mt-1">— Neuromorphic Engineering Reflection</span>
+        </blockquote>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PAGE 2: PROJECTS (Dedicated Project View) -->
+    <!-- ========================================== -->
+    <section id="page-projects" class="page-view w-full">
+      <div class="mb-10">
+        <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+          Projects
+        </h2>
+        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+          [ AI HARDWARE · NEUROMORPHIC ASICs · SYSTOLIC ARRAYS · REVERSE-ENGINEERING · APPROXIMATE COMPUTING ]
+        </p>
+      </div>
+
+      <!-- Projects Architecture List -->
+      <div class="flex flex-col gap-12">
+
+        <!-- Project 1: SNN AFib Detector -->
+        <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              Event-Driven Spiking Neural Network ASIC for AFib Detection
+            </h3>
+            <span class="font-label-sm text-xs text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-0.5 border border-amber-300 dark:border-amber-700 rounded font-semibold">
+              AI HARDWARE · TINY TAPEOUT SKY26B
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            959 / 1,000 standard cells (0.012 mm² core) · Sub-10 nW idle floor · Multiplier-free Leaky Integrate-and-Fire · 15,924 ECG windows verified
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              <strong>The brain trick:</strong> The brain doesn’t run a 100 MHz polling loop waiting for input; neurons sit quiet and only spend energy when something actually happens. Today’s wearable monitors wake a full processor every few seconds to run heavy calculations, draining batteries and missing brief, transient Atrial Fibrillation episodes between sleeps.
+            </p>
+            <p>
+              <strong>What the chip does:</strong> It has <em>no processor at all</em>. Instead, eight tiny Leaky Integrate-and-Fire (LIF) artificial neurons are etched directly into silicon. The entire chip sleeps at sub-10 nW between heartbeats. When an R-peak pulse arrives, it runs a 5-stage pipeline in microseconds (measuring the RR interval, converting to binary spike trains, feeding the reservoir, and computing a 2-of-3 triple-window majority vote) before instantly returning to sleep.
+            </p>
+            <p class="text-on-surface-variant dark:text-dark-text-muted">
+              <strong>What surprised me:</strong> Fitting the full classifier into 959 cells required ditching multipliers entirely and relying on a single recurrent feedback register (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">spike_reg1</code>). In normal rhythm, beats are consistent and the register stays quiet. In AFib, chaotic beat intervals compound across cycles — sustained irregularity is self-reinforcing. Validated on 15,924 clinical ECG windows from the MIT-BIH Arrhythmia Database with zero timing violations (0 ns WNS).
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('vspace-280326-demo/docs/SP.jpeg', 'Signal Pipeline & Reservoir Dataflow')">pipeline_diagram</button>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('vspace-280326-demo/docs/AI.jpeg', 'Chip Architecture & LIF Topology')">lif_architecture</button>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('simulator')">launch_lif_simulator</button>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('blog')">read_tapeout_essay</button>
+          </div>
+        </article>
+
+        <!-- Project 2: 16x16 Systolic NPU + INTERACTIVE SYSTOLIC WAVEFRONT ANIMATION -->
+        <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              16×16 Mixed-Precision Systolic NPU for Edge Inference
+            </h3>
+            <span class="font-label-sm text-xs text-on-surface-variant dark:text-dark-text-muted bg-surface-container dark:bg-dark-surface px-2.5 py-0.5 border border-outline-variant dark:border-dark-border rounded font-semibold">
+              AI HARDWARE · CADENCE 45nm
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            Row-concurrent bit-fusion (INT8 / INT4 / INT2) · Gate-level arithmetic (no DSP IP) · 1.23 mm² · 135.8 mW @ 166 MHz · 2.51 TOPS/W
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              <strong>The hardware evolution:</strong> The first working version (v1) arranged 16 independent tiles in a 4×4 grid. Each tile carried its own private weight and activation memory ports. It was simple to verify, but 16 separate ports meant 16× memory bandwidth and 16× SRAM area waste. In v2, I tore down the memory architecture and rebuilt it into a weight-stationary systolic array with a unified Global Buffer, streaming activations left-to-right with per-row skew.
+            </p>
+            <p>
+              <strong>Why row-concurrent precision matters:</strong> Systolic broadcasting opened the door to row-concurrent bit-fusion: each row latches its own precision mode alongside its weights. In the same clock cycle, Row 0 can compute INT8 while Row 1 computes packed INT4 or INT2, with zero reconfiguration downtime between rows. Every multiplier was built strictly from gate-level half-adders and full-adders — no Verilog <code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">*</code> operator, no vendor IP.
+            </p>
+
+            <!-- INTERACTIVE SYSTOLIC ARRAY WAVEFRONT VISUALIZER -->
+            <div class="my-3 p-4 bg-surface-container dark:bg-dark-surface rounded border border-outline-variant/60 dark:border-dark-border">
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-outline-variant/40 dark:border-dark-border text-xs font-label-meta">
+                <span class="font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
+                  LIVE SYSTOLIC WAVEFRONT DATAFLOW (CYCLE <span id="systolic-cycle">0</span>)
+                </span>
+                <div class="flex items-center gap-2">
+                  <button onclick="stepSystolicArray()" class="bg-primary dark:bg-amber-500 text-white dark:text-gray-900 px-2 py-0.5 rounded text-[10px] font-bold hover:bg-amber-600 transition-colors">
+                    Step Clock ⏭
+                  </button>
+                  <button id="btn-systolic-auto" onclick="toggleSystolicAuto()" class="bg-surface dark:bg-dark-surface-high border border-outline-variant px-2 py-0.5 rounded text-[10px] hover:border-amber-500 transition-colors">
+                    ▶ Auto Wavefront
+                  </button>
+                </div>
+              </div>
+
+              <!-- 4x4 Systolic Mesh Grid -->
+              <div class="mt-3 grid grid-cols-4 gap-2 text-center font-mono text-[11px]">
+                <div id="pe-0-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,0] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.4</span>
+                </div>
+                <div id="pe-0-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,1] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.1</span>
+                </div>
+                <div id="pe-0-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,2] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.5</span>
+                </div>
+                <div id="pe-0-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,3] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.8</span>
+                </div>
+
+                <div id="pe-1-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,0] INT4</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.2</span>
+                </div>
+                <div id="pe-1-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,1] INT4</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.8</span>
+                </div>
+                <div id="pe-1-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,2] INT4</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.4</span>
+                </div>
+                <div id="pe-1-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,3] INT4</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.0</span>
+                </div>
+
+                <div id="pe-2-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,0] INT2</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.0</span>
+                </div>
+                <div id="pe-2-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,1] INT2</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-1.0</span>
+                </div>
+                <div id="pe-2-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,2] INT2</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.0</span>
+                </div>
+                <div id="pe-2-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,3] INT2</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.0</span>
+                </div>
+
+                <div id="pe-3-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,0] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.5</span>
+                </div>
+                <div id="pe-3-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,1] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.3</span>
+                </div>
+                <div id="pe-3-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,2] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.9</span>
+                </div>
+                <div id="pe-3-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
+                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,3] INT8</span>
+                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-1.2</span>
+                </div>
+              </div>
+              
+              <div class="mt-2.5 flex items-center justify-between text-[10px] font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+                <span>Activations stream &rarr; from West</span>
+                <span class="text-amber-600 dark:text-amber-400 font-semibold" id="systolic-status">Wavefront idle</span>
+                <span>Partial sums accumulate &darr; to South</span>
+              </div>
+            </div>
+
+            <p class="text-on-surface-variant dark:text-dark-text-muted">
+              <strong>Results:</strong> Taken through the complete Cadence Suite ASIC flow (Synthesis, CTS, PnR, ECO pin access, DRC/LVS) to clean GDSII signoff on a 45nm library. Passed 2,588 bit-exact verification assertions. Co-simulated with Python on ResNet-20/CIFAR-10, demonstrating >91% accuracy under dynamic precision scaling with 34% energy savings.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('PSMAC_NPU/docs/v2-systolic-row-precision/img/top_level_architecture.png', 'Systolic Array & Global Buffer Architecture')">top_level_arch</button>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('PSMAC_NPU/docs/v2-systolic-row-precision/img/bit_decomposition_hierarchy.png', 'Sub-bit Fusion Multiplier Hierarchy')">bit_fusion_core</button>
+            <span class="text-outline-variant">·</span>
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="PSMAC_NPU/docs/EVOLUTION.md" target="_blank">evolution_notes.md</a>
+          </div>
+        </article>
+
+        <!-- Project 3: ReGDS-SKY130 Jane Street ASIC Reverse Engineering -->
+        <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              ReGDS-SKY130: Silicon Reverse Engineering &amp; SMT Formal Solver
+            </h3>
+            <span class="font-label-sm text-xs text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-0.5 border border-amber-300 dark:border-amber-700 rounded font-semibold">
+              SILICON CTF · ZERO-DAY DISCOVERY
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            GDSII mask polygons to behavioral Verilog · Degree of Connectivity Index (DCI) · Z3 SMT solver · Jane Street ASIC Challenge
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              <strong>The challenge:</strong> When you open a raw GDSII layout, all net names, cell boundaries, and bus structures are gone. You’re left with hundreds of thousands of flattened metal, diffusion, and poly polygons. Traditional graph matching fails because MOSFET Source and Drain are layout-symmetric, producing false negatives.
+            </p>
+            <p>
+              <strong>The solution:</strong> I built a layout-to-RTL pipeline that extracts SPICE with Magic VLSI, applies a symmetric Degree of Connectivity Index (<span class="font-mono text-xs">W_DCI</span>) matrix for topological graph matching, and reconstructs verifiable structural Verilog. We recovered all 76 flip-flops and 1,287 nets of the Jane Street Silicon ASIC challenge.
+            </p>
+            <p class="text-on-surface-variant dark:text-dark-text-muted">
+              <strong>The Silicon Zero-Day:</strong> By modeling the circuit across 122 cycles in the Z3 SMT solver, we discovered the 122-bit key to print the true flag: <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">(* TWO STARS *)</code>. More excitingly, Z3 found a physical coverage bug in the chip’s anti-adjacency logic: a solution with 3 illegal vertically touching stars still drove <code class="font-mono text-xs">success = 1</code> in silicon! We also proved 7 Easter eggs, including an unreachable ROM state (<code class="font-mono text-xs">NOT TOUCH</code>).
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('Reverse-Engineer-an-AISC-Jane-Street-Challenge/layout.png', 'Jane Street Silicon Layout & Physical Polygons')">silicon_layout.png</button>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('blog')">read_reversing_essay</button>
+          </div>
+        </article>
+
+        <!-- Project 4: Real-Time NIR Plastic Sorting -->
+        <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              Real-Time Hyperspectral NIR Spectroscopic Classifier on FPGA
+            </h3>
+            <span class="font-label-sm text-xs text-on-surface-variant dark:text-dark-text-muted bg-surface-container dark:bg-dark-surface px-2.5 py-0.5 border border-outline-variant dark:border-dark-border rounded font-semibold">
+              AI HARDWARE · ARTIX-7 FPGA
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            224 spectral bands (932–1720 nm) · Deterministic 20.94 µs latency · >40× software speedup · 92.5% 5-class sorting
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              In industrial recycling, sorting plastics (PE, PP, PET, PS, PVC) on a fast conveyor belt cannot wait for slow PC-based numerical algorithms. Working as a research intern at CSIR-CEERI, I architected a hardware streaming DSP pipeline on a Xilinx Artix-7 (XC7A100T) directly coupled to a SPECIM FX17e hyperspectral camera capturing 224 channels at 200 FPS.
+            </p>
+            <p>
+              Implemented pipelined Verilog datapaths for Savitzky-Golay FIR filtering, baseline subtraction, and Standard Normal Variate (SNV) normalization. Mapped fixed-point Support Vector Machine (SVM) inference onto DSP48E1 slices with a single-cycle combinational Argmax tree. Reached a deterministic classification speed of 47,600 spectra/sec (20.94 µs latency) with 92.5% accuracy across 500,000 noisy samples.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+            <span class="text-outline-variant">·</span>
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://data.mendeley.com/datasets/jg2z4g6pdh/1" target="_blank" rel="noopener noreferrer">hyperspectral_dataset</a>
+          </div>
+        </article>
+
+        <!-- Project 5: Approximate Sobel Edge Detector -->
+        <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              Power-Aware Sobel Edge Detector with Approximate Multipliers
+            </h3>
+            <span class="font-label-sm text-xs text-on-surface-variant dark:text-dark-text-muted bg-surface-container dark:bg-dark-surface px-2.5 py-0.5 border border-outline-variant dark:border-dark-border rounded font-semibold">
+              NIT TRICHY · APPROXIMATE COMPUTING
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            256×256 real-time grayscale · Compressor-based approximate multiplication · Bounded error for direct PPA reduction
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              Human vision doesn’t need 100% mathematical precision at every pixel to detect edges. At NIT Trichy, I explored trading bounded numerical precision for direct area and dynamic switching energy reductions. Replaced standard FPGA DSP multipliers with custom compressor-based approximate multipliers (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">AppMul_8bit.v</code>) and carry-select adders.
+            </p>
+            <p>
+              Wrapped the math into a streaming 3×3 pixel window buffer using shift registers and synchronous FIFOs. Validated through self-checking testbenches and MATLAB golden-model comparisons, demonstrating substantial power reduction with zero perceptible degradation on standard benchmark images.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+          </div>
+        </article>
+
+        <!-- Project 6: PUF Hardware Security Module -->
+        <article class="axon-card flex flex-col gap-2 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
+              Tamper-Resistant PUF Hardware Security Module on FPGA
+            </h3>
+            <span class="font-label-sm text-xs text-on-surface-variant dark:text-dark-text-muted bg-surface-container dark:bg-dark-surface px-2.5 py-0.5 border border-outline-variant dark:border-dark-border rounded font-semibold">
+              HARDWARE SECURITY · CRYPTO
+            </span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-secondary dark:text-amber-400/90 font-medium">
+            32-node Ring Oscillator PUF · BCH fuzzy extractor · On-the-fly 128-bit key generation · PRESENT-128 cipher
+          </div>
+
+          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
+            <p>
+              Every chip has microscopic manufacturing variations that are as unique as a fingerprint. Instead of storing cryptographic keys in flash memory where they can be physically decapped and probed, this design uses silicon variability to generate keys on demand.
+            </p>
+            <p>
+              Designed a 32-node Ring Oscillator Physical Unclonable Function (RO-PUF) paired with a BCH fuzzy extractor to reconstruct a clean 128-bit key on the fly. Enforced strict Vivado TCL floorplanning constraints to symmetrically pair oscillator slices, eliminating systematic routing bias across the FPGA fabric and ensuring zero persistent key footprint on power-off.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
+            <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PAGE 3: SIMULATOR (Spiking Neuron Canvas) -->
+    <!-- ========================================== -->
+    <!-- ========================================== -->
+    <!-- PAGE 3: SIMULATOR (tt_um_snn_afib_detector) -->
+    <!-- ========================================== -->
+    <section id="page-simulator" class="page-view w-full">
+      <div class="mb-8">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 status-pulse"></span>
+          <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+            Spiking Neuron Simulator
+          </h2>
+        </div>
+        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+          [ tt_um_snn_afib_detector · TINY TAPEOUT 09 · CYCLE-ACCURATE VERILOG EMULATOR ]
+        </p>
+        <p class="font-body-md text-on-surface dark:text-dark-text mt-3 max-w-3xl leading-relaxed">
+          An interactive, cycle-accurate hardware emulator of my physical silicon submitted on Tiny Tapeout 09 (<span class="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">SkyWater 130nm ASIC</span>). It directly models the 16-bit tick prescaler, RR interval &amp; HRV feature extraction, 8-LIF neuron reservoir with power-of-2 arithmetic leak (<code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">potential &gt;&gt; 1</code>), 1-beat recurrent memory (<code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">spike_reg1</code>), and dual-window (8-beat FAST &amp; 16-beat SLOW) majority voting classifier.
+        </p>
+      </div>
+
+      <!-- Oscilloscope & Logic Analyzer Chassis Box -->
+      <div class="w-full bg-[#111418] rounded-md border border-amber-500/40 p-4 md:p-6 shadow-[4px_4px_0px_#d97706] text-white">
+        
+        <!-- Top Status Telemetry -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#21262d] font-mono text-xs">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-amber-400 font-bold tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              CLK: 10.0 MHz (PRESCALER 512×)
+            </span>
+            <span class="text-[#8b949e]">|</span>
+            <span class="text-[#c9d1d9]" id="sim-status">FSM: RUN (01) · READY FOR R-PEAK</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 text-[11px]">
+            <span class="text-amber-300">EST. POWER: <strong id="sim-power">8.4 nW (Idle)</strong></span>
+            <span class="text-[#8b949e]">HEART RATE: <strong class="text-white" id="sim-bpm">72 BPM</strong></span>
+            <span class="text-[#8b949e]">RR INT: <strong class="text-white" id="sim-rr-val">833 ms [6'd32]</strong></span>
+            <span class="text-[#8b949e]">ΔRR (HRV): <strong class="text-white" id="sim-delta-val">4 ms [6'd0]</strong></span>
+          </div>
+        </div>
+
+        <!-- Oscilloscope Waveform Canvas -->
+        <div class="relative w-full h-56 md:h-64 my-4 bg-[#080a0c] rounded border border-[#21262d] crt-grid overflow-hidden">
+          <canvas id="lif-canvas" class="w-full h-full block"></canvas>
+          
+          <div class="absolute left-3 top-2 font-mono text-[10px] text-amber-400/90 bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30 pointer-events-none flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            CHAN 1: ECG ANALOG WAVEFORM (R-PEAK DETECTOR)
+          </div>
+
+          <div class="absolute left-3 bottom-2 font-mono text-[10px] text-sky-400/90 bg-black/75 px-1.5 py-0.5 rounded border border-sky-500/30 pointer-events-none">
+            CHAN 2: 8-NEURON RESERVOIR SPIKE RASTER
+          </div>
+
+          <div id="spike-flash" class="absolute inset-0 bg-amber-500/15 opacity-0 pointer-events-none transition-opacity duration-100"></div>
+        </div>
+
+        <!-- Middle Section: 8-LIF Neuron Reservoir Matrix -->
+        <div class="mb-5 bg-[#0a0d10] p-3.5 md:p-4 rounded border border-[#21262d]">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#21262d] text-xs font-mono">
+            <span class="text-amber-400 font-bold tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-amber-400">memory</span>
+              8-LIF RESERVOIR SILICON MATRIX (4-BIT POTENTIALS · LEAK: V &gt;&gt; 1)
+            </span>
+            <div class="flex items-center gap-3 text-[11px]">
+              <span class="text-[#8b949e]">RECURRENT SYNAPSE (N0 &rarr; N7):</span>
+              <span id="sim-recurrent-flag" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">spike_reg1 [OFF]</span>
+            </div>
+          </div>
+
+          <!-- The 8 Neurons Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 mt-3 text-xs font-mono">
+            <!-- N0: RR Interval Bit 0 -->
+            <div id="neuron-card-0" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-400 text-[11px]">N0 (RR[0])</span>
+                <span id="neuron-led-0" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=5 &middot; W=4</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-0" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-0" class="text-white">0</strong>/15</span>
+                <span class="text-amber-500/80">&rarr; reg1</span>
+              </div>
+            </div>
+
+            <!-- N1: RR Interval Bit 1 -->
+            <div id="neuron-card-1" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-400 text-[11px]">N1 (RR[1])</span>
+                <span id="neuron-led-1" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=5</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-1" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-1" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N2: RR Interval Bit 2 -->
+            <div id="neuron-card-2" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-400 text-[11px]">N2 (RR[2])</span>
+                <span id="neuron-led-2" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=6 &middot; W=3</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-2" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-2" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N3: RR Interval Bit 3 -->
+            <div id="neuron-card-3" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-400 text-[11px]">N3 (RR[3])</span>
+                <span id="neuron-led-3" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=6</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-3" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-3" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N4: HRV Delta Bit 0 -->
+            <div id="neuron-card-4" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sky-400 text-[11px]">N4 (Δ[0])</span>
+                <span id="neuron-led-4" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=3 &middot; W=5</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-4" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-4" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N5: HRV Delta Bit 1 -->
+            <div id="neuron-card-5" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sky-400 text-[11px]">N5 (Δ[1])</span>
+                <span id="neuron-led-5" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=3 &middot; W=4</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-5" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-5" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N6: HRV Delta Bit 2 -->
+            <div id="neuron-card-6" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sky-400 text-[11px]">N6 (Δ[2])</span>
+                <span id="neuron-led-6" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=6</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-6" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-6" class="text-white">0</strong>/15</span>
+              </div>
+            </div>
+
+            <!-- N7: HRV Delta Bit 3 + Recurrent Loop -->
+            <div id="neuron-card-7" class="bg-[#12161b] p-2 rounded border border-amber-500/40 flex flex-col gap-1 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-amber-300 text-[11px]">N7 (Δ|reg)</span>
+                <span id="neuron-led-7" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+              </div>
+              <div class="text-[10px] text-[#8b949e]">&theta;=2 &middot; W=3</div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-7" class="h-full bg-amber-400 transition-all duration-75" style="width: 0%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-[#8b949e]">
+                <span>V: <strong id="neuron-v-7" class="text-white">0</strong>/15</span>
+                <span class="text-amber-400 text-[9px] font-bold">&larr; reg1</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Readout & Dual-Window Voting Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5 font-mono text-xs">
+          
+          <!-- Card 1: Fast Window -->
+          <div class="bg-[#0a0d10] p-3 rounded border border-[#21262d] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+                <span>FAST WINDOW (8-BEAT)</span>
+                <span id="sim-fast-progress" class="text-white text-[11px]">[0/8 BEATS]</span>
+              </div>
+              <p class="text-[11px] text-[#8b949e] mt-1.5 leading-snug">
+                Rapid transient detector. Evaluates signed sum of spikes against threshold &gt; -1.
+              </p>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-[10px] text-[#8b949e] mb-1">
+                <span>ACCUM_FAST: <strong id="sim-accum-fast" class="text-white">0</strong></span>
+                <span>THRESH: &gt; -1</span>
+              </div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden">
+                <div id="sim-fast-meter" class="h-full bg-amber-500 transition-all duration-75" style="width: 50%"></div>
+              </div>
+              <div class="mt-2 text-right">
+                <span id="sim-fast-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">afib_fast: LOW</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Slow Window -->
+          <div class="bg-[#0a0d10] p-3 rounded border border-[#21262d] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+                <span>SLOW WINDOW (16-BEAT)</span>
+                <span id="sim-slow-progress" class="text-white text-[11px]">[0/16 BEATS]</span>
+              </div>
+              <p class="text-[11px] text-[#8b949e] mt-1.5 leading-snug">
+                Sustained rhythm validator. Closes every 16 beats to suppress isolated PVC false-alarms.
+              </p>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-[10px] text-[#8b949e] mb-1">
+                <span>ACCUM_SLOW: <strong id="sim-accum-slow" class="text-white">0</strong></span>
+                <span>THRESH: &gt; -2</span>
+              </div>
+              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden">
+                <div id="sim-slow-meter" class="h-full bg-amber-500 transition-all duration-75" style="width: 50%"></div>
+              </div>
+              <div class="mt-2 text-right">
+                <span id="sim-slow-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">afib_slow: LOW</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Silicon Pin Output -->
+          <div class="bg-[#0a0d10] p-3 rounded border border-amber-500/40 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+                <span>SILICON PINOUT (uo_out / uio_out)</span>
+                <span class="text-emerald-400 text-[10px] font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ACTIVE
+                </span>
+              </div>
+              <div class="mt-2 flex flex-col gap-1.5">
+                <!-- AFIB FLAG -->
+                <div class="flex items-center justify-between p-1.5 rounded bg-[#12161b] border border-[#21262d]">
+                  <span class="text-[11px] font-bold text-[#c9d1d9]">uo[0] AFIB_FLAG:</span>
+                  <span id="sim-afib-flag" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    NORMAL SINUS
+                  </span>
+                </div>
+                <!-- OUT_VALID & ANY_SPIKE -->
+                <div class="flex items-center justify-between text-[10px] text-[#8b949e] px-1">
+                  <span>uo[1] OUT_VALID: <strong id="sim-out-valid" class="text-white">0</strong></span>
+                  <span>uo[2] ANY_SPIKE: <strong id="sim-any-spike" class="text-white">0</strong></span>
+                </div>
+                <!-- CONFIDENCE SCORE -->
+                <div class="flex items-center justify-between text-[10px] text-[#8b949e] px-1">
+                  <span>uo[7:5] CONFIDENCE:</span>
+                  <span id="sim-confidence" class="font-bold text-amber-400">3'b010 (30%)</span>
+                </div>
+                <!-- ASYSTOLE ALARM -->
+                <div class="flex items-center justify-between p-1.5 rounded bg-[#12161b] border border-[#21262d]">
+                  <span class="text-[11px] font-bold text-[#c9d1d9]">uio[0] ASYSTOLE:</span>
+                  <span id="sim-asystole-pin" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">
+                    INACTIVE
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Controls Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#21262d] font-mono text-xs">
+          
+          <!-- Injection Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-normal-beat" onclick="injectBeat('normal')" class="bg-[#21262d] hover:bg-[#30363d] active:bg-amber-600 text-white py-2 px-3 rounded border border-[#30363d] hover:border-amber-400 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px] text-emerald-400">favorite</span>
+              Normal Beat (72 BPM)
+            </button>
+
+            <button id="btn-afib-burst" onclick="injectBeat('afib')" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 active:bg-amber-500 py-2 px-3 rounded border border-amber-500/50 hover:border-amber-400 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px] text-amber-400">bolt</span>
+              AFib Burst (160 BPM, ΔRR)
+            </button>
+
+            <button onclick="injectBeat('pvc')" class="bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] py-2 px-2.5 rounded border border-[#30363d] transition-all" title="Isolated premature ventricular contraction">
+              Isolated PVC
+            </button>
+
+            <button onclick="triggerAsystole()" class="bg-red-500/20 hover:bg-red-500/30 text-red-300 py-2 px-2.5 rounded border border-red-500/40 transition-all" title="Simulates a cardiac pause > 1.6s">
+              Asystole (>1.6s)
+            </button>
+
+            <button id="btn-auto-stream" onclick="toggleAutoStream()" class="bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] py-2 px-3 rounded border border-[#30363d] transition-all">
+              <span id="auto-stream-label">&blacktriangleright; Auto Stream</span>
+            </button>
+          </div>
+
+          <!-- Utilities & Reset -->
+          <div class="flex items-center gap-3">
+            <button id="btn-audio-toggle" onclick="toggleSimAudio()" class="p-1.5 rounded bg-[#21262d] text-[#8b949e] hover:text-white transition-colors" title="Toggle Synthesizer Audio">
+              <span id="audio-icon" class="material-symbols-outlined text-[17px]">volume_off</span>
+            </button>
+
+            <button onclick="resetSim()" class="p-1.5 rounded bg-[#21262d] text-[#8b949e] hover:text-white transition-colors" title="Hardware Reset (rst_n = 0)">
+              <span class="material-symbols-outlined text-[17px]">restart_alt</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PAGE 4: BLOG (Technical Essays)           -->
+    <!-- ========================================== -->
+    <!-- ========================================== -->
+    <!-- PAGE 4: BLOG (Technical Essays)           -->
+    <!-- ========================================== -->
+    <section id="page-blog" class="page-view w-full">
+      <div class="mb-10">
+        <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+          Blog
+        </h2>
+        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+          [ ARCHITECTURE LOGS &middot; TAPEOUT POST-MORTEMS &middot; HARDWARE &amp; SILICON ESSAYS ]
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-12">
+
+        <!-- ============================================================ -->
+        <!-- BLOG POST 1: Tiny Tapeout Microarchitecture in 959 Cells    -->
+        <!-- ============================================================ -->
+        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
+              Micro-Architecture in 959 Standard Cells: Designing an Asynchronous Neuromorphic SNN on Tiny Tapeout 09
+            </h3>
+            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">OCTOBER 2026</span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+            SkyWater 130nm (sky130_fd_sc_hd) &middot; 1&times;1 Tile Area (160&times;100 &mu;m) &middot; 24 Pins &middot; Zero DSP Multipliers
+          </div>
+
+          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+            <p>
+              On Tiny Tapeout, you don’t get an endless sea of gates. You get a single standardized tile: approximately <strong>1,000 standard cells</strong> and exactly 24 I/O pins (8 dedicated digital inputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">ui_in</code>, 8 dedicated outputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uo_out</code>, and 8 bidirectional pins <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uio</code>). When designing my cardiac event monitor (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">tt_um_snn_afib_detector</code>), conventional machine learning approaches were dead on arrival. A single 8-bit digital multiplier consumes 150 to 220 standard cells in SkyWater 130nm, and a tiny 64-byte SRAM macro or register file consumes the entire tile by itself.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              1. The Power-of-2 Integer Leaky Integrate-and-Fire Formulation
+            </h4>
+            <p>
+              The biological Leaky Integrate-and-Fire (LIF) model defines membrane potential dynamics as continuous integration with exponential decay:
+            </p>
+            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+              &tau;_m &middot; (dV/dt) = -(V - V_rest) + R_m &middot; I(t)
+            </div>
+            <p>
+              In digital silicon, evaluating exponential functions requires either lookup tables (LUTs) or iterative Taylor series expansions—both completely unaffordable. Instead, we quantized the neuron's membrane potential into a compact 4-bit unsigned register (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">reg [3:0] potential</code>, bounded between 0 and 15) and replaced exponential integration with an <strong>arithmetic right-shift by 1</strong> (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">potential &gt;&gt; 1</code>).
+            </p>
+            <p>
+              In Verilog, the entire neuron compiles to:
+            </p>
+            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-emerald-400 overflow-x-auto">
+<pre>always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        potential &lt;= 4'd0;
+        spike_out &lt;= 1'b0;
+    end else if (ena &amp;&amp; spike_valid) begin
+        if (potential &gt;= THRESHOLD) begin
+            spike_out &lt;= 1'b1;
+            potential &lt;= 4'd0; // Instantaneous refractory reset
+        end else begin
+            spike_out &lt;= 1'b0;
+            // 50% passive decay via wire shift + synaptic integration:
+            potential &lt;= (potential &gt;&gt; 1) + (spike_in ? {1'b0, WEIGHT} : 4'd0);
+        end
+    end
+end</pre>
+            </div>
+            <p>
+              Because an arithmetic right-shift in hardware is literally free (it is implemented purely via wire routing without a single logic gate), the entire neuron synthesis cost collapsed to <strong>just 24 standard cells</strong>—composed only of a 4-bit ripple adder and four D-flip-flops.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              2. Temporal Recurrence from a Single 1-Bit Flip-Flop
+            </h4>
+            <p>
+              Arrhythmias like Atrial Fibrillation are defined by high beat-to-beat variability (&Delta;RR) sustained across multiple cardiac cycles. A conventional Recurrent Neural Network (RNN) requires an $8 \times 8$ weight matrix (64 multiplications and 64 memory registers).
+            </p>
+            <p>
+              To solve this within our 1,000-cell budget, we introduced a single 1-bit cross-coupling register: <code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded font-bold">spike_reg1</code>. On every incoming beat, <code class="font-mono text-xs">spike_reg1</code> latches the spike output of rate neuron <strong>N0</strong> and injects it as an additional excitation into delta neuron <strong>N7</strong> on the subsequent beat:
+            </p>
+            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+<pre>// In reservoir.v:
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) spike_reg1 &lt;= 1'b0;
+    else if (ena &amp;&amp; spike_valid) spike_reg1 &lt;= s[0];
+end
+
+// Neuron 7 incorporates the delayed spike from Neuron 0:
+lif_neuron #(.THRESHOLD(8'd2), .WEIGHT(3'd3)) n7 (
+    .clk(clk), .rst_n(rst_n), .ena(ena),
+    .spike_valid(spike_valid),
+    .spike_in(gd[3] | spike_reg1), 
+    .spike_out(s[7])
+);</pre>
+            </div>
+            <p>
+              This single feedback wire introduces rich temporal hysteresis: when a rapid ectopic beat triggers N0, its memory is preserved into the next beat cycle, sensitizing N7 to fire if the subsequent beat exhibits high variability. A sustained arrhythmic episode creates a self-reinforcing cascade, while isolated premature contractions decay without false alarming.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              3. Dual-Window Majority Voting (<code class="font-mono text-sm">readout.v</code>)
+            </h4>
+            <p>
+              To eliminate false alarms caused by noisy electrode contacts or isolated Premature Ventricular Contractions (PVCs), the readout module implements a two-tiered coincidence detector:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+              <li><strong>FAST Window (8 beats)</strong>: Rapid transient filter. Accumulates signed synaptic votes across 8 consecutive beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_fast &gt; -1</code>, asserts <code class="font-mono text-xs">afib_fast = 1</code>.</li>
+              <li><strong>SLOW Window (16 beats)</strong>: Sustained rhythm confirmation. Accumulates signed votes across 16 beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_slow &gt; -2</code>, asserts <code class="font-mono text-xs">afib_slow = 1</code>.</li>
+              <li><strong>Majority Coincidence Gate</strong>: The final output alarm is gated by strict logical coincidence: <code class="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">afib_flag &lt;= afib_fast &amp; afib_slow</code>. A transient spike burst cannot trigger the alarm unless confirmed by the 16-beat slow baseline.</li>
+            </ul>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              4. Physical Silicon Telemetry &amp; OpenLane Synthesis Results
+            </h4>
+            <p>
+              Synthesized using Yosys and placed/routed with OpenLane against the <code class="font-mono text-xs">sky130_fd_sc_hd</code> standard cell library:
+            </p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-2 font-mono text-xs">
+              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
+                <div class="text-[#8b949e] text-[10px]">TOTAL CELL COUNT</div>
+                <div class="text-xl font-bold text-amber-400 mt-1">959</div>
+                <div class="text-[10px] text-[#8b949e]">Tile Budget: 1,000</div>
+              </div>
+              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
+                <div class="text-[#8b949e] text-[10px]">CORE UTILIZATION</div>
+                <div class="text-xl font-bold text-amber-400 mt-1">48.7%</div>
+                <div class="text-[10px] text-[#8b949e]">Zero DRC violations</div>
+              </div>
+              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
+                <div class="text-[#8b949e] text-[10px]">OPERATING FREQ</div>
+                <div class="text-xl font-bold text-emerald-400 mt-1">10.0 MHz</div>
+                <div class="text-[10px] text-[#8b949e]">Setup Slack: +42.1 ns</div>
+              </div>
+              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
+                <div class="text-[#8b949e] text-[10px]">QUIESCENT POWER</div>
+                <div class="text-xl font-bold text-sky-400 mt-1">8.4 nW</div>
+                <div class="text-[10px] text-[#8b949e]">Between beats</div>
+              </div>
+            </div>
+            <p>
+              By ruthlessly eliminating floating-point arithmetic and taking advantage of physical right-shift wiring, the entire neuromorphic pipeline fit with 41 cells to spare, meeting all timing and physical design constraints.
+            </p>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <!-- BLOG POST 2: Jane Street ASIC SMT Solving                   -->
+        <!-- ============================================================ -->
+        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
+              Reverse Engineering a Physical ASIC Layout: Extracting Zero-Days with Graph Isomorphism and Z3 SMT Solving
+            </h3>
+            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">SEPTEMBER 2026</span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+            Jane Street ASIC CTF &middot; Flattened GDSII Polygons &middot; Degree of Connectivity Index (DCI) &middot; SMT Constraint Unrolling
+          </div>
+
+          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+            <p>
+              Layout polygons tell no lies, but they speak in pure geometry. In the Jane Street ASIC Reverse Engineering Challenge, participants were handed an opaque, flattened GDSII database: raw 2D polygon streams across semiconductor layers (Diffusion, Polysilicon, Contacts, Metal1, Metal2). There were no schematic netlists, no standard cell boundary markers, no pin labels, and no clock tree documentation.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              1. The Source-Drain Permutation Dilemma in Netlist Extraction
+            </h4>
+            <p>
+              Decompiling geometry back into a transistor netlist is conceptually straightforward: wherever Polysilicon crosses Diffusion, a MOSFET channel exists. Contacts link diffusion regions to metal routing wires.
+            </p>
+            <p>
+              However, when applying standard sub-graph isomorphism algorithms (like VF2 or the Weisfeiler-Lehman kernel) to classify extracted transistor groups into standard gates (NAND, NOR, XOR, DFF), matching broke down completely. Why? In planar CMOS, MOSFET Source and Drain terminals are <strong>geometrically and physically symmetric</strong>. In an extracted netlist, the designation of which terminal is source and which is drain is completely non-deterministic.
+            </p>
+            <p>
+              To overcome this, we developed the <strong>Degree of Connectivity Index (DCI)</strong>: a topological matrix metric invariant under source/drain permutations:
+            </p>
+            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+              W_DCI(u, v) = &sum;_{k=1}^{d} [ A^k(u, v) / (deg(u) &middot; deg(v)) ]
+            </div>
+            <p>
+              Because the DCI edge-weight tensor treats the bilateral channel conductance as an unordered pair while weighting neighboring interconnect degrees, it produces an identical topological fingerprint regardless of terminal swaps. With DCI, our automated netlist classifier achieved <strong>100% gate recovery accuracy</strong> across all standard cells in the ASIC core.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              2. Recovering the 76-State Sequential Machine
+            </h4>
+            <p>
+              Once standard cell boundaries were resolved, topological traversal isolated <strong>76 D-type flip-flops</strong> clocked by a balanced H-tree clock network. Tracing the combinational cones of logic revealed that the hardware implemented a sequential puzzle checker for an $11 \times 11$ Star Battle grid puzzle. The state machine took a stream of serial coordinates across 122 clock cycles, sequentially verifying:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+              <li>Exactly two stars per row.</li>
+              <li>Exactly two stars per column.</li>
+              <li>Exactly two stars per irregular 11-cell polyomino region.</li>
+              <li>The anti-adjacency constraint: no two stars may touch, even diagonally.</li>
+            </ul>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              3. Unrolling 122 Clock Cycles into First-Order SMT Logic
+            </h4>
+            <p>
+              Brute-forcing an input sequence across 76 flip-flops over 122 cycles would require exploring $2^{76 \times 122}$ states. Instead, we translated the recovered synthesizable Verilog directly into first-order propositional constraints for the <strong>Z3 SMT solver</strong>:
+            </p>
+            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-emerald-400 overflow-x-auto">
+<pre>from z3 import *
+
+solver = Solver()
+# Unroll 76 sequential flip-flops across 122 cycles
+Q = [[Bool(f"q_{i}_cycle_{t}") for i in range(76)] for t in range(123)]
+inputs = [BitVec(f"in_cycle_{t}", 8) for t in range(122)]
+
+# Enforce combinational next-state transfer functions extracted from netlist:
+for t in range(122):
+    for i in range(76):
+        solver.add(Q[t+1][i] == transition_logic[i](Q[t], inputs[t]))
+
+# Initial reset state & target success assertion:
+for i in range(76): solver.add(Q[0][i] == False)
+solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
+            </div>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              4. The Silicon Zero-Day
+            </h4>
+            <p>
+              When Z3 returned <code class="font-mono text-xs text-emerald-400">SAT</code> in under 4 seconds, we expected the model to output the canonical mathematical solution to the 11&times;11 Star Battle puzzle. Instead, the input vector revealed an <em>impossible puzzle state</em>: three stars were clustered directly adjacent to one another in the lower right quadrant.
+            </p>
+            <p>
+              Tracing the netlist logic on Pin 42 revealed a hardware zero-day:
+            </p>
+            <p class="p-3 bg-[#0d1117] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+              The layout engineer had optimized the anti-adjacency checking cone using a tree of 2-input XOR and AND gates, but had omitted the diagonal boundary condition at index (10, 10). Under specific multi-cycle input skew, an unconstrained race condition disabled the adjacency fault latch!
+            </p>
+            <p>
+              The chip didn’t care about human game rules; it only cared about its physical gate equations. The SMT solver exploited this physical logic flaw, asserting <code class="font-mono text-xs font-bold text-emerald-400">SUCCESS = 1</code> in physical silicon using a completely invalid puzzle configuration.
+            </p>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <!-- BLOG POST 3: Physics of 20 Watts                             -->
+        <!-- ============================================================ -->
+        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
+              Why 20 Watts of Warm Tissue Beats Megawatts of Cold Silicon
+            </h3>
+            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">AUGUST 2026</span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+            Thermodynamics of Compute &middot; Clock Tree Dissipation &middot; Event-Driven Sparsity &middot; Zero-Quiescent Silicon
+          </div>
+
+          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+            <p>
+              Every computer we build is held hostage by a relentless metronome: the synchronous clock. In modern CMOS VLSI, dynamic power dissipation is governed by the charging and discharging of gate and wire capacitances:
+            </p>
+            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+              P_{dynamic} = &alpha; &middot; C_{load} &middot; V_{dd}^2 &middot; f
+            </div>
+            <p>
+              In high-performance GPUs and AI accelerators running at 2.5 to 3.5 GHz, billions of transistors switch billions of times every second. Even when processing sparse matrix operands or waiting for high-latency HBM3e memory fetches, the clock tree keeps toggling. Clock distribution networks—composed of massive H-trees, resonant clock buffers, and low-skew repeaters—account for <strong>35% to 50% of an ASIC’s entire dynamic power budget</strong> before any actual math occurs.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              1. The Biological Contrast: 86 Billion Neurons on 20 Watts
+            </h4>
+            <p>
+              The human brain contains approximately 86 billion neurons and over 100 trillion synaptic connections. It performs continuous, multimodal perception, sensorimotor coordination, and online learning on an energy budget of approximately <strong>20 Watts</strong>—less power than a dim incandescent bulb.
+            </p>
+            <p>
+              It achieves this extraordinary efficiency through three physical principles:
+            </p>
+            <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+              <li><strong>Extreme Activity Sparsity (&alpha; &ll; 0.001)</strong>: In the cerebral cortex, fewer than 1% of neurons are active at any given millisecond. The remaining 99% sit completely silent at their resting membrane potential (-70 mV), drawing negligible metabolic energy.</li>
+              <li><strong>Event-Driven Communication</strong>: Biological sensors do not transmit synchronous video frames. The human retina emits zero spikes if the visual scene is static; ganglion cells fire only when a localized contrast or illumination gradient occurs.</li>
+              <li><strong>Analog Physics as Free Computation</strong>: Biology does not implement 64-bit floating-point ALUs to compute exponential decay or leaky summation. Membrane capacitance and ion channel conductances ($Na^+/K^+$ pump kinetics) perform continuous integration and decay as inherent physical properties of wet lipid bilayers.</li>
+            </ul>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              2. Translating the Principle to Silicon (<code class="font-mono text-sm">tt_um_snn_afib_detector</code>)
+            </h4>
+            <p>
+              In our Tiny Tapeout 09 chip, we copied this exact event-driven sparsity:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+              <li>Between heartbeats, the LIF reservoir and feature extractors are clock-gated into deep sleep. Measured quiescent leakage is <strong>8.4 nW</strong>.</li>
+              <li>When an R-peak pulse arrives, the pipeline executes for only <strong>5 microseconds</strong>, consuming 1.88 mW of active dynamic power.</li>
+              <li>It instantly transitions back to sleep for the remaining 999,995 microseconds of the cardiac cycle.</li>
+            </ul>
+            <p>
+              The average continuous power dissipation is calculated as:
+            </p>
+            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+              P_{avg} = [ (5 &mu;s &middot; 1.88 mW) + (999,995 &mu;s &middot; 8.4 nW) ] / 1.0 s &approx; 17.8 nW
+            </div>
+            <p>
+              By contrast, a conventional ARM Cortex-M0+ running an ECG classification routine at 48 MHz consumes approximately 5 mW continuous power—nearly <strong>300,000&times; more energy</strong> for the exact same clinical diagnostic result.
+            </p>
+            <p>
+              True energy efficiency does not come from shrinking transistors to 2nm; it comes from learning when to let silicon stay quiet.
+            </p>
+          </div>
+        </article>
+
+        <!-- ============================================================ -->
+        <!-- BLOG POST 4: Precision-Scalable Systolic NPU                -->
+        <!-- ============================================================ -->
+        <article class="axon-card flex flex-col gap-4 pl-3">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
+              Precision-Scalable Systolic Compute: Microarchitecting the PSMAC 4&times;4 NPU from Gate Primitives
+            </h3>
+            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">JULY 2026</span>
+          </div>
+          
+          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+            Weight-Stationary Systolic Array &middot; Spatial Bit-Slicing (SBB/BBU/RFU) &middot; Per-Row Runtime Precision (INT8/4/2)
+          </div>
+
+          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+            <p>
+              When designing neural network accelerators, the industry standard is to instantiate black-box DSP blocks provided by FPGA vendors or standard cell ASIC synthesis libraries. But black-box multipliers lock you into fixed precisions: an INT16 multiplier computing an INT4 dot product wastes 75% of its silicon area and switching energy.
+            </p>
+            <p>
+              In our custom NPU project (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">PSMAC_NPU</code>), we designed a 4&times;4 weight-stationary systolic MAC array entirely from gate primitives—half-adders and full-adders—supporting <strong>per-row runtime reconfigurable INT8 / INT4 / INT2 precision</strong>.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              1. Architectural Evolution: Independent Tiles (v1) &rarr; Weight-Stationary Systolic (v2)
+            </h4>
+            <p>
+              Our initial implementation (v1) arranged 16 independent Processing Elements (PEs) in a 4&times;4 grid. Each tile had dedicated local SRAM ports for weights and activations, computing independent vector dot products.
+            </p>
+            <p>
+              While simple to verify, v1 hit an immediate architectural wall: 16 separate memory read ports consumed <strong>16&times; the memory bandwidth</strong> and silicon area of a shared bus. Neighboring tiles were reading identical or shifted activation streams, yet paying the full energy penalty of SRAM wordline charging on every cycle.
+            </p>
+            <p>
+              In version 2, we completely re-architected the system into a <strong>2D weight-stationary systolic mesh</strong>:
+            </p>
+            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+              <li><strong>Weights Stationary in Mesh</strong>: Weights are broadcast row-by-row into PEs, where they latch and remain resident across hundreds of streaming cycles. Settle latency is strictly fixed at 7 cycles.</li>
+              <li><strong>Activations Stream Left &rarr; Right</strong>: Activations $X$ are skewed diagonally (Row $i$ delayed by $i$ clock cycles) and propagated across horizontal registers. Every PE reuses the exact activation value its left neighbor used one cycle earlier.</li>
+              <li><strong>Partial Sums Flow Top &rarr; Bottom</strong>: Accumulators flow down each column, integrating partial sums with zero external memory traffic.</li>
+            </ul>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              2. Bottom-Up Arithmetic Hierarchy: SBB &rarr; BBU &rarr; RFU
+            </h4>
+            <p>
+              Every multiply-accumulate operation in the NPU decomposes into a clean, gate-level spatial hierarchy:
+            </p>
+            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+<pre>Gate Primitives (Half-Adders, Full-Adders, AND Gates)
+       │
+       ▼
+Signed Bit-Block (SBB): 3-bit × 3-bit signed partial product primitive
+       │
+       ▼
+Bit-Block Unit (BBU): 4 coupled SBBs with sign-extension logic
+       │
+       ▼
+Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes</pre>
+            </div>
+            <p>
+              Because precision is structural rather than an emulated software mode, switching a row from INT8 to INT4 doubles its throughput without increasing power density.
+            </p>
+
+            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
+              3. Per-Row Runtime Precision Scheduling
+            </h4>
+            <p>
+              The defining breakthrough of our systolic re-architecture is per-row precision scheduling:
+            </p>
+            <p class="p-3 bg-[#0d1117] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+              When weights are broadcast into the mesh, each row latches its own mode configuration tag <code>{sx, sy, mode}</code> simultaneously with its weight operands. Row 0 can process INT8 for a high-precision sensitive channel, while Row 3 simultaneously computes INT2 for a noise-tolerant feature map on the exact same clock cycle.
+            </p>
+            <p>
+              The entire design was verified across <strong>2,588 directed, protocol, and constrained-random assertion checks</strong>, proving deterministic streaming latency ($\text{vec\_len} + 8$ cycles) with zero arithmetic overflows.
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PAGE 5: EXPERIENCE (Internships & Academics) -->
+    <!-- ========================================== -->
+    <section id="page-experience" class="page-view w-full">
+      <div class="mb-10">
+        <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+          Experience
+        </h2>
+        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+          [ RESEARCH INTERNSHIPS &amp; ACADEMICS ]
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-10">
+        
+        <!-- Research Internships -->
+        <div class="flex flex-col gap-8">
+          <!-- CSIR-CEERI -->
+          <div class="axon-card flex flex-col gap-2 border-l-2 border-amber-500 pl-4 py-1">
+            <div class="text-on-surface dark:text-dark-text font-medium text-lg">
+              <span class="font-bold text-primary dark:text-white">CSIR-CEERI, Chennai</span> — Research Intern
+              <span class="font-label-meta text-xs text-on-surface-variant dark:text-dark-text-muted ml-2">May 2026 – June 2026</span>
+            </div>
+            <p class="text-on-surface dark:text-dark-text font-body-md text-sm leading-relaxed">
+              Accelerated real-time hyperspectral NIR plastic sorting by >40× over PC software, reaching a deterministic 20.94 µs latency (47.6k spectra/s) using pipelined Verilog on an Artix-7 FPGA. Built streaming Savitzky-Golay FIR filtering, SNV normalization, and parallel SVM inference on DSP48E1 slices for 92.5% sorting accuracy.
+            </p>
+          </div>
+
+          <!-- NIT Trichy -->
+          <div class="axon-card flex flex-col gap-2 border-l-2 border-amber-500 pl-4 py-1">
+            <div class="text-on-surface dark:text-dark-text font-medium text-lg">
+              <span class="font-bold text-primary dark:text-white">Department of ECE, NIT Trichy</span> — Research Intern
+              <span class="font-label-meta text-xs text-on-surface-variant dark:text-dark-text-muted ml-2">May 2025 – June 2025</span>
+            </div>
+            <p class="text-on-surface dark:text-dark-text font-body-md text-sm leading-relaxed">
+              Designed compressor-based approximate multipliers for a prioritized Sobel edge detector, trading bounded precision loss for reduced multiplier area and dynamic switching power. Closed verification with self-checking FPGA testbenches and MATLAB golden-model comparisons.
+            </p>
+          </div>
+        </div>
+
+        <!-- Education Subsection -->
+        <div class="pt-6 border-t border-outline-variant/60 dark:border-dark-border">
+          <div class="font-headline-sm text-lg text-primary dark:text-white font-bold flex flex-wrap items-center justify-between gap-2">
+            <span>Vellore Institute of Technology (VIT), Vellore</span>
+            <span class="font-label-meta text-xs text-on-surface-variant dark:text-dark-text-muted font-normal">2023 – 2027</span>
+          </div>
+          <div class="font-body-md text-sm text-amber-700 dark:text-amber-400 font-semibold mt-1">
+            B.Tech in Electronics and Communication Engineering · CGPA 9.29 / 10.0
+          </div>
+          <p class="font-body-md text-xs text-on-surface-variant dark:text-dark-text-muted mt-2">
+            Key Coursework: VLSI System Design, Computer Architecture, Digital Logic Design, Microcontrollers, RTL-to-GDSII Physical Flow.
+          </p>
+        </div>
+
+        <!-- Technical Tooling Matrix -->
+        <div class="pt-6 border-t border-outline-variant/60 dark:border-dark-border">
+          <h3 class="font-headline-sm text-base text-primary dark:text-white font-bold mb-3">Tooling &amp; Flow Stack</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-label-meta">
+            <div class="bg-surface-container dark:bg-dark-surface p-2.5 rounded border border-outline-variant/40 dark:border-dark-border">
+              <span class="font-bold text-amber-600 dark:text-amber-400 block mb-1">RTL &amp; ARCH</span>
+              Verilog, VHDL, Verilator, Linting, CDC, Datapath Optimization
+            </div>
+            <div class="bg-surface-container dark:bg-dark-surface p-2.5 rounded border border-outline-variant/40 dark:border-dark-border">
+              <span class="font-bold text-amber-600 dark:text-amber-400 block mb-1">PHYSICAL &amp; EDA</span>
+              Cadence Suite, OpenLane, Magic VLSI, Xilinx Vivado, Modelsim
+            </div>
+            <div class="bg-surface-container dark:bg-dark-surface p-2.5 rounded border border-outline-variant/40 dark:border-dark-border">
+              <span class="font-bold text-amber-600 dark:text-amber-400 block mb-1">FORMAL &amp; SCRIPTING</span>
+              Z3 SMT Solver, Python, TCL Automation, C, Linux CLI
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PAGE 6: CONTACT & OUTSIDE SILICON (Cinephile & BB) -->
+    <!-- ========================================== -->
+    <section id="page-contact" class="page-view w-full">
+      <div class="mb-10">
+        <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+          Contact
+        </h2>
+        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+          [ COMMUNICATIONS &amp; OUTSIDE HARDWARE ]
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-10">
+        
+        <!-- Direct Inquiries -->
+        <div>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold mb-2">Direct Mail</h3>
+          <p class="font-body-md text-base text-on-surface dark:text-dark-text">
+            Send an email to <a class="underline underline-offset-4 text-amber-700 dark:text-amber-400 font-semibold hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 px-1 py-0.5 rounded transition-colors" href="mailto:sanjaykrishna.a.2005@gmail.com">sanjaykrishna.a.2005@gmail.com</a>
+          </p>
+          <span class="text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted mt-1 block">Based in Tamil Nadu, India · Open for silicon architecture and hardware engineering internships</span>
+        </div>
+
+        <!-- Social Networks -->
+        <div>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold mb-3">Presence &amp; Code</h3>
+          <ul class="list-disc list-inside text-on-surface dark:text-dark-text font-body-md text-sm space-y-2 ml-1">
+            <li>
+              <a class="underline underline-offset-4 text-primary dark:text-amber-400 font-semibold hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 px-1 py-0.5 rounded transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">GitHub (@SanjayKrishna2005)</a>
+              — Synthesizable Verilog, Cadence TCL scripts, testbenches, and SMT reversing scripts
+            </li>
+            <li>
+              <a class="underline underline-offset-4 text-primary dark:text-amber-400 font-semibold hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 px-1 py-0.5 rounded transition-colors" href="https://linkedin.com/in/sanjay-krishnaa2005" target="_blank" rel="noopener noreferrer">LinkedIn (sanjay-krishnaa2005)</a>
+              — Research updates, tapeout milestones, and professional network
+            </li>
+            <li>
+              <a class="underline underline-offset-4 text-primary dark:text-amber-400 font-semibold hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 px-1 py-0.5 rounded transition-colors" href="Meta_CV.pdf" target="_blank" rel="noopener noreferrer">Download Curriculum Vitae (PDF)</a>
+              — 1-page hardware engineering summary
+            </li>
+          </ul>
+        </div>
+
+        <!-- OUTSIDE SILICON: THE CINEPHILE & HEISENBERG LAB -->
+        <div class="pt-6 border-t border-outline-variant/60 dark:border-dark-border">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-600 text-[22px]">movie</span>
+              Outside Silicon: The Cinephile
+            </h3>
+            <button onclick="toggleCinematicMode()" class="flex items-center gap-1.5 bg-surface-container dark:bg-dark-surface px-2.5 py-1 rounded border border-outline-variant text-xs font-label-sm hover:border-amber-500 transition-colors">
+              <span class="material-symbols-outlined text-[14px] text-amber-500">theater_comedy</span>
+              <span id="cinematic-label">Toggle 2.39:1 Cinema Mode</span>
+            </button>
+          </div>
+
+          <p class="font-body-md text-on-surface dark:text-dark-text max-w-3xl leading-relaxed">
+            When I'm not inspecting clock tree skew or running formal verification, I'm almost certainly watching cinema or re-watching <em class="cursor-pointer underline decoration-dotted hover:text-amber-600 transition-colors" onclick="triggerBreakingBadEasterEgg()">Breaking Bad</em> and <em>Better Call Saul</em>. In Vince Gilligan's words, <em>"Chemistry is the study of matter, but really it is the study of change."</em> Hardware is the exact same discipline: taking static silicon crystal and teaching it to dance with electrons.
+          </p>
+
+          <!-- Top 5 Cinema Watchlist / Letterboxd Shelf -->
+          <div class="mt-5">
+            <span class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-semibold uppercase tracking-wider block mb-2">
+              [ TOP 5 CINEMA ROTATION / WHAT I WATCH WHEN TIMING FAILS ]
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs font-label-meta">
+              <div class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border">
+                <span class="font-bold text-primary dark:text-white text-sm block">1. Oppenheimer (2023)</span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"The ultimate collision of pure theoretical physics and uncompromising engineering."</span>
+              </div>
+              <div class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border">
+                <span class="font-bold text-primary dark:text-white text-sm block">2. Blade Runner 2049 (2017)</span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"The finest meditation on memory registers and artificial intelligence ever put on 70mm."</span>
+              </div>
+              <div class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border">
+                <span class="font-bold text-primary dark:text-white text-sm block">3. Whiplash (2014)</span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"'Not quite my tempo' is exactly what happens when clock skew violates setup time."</span>
+              </div>
+              <div class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border">
+                <span class="font-bold text-primary dark:text-white text-sm block">4. Interstellar (2014)</span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"TARS definitely runs an event-driven SNN with zero idle power in deep space."</span>
+              </div>
+              <!-- Subtle Easter Egg trigger on card 5 -->
+              <div onclick="triggerBreakingBadEasterEgg()" class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border cursor-pointer hover:border-emerald-500/80 transition-all">
+                <span class="font-bold text-primary dark:text-white text-sm block flex items-center justify-between">
+                  <span>5. Breaking Bad (2008–2013)</span>
+                  <span class="text-[9px] font-mono bg-emerald-700/20 text-emerald-500 px-1 rounded">Br</span>
+                </span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"99.1% pure synthesizable RTL. No latch inferred. No setup timing violation."</span>
+              </div>
+              <div class="bg-surface-container dark:bg-dark-surface p-3 rounded border border-outline-variant/40 dark:border-dark-border">
+                <span class="font-bold text-primary dark:text-white text-sm block">6. The Social Network (2010)</span>
+                <span class="text-on-surface-variant dark:text-dark-text-muted mt-1 block">"Drop the 'The'. Just 'Silicon'. Razor-sharp execution and relentless momentum."</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RETRO MINI AUDIO & LAB CONTROLLER DOCK -->
+  <aside aria-label="Audio player widget" class="fixed bottom-4 left-4 z-50 flex items-center bg-[#eaecef] dark:bg-[#161b22] border border-[#d0d7de] dark:border-[#30363d] p-2 gap-3 shadow-[2px_2px_0px_#0d1117] dark:shadow-[2px_2px_0px_#d97706] text-on-surface dark:text-dark-text select-none rounded-sm">
+    <!-- Dark Mode Toggle Button -->
+    <button id="theme-toggle-btn" aria-label="Toggle Night Mode" class="w-6 h-6 flex items-center justify-center bg-surface-container dark:bg-dark-surface-high border border-outline-variant dark:border-dark-border hover:bg-amber-500 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 transition-colors text-on-surface-variant dark:text-dark-text-muted" type="button" onclick="toggleDarkMode()">
+      <span class="material-symbols-outlined text-[14px]" id="theme-icon">dark_mode</span>
+    </button>
+
+    <!-- Synthesizer Play/Pause Button -->
+    <button id="audio-play-btn" aria-label="Play or pause synthesized chip chime" class="w-6 h-6 flex items-center justify-center bg-primary dark:bg-amber-500 text-white dark:text-gray-900 hover:bg-amber-600 transition-colors" type="button" onclick="toggleAudioSynthesis()">
+      <span class="material-symbols-outlined text-[14px]" id="audio-icon" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+    </button>
+
+    <!-- Track Metadata & Micro Slider -->
+    <div class="flex flex-col gap-1 pr-1">
+      <div class="flex items-center justify-between text-[11px] font-label-meta leading-none gap-3">
+        <span class="font-bold text-amber-700 dark:text-amber-400 tracking-tight uppercase cursor-pointer" onclick="cycleAudioMode()" id="audio-title" title="Click to cycle audio track">TWENTY WATTS</span>
+        <span class="text-on-surface-variant dark:text-dark-text-muted text-[10px]" id="audio-artist">Sanjay Krishna</span>
+      </div>
+      <!-- Linear Track Bar with Square Thumb -->
+      <div class="w-24 h-1 bg-[#d0d7de] dark:bg-[#30363d] relative flex items-center cursor-pointer" onclick="cycleSynthTone()">
+        <div id="audio-bar" class="h-full bg-amber-600 dark:bg-amber-500 w-1/3 transition-all duration-300"></div>
+        <div id="audio-thumb" class="w-2 h-2 bg-amber-600 dark:bg-amber-500 absolute left-1/3 -translate-x-1/2"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RETRO CLI TERMINAL DRAWER (Toggled by TERM button or '~') -->
+  <div id="terminal-drawer" class="fixed bottom-16 right-4 z-50 w-80 md:w-96 bg-black/95 text-emerald-400 border border-emerald-500/60 rounded shadow-2xl p-3 font-mono text-xs hidden flex-col gap-2">
+    <div class="flex justify-between items-center pb-1.5 border-b border-emerald-800 text-[10px]">
+      <span class="font-bold text-emerald-400 flex items-center gap-1">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        SANJAY_OS // SILICON REVERSE SHELL
+      </span>
+      <button onclick="toggleTerminal()" class="text-emerald-500 hover:text-white">✕</button>
+    </div>
+    <div id="terminal-output" class="h-44 overflow-y-auto flex flex-col gap-1 text-[11px] leading-tight pr-1">
+      <p class="text-emerald-300">Type <span class="text-amber-400 font-bold">'help'</span> for command list.</p>
+    </div>
+    <div class="flex items-center gap-1 pt-1 border-t border-emerald-800">
+      <span class="text-emerald-400 font-bold">&gt;</span>
+      <input type="text" id="terminal-input" placeholder="try 'chips', 'bb', 'movies'..." class="bg-transparent border-none outline-none text-emerald-300 w-full text-xs font-mono" onkeydown="handleTerminalCommand(event)"/>
+    </div>
+  </div>
+
+  <!-- FOOTER (Homage to Armaan with Friendsites & Webring) -->
+  <footer class="w-full bg-surface dark:bg-dark-bg border-t border-outline-variant/60 dark:border-dark-border mt-auto">
+    <div class="w-full px-margin-mobile md:px-margin py-8 flex flex-col gap-4 max-w-[1100px] mx-auto text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+      
+      <!-- Top Row: Friendsites & Silicon Webring -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-outline-variant/40 dark:border-dark-border text-[11px]">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold text-primary dark:text-white uppercase tracking-wider">FRIENDSITES &amp; WEBRING:</span>
+          <a href="https://tinytapeout.com" target="_blank" class="hover:text-amber-600 underline">[Tiny Tapeout]</a>
+          <span class="text-outline-variant">·</span>
+          <a href="https://skywater-pdk.readthedocs.io/" target="_blank" class="hover:text-amber-600 underline">[SkyWater 130]</a>
+          <span class="text-outline-variant">·</span>
+          <a href="https://github.com/Z3Prover/z3" target="_blank" class="hover:text-amber-600 underline">[Z3 SMT]</a>
+          <span class="text-outline-variant">·</span>
+          <span class="text-emerald-600 dark:text-emerald-400 cursor-pointer" onclick="triggerBreakingBadEasterEgg()">[Heisenberg Semiconductor]</span>
+        </div>
+        <button onclick="toggleCinematicMode()" class="hover:text-amber-600 text-[10px] text-outline">
+          🎬 Cinematic Mode
+        </button>
+      </div>
+
+      <!-- Bottom Row: Copyright & Socials -->
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          © 2026 Sanjay Krishna. AI Hardware, Neuromorphic Silicon &amp; Computer Architecture.
+        </div>
+        <div class="flex items-center gap-5">
+          <a class="hover:text-amber-600 dark:hover:text-amber-400 underline underline-offset-4 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">GITHUB</a>
+          <a class="hover:text-amber-600 dark:hover:text-amber-400 underline underline-offset-4 transition-colors" href="https://linkedin.com/in/sanjay-krishnaa2005" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+          <a class="hover:text-amber-600 dark:hover:text-amber-400 underline underline-offset-4 transition-colors" href="Meta_CV.pdf" target="_blank" rel="noopener noreferrer">RESUME</a>
+          <a class="hover:text-amber-600 dark:hover:text-amber-400 underline underline-offset-4 transition-colors" href="mailto:sanjaykrishna.a.2005@gmail.com">EMAIL</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- FULLSCREEN / HIGH-RES MEDIA MODAL -->
+  <div id="media-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 md:p-8" onclick="closeMediaModal(event)">
+    <div class="bg-surface dark:bg-dark-surface border border-outline-variant dark:border-dark-border max-w-4xl w-full max-h-[90vh] flex flex-col rounded shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <div class="p-3 border-b border-outline-variant dark:border-dark-border flex justify-between items-center">
+        <h4 id="modal-title" class="font-label-meta text-xs md:text-sm font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+          SPECIMEN INSPECTION
+        </h4>
+        <button onclick="closeMediaModal()" class="text-on-surface-variant dark:text-dark-text hover:text-amber-600 p-1">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="flex-1 bg-black overflow-auto p-2 flex items-center justify-center">
+        <img id="modal-img" src="" alt="Specimen Inspection" class="max-w-full max-h-[75vh] object-contain rounded"/>
+      </div>
+      <div class="p-2.5 bg-surface-container dark:bg-dark-surface-high font-label-meta text-[11px] text-on-surface-variant dark:text-dark-text-muted flex justify-between items-center">
+        <span id="modal-caption">Silicon layout &amp; micro-architecture verification.</span>
+        <a id="modal-raw-link" href="#" target="_blank" class="text-amber-600 dark:text-amber-400 underline">Open Raw Image</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BREAKING BAD TOAST & EASTER EGG -->
+  <div id="bb-toast" class="fixed top-6 right-6 z-50 bg-neutral-900 border-2 border-emerald-500 text-white p-4 rounded shadow-2xl max-w-sm hidden transition-all duration-300">
+    <div class="flex items-start gap-3">
+      <div class="bg-emerald-600 text-white font-bold font-mono px-2 py-1 text-sm rounded">
+        Br
+      </div>
+      <div class="flex flex-col gap-1 text-xs">
+        <span class="font-bold text-emerald-400">BREAKING BAD THEME PLAYING</span>
+        <p class="text-neutral-300 italic" id="bb-quote">"99.1% pure synthesizable RTL. No latch inferred. No timing violation."</p>
+      </div>
+      <button onclick="document.getElementById('bb-toast').classList.add('hidden')" class="text-neutral-400 hover:text-white">✕</button>
+    </div>
+  </div>
+
+  <!-- SCRIPTS: PAGE NAVIGATION, AUDIO SYNTH, SIMULATOR, TERMINAL, ANIMATIONS -->
+  <script>
+    // --- 1. PAGE ROUTING SYSTEM & LITHOGRAPHY STEPPER BEAM SCAN ---
+    const pages = ['home', 'projects', 'simulator', 'blog', 'experience', 'contact'];
+
+    function navigateTo(pageId) {
+      if (!pages.includes(pageId)) pageId = 'home';
+
+      // Trigger Lithography Stepper Beam wipe animation
+      const beam = document.getElementById('stepper-beam');
+      if (beam) {
+        beam.classList.remove('stepper-scan');
+        void beam.offsetWidth;
+        beam.classList.add('stepper-scan');
+      }
+
+      // Hide all views, show target view
+      pages.forEach(p => {
+        const el = document.getElementById(`page-${p}`);
+        const btn = document.getElementById(`nav-btn-${p}`);
+        if (el) {
+          if (p === pageId) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        }
+        if (btn) {
+          const prefix = btn.querySelector('.nav-prefix');
+          if (p === pageId) {
+            btn.classList.add('text-amber-600', 'dark:text-amber-400', 'font-bold');
+            btn.classList.remove('text-on-surface-variant', 'dark:text-dark-text-muted');
+            if (prefix) prefix.classList.remove('hidden');
+          } else {
+            btn.classList.remove('text-amber-600', 'dark:text-amber-400', 'font-bold');
+            btn.classList.add('text-on-surface-variant', 'dark:text-dark-text-muted');
+            if (prefix) prefix.classList.add('hidden');
+          }
+        }
+      });
+
+      // Update URL hash
+      history.pushState(null, null, `#${pageId}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // If switching to simulator, trigger resize
+      if (pageId === 'simulator' && typeof resizeCanvas === 'function') {
+        setTimeout(resizeCanvas, 50);
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.replace('#', '');
+      navigateTo(hash || 'home');
+    });
+
+    // --- 1.1 MONOLITHIC TITLE DUAL-MORPH ENGINE (SANJAY KRISHNA <-> TWENTY WATTS) ---
+    const MORPH_STATES = [
+      {
+        line1: "SANJAY",
+        line2: "KRISHNA",
+        label: "AI HARDWARE ARCHITECT · SILICON RESEARCHER",
+        btn: "MORPH [20W]"
+      },
+      {
+        line1: "TWENTY",
+        line2: "WATTS",
+        label: "20-WATT BIO-NEUROMORPHIC SILICON",
+        btn: "MORPH [SANJAY]"
+      }
+    ];
+
+    let currentMorphIdx = 0;
+    let isMorphing = false;
+    let morphAutoTimer = null;
+    const MORPH_GLYPHS = "0101XY#λΩµ§0x4F0x9AΔ∏∑√~*!&|<>";
+
+    function morphSingleWord(element, fromWord, toWord, durationMs, callback) {
+      if (!element) { if (callback) callback(); return; }
+      const steps = 16;
+      let currentStep = 0;
+      const intervalMs = Math.floor(durationMs / steps);
+
+      const timer = setInterval(() => {
+        currentStep++;
+        const progress = currentStep / steps;
+        const currentLen = Math.round(fromWord.length + (toWord.length - fromWord.length) * progress);
+        let result = "";
+
+        for (let i = 0; i < currentLen; i++) {
+          if (progress >= 0.82 && i < toWord.length) {
+            result += toWord[i];
+          } else if (progress < 0.20 && i < fromWord.length) {
+            result += (Math.random() < 0.35 ? MORPH_GLYPHS[Math.floor(Math.random() * MORPH_GLYPHS.length)] : fromWord[i]);
+          } else {
+            result += MORPH_GLYPHS[Math.floor(Math.random() * MORPH_GLYPHS.length)];
+          }
+        }
+
+        element.textContent = result;
+
+        if (currentStep >= steps) {
+          clearInterval(timer);
+          element.textContent = toWord;
+          if (callback) callback();
+        }
+      }, intervalMs);
+    }
+
+    function toggleTitleMorph(manual = false) {
+      if (isMorphing) return;
+      isMorphing = true;
+
+      // Reset auto-timer if manually triggered
+      if (morphAutoTimer) {
+        clearInterval(morphAutoTimer);
+      }
+
+      const nextIdx = (currentMorphIdx + 1) % MORPH_STATES.length;
+      const curState = MORPH_STATES[currentMorphIdx];
+      const nextState = MORPH_STATES[nextIdx];
+
+      const elLine1 = document.getElementById('title-line-1');
+      const elLine2 = document.getElementById('title-line-2');
+      const elLabel = document.getElementById('morph-mode-label');
+      const elBtn = document.getElementById('morph-btn-text');
+
+      let doneCount = 0;
+      const onDone = () => {
+        doneCount++;
+        if (doneCount === 2) {
+          currentMorphIdx = nextIdx;
+          isMorphing = false;
+          if (elLabel) elLabel.textContent = nextState.label;
+          if (elBtn) elBtn.textContent = nextState.btn;
+
+          // Restart auto-cycle
+          startMorphAutoTimer();
+        }
+      };
+
+      if (elLine1 && elLine2) {
+        morphSingleWord(elLine1, curState.line1, nextState.line1, 550, onDone);
+        morphSingleWord(elLine2, curState.line2, nextState.line2, 550, onDone);
+      } else {
+        isMorphing = false;
+      }
+    }
+
+    function startMorphAutoTimer() {
+      if (morphAutoTimer) clearInterval(morphAutoTimer);
+      morphAutoTimer = setInterval(() => {
+        toggleTitleMorph(false);
+      }, 4200);
+    }
+
+    // --- 1.2 CINEMA TAPE DECK CONTROLLER ---
+    const CINEMA_TAPES = [
+      {
+        title: "Breaking Bad",
+        year: "2008–2013",
+        director: "DIR: VINCE GILLIGAN",
+        tag: "CHEMISTRY / SILICON",
+        badge: "Br",
+        badgeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
+        quote: "\"99.1% pure synthesizable RTL. No latch inferred. No timing violation.\"",
+        isBB: true
+      },
+      {
+        title: "Oppenheimer",
+        year: "2023",
+        director: "DIR: C. NOLAN",
+        tag: "PHYSICS / COLLISION",
+        badge: "U",
+        badgeClass: "bg-amber-500/20 text-amber-400 border-amber-500/40",
+        quote: "\"Theory will only take you so far. Then silicon physics takes over.\"",
+        isBB: false
+      },
+      {
+        title: "Blade Runner 2049",
+        year: "2017",
+        director: "DIR: D. VILLENEUVE",
+        tag: "MEMORY / SYNAPSE",
+        badge: "AI",
+        badgeClass: "bg-blue-500/20 text-blue-400 border-blue-500/40",
+        quote: "\"All those moments will be lost in SRAM... like flip-flops in reset.\"",
+        isBB: false
+      },
+      {
+        title: "Whiplash",
+        year: "2014",
+        director: "DIR: D. CHAZELLE",
+        tag: "CLOCK SKEW / TEMPO",
+        badge: "CLK",
+        badgeClass: "bg-red-500/20 text-red-400 border-red-500/40",
+        quote: "\"'Not quite my tempo' is exactly what happens when clock skew violates setup time.\"",
+        isBB: false
+      },
+      {
+        title: "Interstellar",
+        year: "2014",
+        director: "DIR: C. NOLAN",
+        tag: "DEEP SPACE / SNN",
+        badge: "SNN",
+        badgeClass: "bg-purple-500/20 text-purple-400 border-purple-500/40",
+        quote: "\"TARS definitely runs an event-driven SNN with zero idle power in deep space.\"",
+        isBB: false
+      },
+      {
+        title: "The Social Network",
+        year: "2010",
+        director: "DIR: D. FINCHER",
+        tag: "ALGORITHMS / ACCEL",
+        badge: "16x16",
+        badgeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
+        quote: "\"Drop the 'The'. Just 'Silicon'. Razor-sharp execution and relentless momentum.\"",
+        isBB: false
+      }
+    ];
+
+    let currentTapeIdx = 0;
+    let tapeSpinTimer = null;
+
+    function renderActiveTape() {
+      const tape = CINEMA_TAPES[currentTapeIdx];
+      const counterEl = document.getElementById('tape-counter');
+      const titleEl = document.getElementById('tape-title');
+      const yearEl = document.getElementById('tape-year');
+      const directorEl = document.getElementById('tape-director');
+      const tagEl = document.getElementById('tape-tag');
+      const quoteEl = document.getElementById('tape-quote');
+      const badgeEl = document.getElementById('tape-badge');
+      const playLabel = document.getElementById('tape-play-label');
+
+      if (counterEl) counterEl.textContent = `0${currentTapeIdx + 1} / 0${CINEMA_TAPES.length}`;
+      if (titleEl) titleEl.textContent = tape.title;
+      if (yearEl) yearEl.textContent = tape.year;
+      if (directorEl) directorEl.textContent = tape.director;
+      if (tagEl) tagEl.textContent = tape.tag;
+      if (quoteEl) quoteEl.textContent = tape.quote;
+      if (badgeEl) {
+        badgeEl.textContent = tape.badge;
+        badgeEl.className = `font-mono text-[10px] font-bold px-1.5 py-0.5 rounded border ${tape.badgeClass}`;
+      }
+      if (playLabel) {
+        playLabel.textContent = tape.isBB ? "PLAY THEME" : "PLAY SCORE";
+      }
+    }
+
+    function nextTape() {
+      playBlip(750, 'sine', 0.04, 0.03);
+      currentTapeIdx = (currentTapeIdx + 1) % CINEMA_TAPES.length;
+      renderActiveTape();
+    }
+
+    function prevTape() {
+      playBlip(700, 'sine', 0.04, 0.03);
+      currentTapeIdx = (currentTapeIdx - 1 + CINEMA_TAPES.length) % CINEMA_TAPES.length;
+      renderActiveTape();
+    }
+
+    function playActiveTape() {
+      const tape = CINEMA_TAPES[currentTapeIdx];
+      startTapeReels(6000);
+
+      if (tape.isBB) {
+        triggerBreakingBadEasterEgg();
+      } else {
+        playCinemaChord();
+      }
+    }
+
+    function startTapeReels(durationMs = 6000) {
+      const spoolL = document.getElementById('spool-left');
+      const spoolR = document.getElementById('spool-right');
+      if (spoolL && spoolR) {
+        spoolL.classList.add('tape-reel-spin');
+        spoolR.classList.add('tape-reel-spin');
+      }
+      if (tapeSpinTimer) clearTimeout(tapeSpinTimer);
+      tapeSpinTimer = setTimeout(() => {
+        if (spoolL && spoolR) {
+          spoolL.classList.remove('tape-reel-spin');
+          spoolR.classList.remove('tape-reel-spin');
+        }
+      }, durationMs);
+    }
+
+    function playCinemaChord() {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const freqs = [220, 277.18, 329.63, 440];
+        freqs.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.04, now + idx * 0.06 + 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.06);
+          osc.stop(now + 3.0);
+        });
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      navigateTo(hash || 'home');
+      initSiliconBackground();
+      initClockWaveform();
+      renderActiveTape();
+
+      // On every reload: initial bitstream decode into SANJAY KRISHNA, then start auto-alternating!
+      setTimeout(() => {
+        const elLine1 = document.getElementById('title-line-1');
+        const elLine2 = document.getElementById('title-line-2');
+        if (elLine1 && elLine2) {
+          morphSingleWord(elLine1, "010101", "SANJAY", 600, () => {
+            elLine1.classList.remove('font-mono');
+          });
+          morphSingleWord(elLine2, "0x4F9A", "KRISHNA", 600, () => {
+            elLine2.classList.remove('font-mono');
+            currentMorphIdx = 0;
+            startMorphAutoTimer();
+          });
+        } else {
+          startMorphAutoTimer();
+        }
+      }, 100);
+    });
+
+    // --- PHOTO FALLBACK & EXTENSION LOADER ---
+    function handlePhotoFallback(img) {
+      if (!img) return;
+      const src = img.src.toLowerCase();
+      if (src.endsWith('photo.jpg')) {
+        img.src = 'photo.png';
+      } else if (src.endsWith('photo.png')) {
+        img.src = 'photo.jpeg';
+      } else if (src.endsWith('photo.jpeg')) {
+        img.src = 'photo.webp';
+      } else {
+        // If file not placed yet, gracefully hide container until provided
+        img.style.display = 'none';
+        const desktopBox = document.getElementById('hero-portrait-container');
+        if (desktopBox) desktopBox.style.display = 'none';
+        const mobileBox = document.getElementById('mobile-portrait-container');
+        if (mobileBox) mobileBox.style.display = 'none';
+      }
+    }
+
+    // --- 2. SILICON WAFER AMBIENT ROUTING TRACES BACKGROUND CANVAS ---
+    let bgCanvas, bgCtx;
+    let traces = [];
+    let mousePos = { x: -1000, y: -1000 };
+
+    function initSiliconBackground() {
+      bgCanvas = document.getElementById('silicon-bg-canvas');
+      if (!bgCanvas) return;
+      bgCtx = bgCanvas.getContext('2d');
+
+      function resizeBg() {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+        generateTraces();
+      }
+      window.addEventListener('resize', resizeBg);
+      resizeBg();
+
+      window.addEventListener('mousemove', (e) => {
+        mousePos.x = e.clientX;
+        mousePos.y = e.clientY;
+      });
+
+      requestAnimationFrame(animateSiliconBackground);
+    }
+
+    function generateTraces() {
+      traces = [];
+      const numTraces = Math.floor(window.innerWidth / 45);
+      const w = bgCanvas.width;
+      const h = bgCanvas.height;
+
+      for (let i = 0; i < numTraces; i++) {
+        const startX = Math.random() * w;
+        const startY = Math.random() * h;
+        const isHorizontal = Math.random() > 0.5;
+        const seg1 = (Math.random() * 200 + 80) * (Math.random() > 0.5 ? 1 : -1);
+        const seg2 = (Math.random() * 200 + 80) * (Math.random() > 0.5 ? 1 : -1);
+
+        traces.push({
+          x: startX,
+          y: startY,
+          x2: isHorizontal ? startX + seg1 : startX,
+          y2: isHorizontal ? startY : startY + seg1,
+          x3: isHorizontal ? startX + seg1 : startX + seg2,
+          y3: isHorizontal ? startY + seg2 : startY + seg1,
+          pulseProgress: Math.random(),
+          pulseSpeed: 0.002 + Math.random() * 0.003,
+          color: Math.random() > 0.3 ? '#d97706' : '#3a4d6b'
+        });
+      }
+    }
+
+    function animateSiliconBackground() {
+      if (!bgCtx || !bgCanvas) return;
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const baseAlpha = isDark ? 0.09 : 0.04;
+      const pulseAlpha = isDark ? 0.7 : 0.5;
+
+      traces.forEach(t => {
+        bgCtx.strokeStyle = t.color;
+        bgCtx.globalAlpha = baseAlpha;
+        bgCtx.lineWidth = 1;
+        bgCtx.beginPath();
+        bgCtx.moveTo(t.x, t.y);
+        bgCtx.lineTo(t.x2, t.y2);
+        bgCtx.lineTo(t.x3, t.y3);
+        bgCtx.stroke();
+
+        bgCtx.fillStyle = t.color;
+        bgCtx.beginPath();
+        bgCtx.arc(t.x2, t.y2, 1.8, 0, Math.PI * 2);
+        bgCtx.fill();
+
+        t.pulseProgress += t.pulseSpeed;
+        if (t.pulseProgress > 1) t.pulseProgress = 0;
+
+        let px, py;
+        if (t.pulseProgress < 0.5) {
+          const subP = t.pulseProgress / 0.5;
+          px = t.x + (t.x2 - t.x) * subP;
+          py = t.y + (t.y2 - t.y) * subP;
+        } else {
+          const subP = (t.pulseProgress - 0.5) / 0.5;
+          px = t.x2 + (t.x3 - t.x2) * subP;
+          py = t.y2 + (t.y3 - t.y2) * subP;
+        }
+
+        const dx = px - mousePos.x;
+        const dy = py - mousePos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        let glowBoost = 1;
+        if (dist < 150) {
+          glowBoost = 1 + (150 - dist) / 30;
+        }
+
+        bgCtx.fillStyle = '#f59e0b';
+        bgCtx.globalAlpha = pulseAlpha * glowBoost;
+        bgCtx.beginPath();
+        bgCtx.arc(px, py, 2 * glowBoost, 0, Math.PI * 2);
+        bgCtx.fill();
+      });
+
+      requestAnimationFrame(animateSiliconBackground);
+    }
+
+    // --- 3. LIVE DIGITAL CLOCK SQUARE WAVEFORM (HEADER) ---
+    let clockCanvas, clockCtx;
+    let clockFreqs = [10, 166, 1200];
+    let clockIdx = 0;
+    let clockPhase = 0;
+
+    function initClockWaveform() {
+      clockCanvas = document.getElementById('clock-canvas');
+      if (!clockCanvas) return;
+      clockCtx = clockCanvas.getContext('2d');
+      requestAnimationFrame(animateClockWaveform);
+    }
+
+    function cycleClockFrequency() {
+      clockIdx = (clockIdx + 1) % clockFreqs.length;
+      const freq = clockFreqs[clockIdx];
+      const label = document.getElementById('clock-freq-label');
+      label.textContent = freq >= 1000 ? `${(freq/1000).toFixed(1)} GHz` : `${freq} MHz`;
+      playBlip(freq >= 1000 ? 1760 : (freq === 166 ? 880 : 440), 'square', 0.08, 0.04);
+    }
+
+    function animateClockWaveform() {
+      if (!clockCtx || !clockCanvas) return;
+      const w = clockCanvas.width;
+      const h = clockCanvas.height;
+
+      clockCtx.clearRect(0, 0, w, h);
+      const isDark = document.documentElement.classList.contains('dark');
+      clockCtx.strokeStyle = isDark ? '#f59e0b' : '#d97706';
+      clockCtx.lineWidth = 1.4;
+
+      const speed = clockIdx === 2 ? 0.35 : (clockIdx === 1 ? 0.18 : 0.08);
+      clockPhase += speed;
+
+      const period = 10;
+      clockCtx.beginPath();
+      for (let x = 0; x <= w; x++) {
+        const val = Math.sin((x + clockPhase * 10) * (2 * Math.PI / period));
+        const y = val >= 0 ? 2 : h - 2;
+        if (x === 0) clockCtx.moveTo(x, y);
+        else clockCtx.lineTo(x, y);
+      }
+      clockCtx.stroke();
+
+      requestAnimationFrame(animateClockWaveform);
+    }
+
+    // --- 4. INTERACTIVE SYSTOLIC ARRAY WAVEFRONT VISUALIZER ---
+    let systolicCycle = 0;
+    let systolicAutoInterval = null;
+
+    function stepSystolicArray() {
+      systolicCycle++;
+      document.getElementById('systolic-cycle').textContent = systolicCycle;
+      const statusEl = document.getElementById('systolic-status');
+
+      const activeDiag = systolicCycle % 7;
+      statusEl.textContent = `Wavefront active on diagonal k = ${activeDiag}`;
+
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          const pe = document.getElementById(`pe-${r}-${c}`);
+          if (r + c === activeDiag) {
+            pe.classList.add('ring-2', 'ring-amber-500', 'bg-amber-100', 'dark:bg-amber-950/80', 'scale-[1.04]');
+            pe.classList.remove('bg-surface', 'dark:bg-dark-surface-high');
+          } else {
+            pe.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-100', 'dark:bg-amber-950/80', 'scale-[1.04]');
+            pe.classList.add('bg-surface', 'dark:bg-dark-surface-high');
+          }
+        }
+      }
+
+      playBlip(300 + activeDiag * 80, 'triangle', 0.05, 0.03);
+    }
+
+    function toggleSystolicAuto() {
+      const btn = document.getElementById('btn-systolic-auto');
+      if (systolicAutoInterval) {
+        clearInterval(systolicAutoInterval);
+        systolicAutoInterval = null;
+        btn.textContent = "▶ Auto Wavefront";
+      } else {
+        btn.textContent = "⏹ Stop Wavefront";
+        systolicAutoInterval = setInterval(stepSystolicArray, 420);
+      }
+    }
+
+    // --- 5. MULTIMETER CHIP PROBE & PIN INTERACTION ---
+    function playMultimeterTone() {
+      playBlip(987.77, 'sine', 0.08, 0.08);
+    }
+
+    function probePin(pin, val) {
+      playBlip(1200, 'triangle', 0.06, 0.05);
+      const readout = document.getElementById('pin-readout');
+      if (readout) {
+        readout.textContent = `${pin} = ${val}`;
+      }
+    }
+
+    // --- 6. CINEMATIC 2.39:1 MODE ---
+    let isCinematic = false;
+    function toggleCinematicMode() {
+      isCinematic = !isCinematic;
+      document.body.classList.toggle('cinematic-mode', isCinematic);
+      const label = document.getElementById('cinematic-label');
+      if (label) {
+        label.textContent = isCinematic ? 'Exit Cinema Mode' : 'Toggle 2.39:1 Cinema Mode';
+      }
+      playBlip(isCinematic ? 180 : 360, 'sine', 0.3, 0.06);
+    }
+
+    // --- 7. RETRO SILICON CLI TERMINAL ---
+    function toggleTerminal() {
+      const term = document.getElementById('terminal-drawer');
+      term.classList.toggle('hidden');
+      term.classList.toggle('flex');
+      if (!term.classList.contains('hidden')) {
+        document.getElementById('terminal-input').focus();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '`' || e.key === '~') {
+        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          toggleTerminal();
+        }
+      }
+      // Hidden secret: typing 'b' then 'b' triggers Breaking Bad theme
+      if (e.key === 'b' || e.key === 'B') {
+        if (!window._bPressed) {
+          window._bPressed = true;
+          setTimeout(() => { window._bPressed = false; }, 800);
+        } else {
+          window._bPressed = false;
+          triggerBreakingBadEasterEgg();
+        }
+      }
+    });
+
+    function handleTerminalCommand(e) {
+      if (e.key === 'Enter') {
+        const input = document.getElementById('terminal-input');
+        const output = document.getElementById('terminal-output');
+        const cmd = input.value.trim().toLowerCase();
+        input.value = '';
+
+        const line = document.createElement('p');
+        line.innerHTML = `<span class="text-amber-400 font-bold">&gt; ${cmd}</span>`;
+        output.appendChild(line);
+
+        let res = '';
+        if (cmd === 'help') {
+          res = "COMMANDS: 'chips', 'ai', 'bb', 'movies', 'goto [page]', 'clear', 'overclock', 'whoami'";
+        } else if (cmd === 'chips' || cmd === 'ai') {
+          res = "AI Hardware & ASICs:<br/>1) PSMAC 16x16 Systolic NPU (Cadence 45nm, 2.51 TOPS/W)<br/>2) SNN AFib Detector (Tiny Tapeout, sub-10nW idle)<br/>3) ReGDS-SKY130 Reverse Engineering (Z3 SMT Solver)<br/>4) Hyperspectral NIR Classifier (Artix-7, 20.94µs)";
+        } else if (cmd === 'bb') {
+          triggerBreakingBadEasterEgg();
+          res = "Playing Breaking Bad Theme...";
+        } else if (cmd === 'movies') {
+          res = "TOP 5: Oppenheimer, Blade Runner 2049, Whiplash, Interstellar, Breaking Bad";
+        } else if (cmd === 'clear') {
+          output.innerHTML = '';
+          return;
+        } else if (cmd.startsWith('goto ')) {
+          const target = cmd.split(' ')[1];
+          if (pages.includes(target)) {
+            navigateTo(target);
+            res = `Switched to page '${target}'`;
+          } else {
+            res = `Unknown page '${target}'. Options: ${pages.join(', ')}`;
+          }
+        } else if (cmd === 'overclock') {
+          cycleClockFrequency();
+          res = "CLOCK DOMAIN PUSHED TO HIGHER FREQUENCY.";
+        } else if (cmd === 'whoami') {
+          res = "Sanjay Krishna — AI Hardware engineer, neuromorphic silicon builder, cinephile.";
+        } else {
+          res = `command not found: '${cmd}'. Try 'help'.`;
+        }
+
+        const resLine = document.createElement('p');
+        resLine.className = "text-[#8b949e]";
+        resLine.innerHTML = res;
+        output.appendChild(resLine);
+        output.scrollTop = output.scrollHeight;
+      }
+    }
+
+    // --- 8. AUTHENTIC BREAKING BAD THEME (Audio File + Web Audio Slide Dobro Synthesis) ---
+    function triggerBreakingBadEasterEgg() {
+      const toast = document.getElementById('bb-toast');
+      const quoteEl = document.getElementById('bb-quote');
+      
+      const quotes = [
+        "\"99.1% pure synthesizable RTL. No latch inferred. No timing violation.\"",
+        "\"You clearly don't know who you're talking to. I am not in timing violation, Skyler. I AM the clock tree.\"",
+        "\"Chemistry is the study of matter, but silicon is the study of change.\""
+      ];
+      quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+      toast.classList.remove('hidden');
+
+      // 1. First attempt to play the actual MP3 if placed in folder ('breaking_bad_theme.mp3')
+      const audioFile = document.getElementById('bb-audio-theme');
+      let playedFile = false;
+
+      if (audioFile) {
+        audioFile.currentTime = 0;
+        const playPromise = audioFile.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            playedFile = true;
+          }).catch(() => {
+            // If file missing or blocked, play the synthesized slide guitar dobro theme!
+            playSynthesizedBreakingBadTheme();
+          });
+        }
+      } else {
+        playSynthesizedBreakingBadTheme();
+      }
+
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 7000);
+    }
+
+    // High-fidelity synthesis of Dave Porter's iconic Breaking Bad Dobro slide guitar theme
+    function playSynthesizedBreakingBadTheme() {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        // Low desert sub-bass rumble drone (D2 = 73.4 Hz)
+        const subOsc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        subOsc.type = 'sawtooth';
+        subOsc.frequency.setValueAtTime(73.41, now);
+        subGain.gain.setValueAtTime(0.08, now);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
+        subOsc.connect(subGain);
+        subGain.connect(ctx.destination);
+        subOsc.start(now);
+        subOsc.stop(now + 4.2);
+
+        // Dobro Slide Guitar Melody Notes (Dave Porter's D minor blues slide)
+        // Note timings: [freq, startOffset, duration, slideTargetFreq]
+        const dobroNotes = [
+          [293.66, 0.10, 0.40, 349.23], // D4 slides up to F4
+          [392.00, 0.55, 0.45, 415.30], // G4 bends to G#4
+          [392.00, 1.05, 0.35, 349.23], // G4 drops back to F4
+          [293.66, 1.45, 0.60, 261.63], // D4 slides down to C4
+          [293.66, 2.10, 1.20, 293.66]  // Final resonant D4 resolve with vibrato
+        ];
+
+        dobroNotes.forEach(([startFreq, offset, dur, endFreq]) => {
+          const t = now + offset;
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+          const gain = ctx.createGain();
+
+          osc1.type = 'sawtooth';
+          osc2.type = 'triangle';
+
+          // Frequency slide (portamento)
+          osc1.frequency.setValueAtTime(startFreq, t);
+          osc1.frequency.exponentialRampToValueAtTime(endFreq, t + dur * 0.7);
+
+          osc2.frequency.setValueAtTime(startFreq * 1.002, t); // slight detune for acoustic shimmer
+          osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.002, t + dur * 0.7);
+
+          // Dobro acoustic resonator filter
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(800, t);
+          filter.Q.setValueAtTime(3.5, t);
+
+          // Pluck envelope
+          gain.gain.setValueAtTime(0.001, t);
+          gain.gain.linearRampToValueAtTime(0.12, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc1.start(t);
+          osc2.start(t);
+          osc1.stop(t + dur);
+          osc2.stop(t + dur);
+        });
+
+      } catch (e) {}
+    }
+
+    // --- 9. MEDIA MODAL VIEWER ---
+    function openMediaModal(src, title) {
+      const modal = document.getElementById('media-modal');
+      const img = document.getElementById('modal-img');
+      const titleEl = document.getElementById('modal-title');
+      const captionEl = document.getElementById('modal-caption');
+      const rawLink = document.getElementById('modal-raw-link');
+
+      img.src = src;
+      titleEl.textContent = title;
+      captionEl.textContent = "Hardware Verification Document: " + src;
+      rawLink.href = src;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeMediaModal(e) {
+      const modal = document.getElementById('media-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    const HERO_SPECIMENS = {
+      snn: {
+        src: 'vspace-280326-demo/docs/SP.jpeg',
+        title: 'SNN AFib Detector — Signal Pipeline & Reservoir Architecture',
+        process: 'SKY26B / 0.012mm²',
+        tag: 'tt_um_snn_afib_detector',
+        sub: 'SKY26B / TT Shuttle',
+        metric: '959 / 1,000 Cells',
+        pins: [
+          { name: 'ui[0]', pin: 'ui[0] R-PEAK', val: 'HIGH (1.8V pulse)' },
+          { name: 'uo[0]', pin: 'uo[0] AFIB_FLAG', val: 'LOW (Normal Rhythm)' },
+          { name: 'uo[2]', pin: 'uo[2] ANY_SPIKE', val: 'PULSING (Active)' },
+          { name: 'uio[0]', pin: 'uio[0] ASYSTOLE', val: 'CLEARED (0V)' }
+        ]
+      },
+      npu: {
+        src: 'PSMAC_NPU/docs/v2-systolic-row-precision/img/top_level_architecture.png',
+        title: 'PSMAC 16×16 NPU — Top-Level Precision Scaled Architecture',
+        process: 'Kintex-7 / 166MHz',
+        tag: 'psmac_16x16_npu.top',
+        sub: 'Row-Dynamic Precision',
+        metric: '135.8 mW Power',
+        pins: [
+          { name: 'clk', pin: 'clk_166mhz', val: '6.02ns period' },
+          { name: 'pe[0,0]', pin: 'pe_mode', val: 'INT8 active' },
+          { name: 'sched', pin: 'row_sched', val: '0x3F precision' },
+          { name: 'acc', pin: 'acc_out[31:0]', val: '0x00A4C180' }
+        ]
+      },
+      sobel: {
+        src: 'vspace-280326-demo/docs/AI.jpeg',
+        title: 'Approximate Sobel Edge Detector — Kintex-7 FPGA Architecture',
+        process: 'Kintex-7 / 28nm',
+        tag: 'approx_sobel_edge.v',
+        sub: 'Error-Tolerant Compute',
+        metric: '-62% Power Floor',
+        pins: [
+          { name: 'px_in', pin: 'pixel_in[7:0]', val: '0x8E grayscale' },
+          { name: 'adder', pin: 'adder_mode', val: 'APPROX truncate' },
+          { name: 'psnr', pin: 'img_psnr', val: '38.4 dB (Pass)' },
+          { name: 'edge', pin: 'edge_flag', val: '1 (Boundary detected)' }
+        ]
+      },
+      jane: {
+        src: 'Reverse-Engineer-an-AISC-Jane-Street-Challenge/layout.png',
+        title: 'Jane Street ASIC Puzzle — 130nm Layout Recovery',
+        process: 'SkyWater 130nm',
+        tag: 'jane_street_puzzle.gds',
+        sub: 'Magic VLSI / SPICE',
+        metric: 'Netlist Extracted',
+        pins: [
+          { name: 'pin_42', pin: 'pin_42_vss', val: 'VSS TIE-OFF BUG' },
+          { name: 'xor', pin: 'xor_diff', val: '0 MISMATCHES' },
+          { name: 'fsm', pin: 'fsm_state[3:0]', val: '0xF (16 States)' },
+          { name: 'flag', pin: 'prize_unlock', val: 'SOLVED (1)' }
+        ]
+      }
+    };
+
+    function switchHeroSpecimen(key) {
+      const spec = HERO_SPECIMENS[key];
+      if (!spec) return;
+      playBlip(600, 'triangle', 0.05, 0.04);
+
+      const img = document.getElementById('hero-chip-img');
+      if (img) {
+        img.src = spec.src;
+        img.onclick = () => openMediaModal(spec.src, spec.title);
+      }
+      const tag = document.getElementById('hero-media-tag');
+      if (tag) tag.textContent = spec.tag;
+      const sub = document.getElementById('hero-media-sub');
+      if (sub) sub.textContent = spec.sub;
+      const metric = document.getElementById('hero-media-metric');
+      if (metric) metric.textContent = spec.metric;
+      const proc = document.getElementById('hero-chip-process');
+      if (proc) proc.textContent = spec.process;
+      const readout = document.getElementById('pin-readout');
+      if (readout) readout.textContent = 'CLICK PIN TO TEST';
+
+      const pinContainer = document.getElementById('hero-pins-container');
+      if (pinContainer) {
+        pinContainer.innerHTML = spec.pins.map(p => 
+          `<button onclick="probePin('${p.pin}', '${p.val}')" class="bg-surface-container dark:bg-dark-surface-high hover:bg-amber-500 hover:text-white py-0.5 rounded border border-outline-variant/40 text-center transition-colors truncate px-1 text-[10px] font-mono">${p.name}</button>`
+        ).join('');
+      }
+
+      ['snn', 'npu', 'sobel', 'jane'].forEach(k => {
+        const btn = document.getElementById(`chip-btn-${k}`);
+        if (!btn) return;
+        if (k === key) {
+          btn.className = "bg-amber-600 text-white dark:bg-amber-500 dark:text-gray-950 py-1 px-1.5 rounded text-left truncate transition-colors border border-amber-600 font-medium text-[10px]";
+        } else {
+          btn.className = "bg-surface-container dark:bg-dark-surface-high hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 py-1 px-1.5 rounded text-left truncate transition-colors border border-outline-variant/40 dark:border-dark-border text-[10px]";
+        }
+      });
+    }
+
+    function switchHeroMedia(src, name, sub) {
+      document.getElementById('hero-chip-img').src = src;
+      document.getElementById('hero-media-tag').textContent = name;
+      document.getElementById('hero-media-sub').textContent = sub;
+    }
+
+    // --- 10. DARK MODE TOGGLE ---
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('theme-icon');
+      if (icon) {
+        icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+      }
+    }
+
+    (function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+    })();
+
+    // --- 11. AUDIO CONTROLLER & WEB AUDIO SYNTHESIZER ---
+    let audioCtx = null;
+    let isSynthPlaying = false;
+    let synthInterval = null;
+    let currentAudioMode = 0;
+    const audioModes = [
+      { title: "TWENTY WATTS", artist: "20W Drone" },
+      { title: "HEISENBERG", artist: "Dobro Theme" },
+      { title: "CARDIAC PULSE", artist: "72 BPM LIF" },
+      { title: "8-BIT CHIP", artist: "Arpeggiator" }
+    ];
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playBlip(freq = 440, type = 'sine', duration = 0.12, gainVal = 0.08) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function cycleAudioMode() {
+      currentAudioMode = (currentAudioMode + 1) % audioModes.length;
+      document.getElementById('audio-title').textContent = audioModes[currentAudioMode].title;
+      document.getElementById('audio-artist').textContent = audioModes[currentAudioMode].artist;
+      playBlip(440, 'triangle', 0.1, 0.05);
+
+      if (currentAudioMode === 1) {
+        triggerBreakingBadEasterEgg();
+      }
+    }
+
+    function toggleAudioSynthesis() {
+      isSynthPlaying = !isSynthPlaying;
+      const playIcon = document.getElementById('audio-icon');
+      const bar = document.getElementById('audio-bar');
+      const thumb = document.getElementById('audio-thumb');
+
+      if (isSynthPlaying) {
+        playIcon.textContent = 'pause';
+        
+        let step = 0;
+        synthInterval = setInterval(() => {
+          step++;
+          if (currentAudioMode === 0) {
+            const notes = [130.81, 196.00, 261.63, 329.63];
+            playBlip(notes[step % notes.length], 'sine', 0.4, 0.04);
+          } else if (currentAudioMode === 1) {
+            playSynthesizedBreakingBadTheme();
+          } else if (currentAudioMode === 2) {
+            playBlip(120, 'sine', 0.08, 0.09);
+            setTimeout(() => playBlip(95, 'sine', 0.12, 0.07), 160);
+          } else {
+            const notes = [220, 261.63, 329.63, 392, 440, 523.25];
+            playBlip(notes[step % notes.length], 'square', 0.12, 0.03);
+          }
+
+          const pct = ((step % 10) + 1) * 10;
+          bar.style.width = pct + '%';
+          thumb.style.left = pct + '%';
+        }, 340);
+      } else {
+        playIcon.textContent = 'play_arrow';
+        if (synthInterval) clearInterval(synthInterval);
+      }
+    }
+
+    function cycleSynthTone() {
+      cycleAudioMode();
+    }
+
+    // --- 12. INTERACTIVE CYCLE-ACCURATE LEAKY INTEGRATE-AND-FIRE (LIF) SIMULATOR ---
+    // Emulates tt_um_snn_afib_detector.v from SkyWater 130nm Tiny Tapeout 09
+    const canvas = document.getElementById('lif-canvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+
+    // Neuron configuration parameters matching reservoir.v:
+    const NEURONS = [
+      { id: 0, bank: 'interval', bit: 0, thresh: 5, weight: 4 },
+      { id: 1, bank: 'interval', bit: 1, thresh: 4, weight: 5 },
+      { id: 2, bank: 'interval', bit: 2, thresh: 6, weight: 3 },
+      { id: 3, bank: 'interval', bit: 3, thresh: 4, weight: 6 },
+      { id: 4, bank: 'delta',    bit: 0, thresh: 3, weight: 5 },
+      { id: 5, bank: 'delta',    bit: 1, thresh: 3, weight: 4 },
+      { id: 6, bank: 'delta',    bit: 2, thresh: 4, weight: 6 },
+      { id: 7, bank: 'delta',    bit: 3, thresh: 2, weight: 3 }
+    ];
+
+    // Hardware Registers (exact Verilog state)
+    let neuronPotentials = [0, 0, 0, 0, 0, 0, 0, 0]; // 4-bit unsigned [0..15]
+    let neuronSpikes = [0, 0, 0, 0, 0, 0, 0, 0];     // 1-bit outputs
+    let spikeReg1 = 0;                               // 1-bit recurrent flip-flop
+    let rrPrev = 32;                                 // 6-bit register
+    let rrInterval = 32;                             // 6-bit register
+    let rrDelta = 0;                                 // 6-bit register
+    let asystoleFlag = false;                        // uio_out[0]
+    let lastBeatTimestamp = performance.now();
+    let asystoleTimer = null;
+
+    // Readout registers matching readout.v
+    // Trained 3-bit weights loaded into weight_sr
+    const READOUT_WEIGHTS = [-1, 1, 1, 2, 2, 2, 3, 3];
+    let accumFast = 0;      // 9-bit signed
+    let beatFast = 0;       // 4-bit (0..7)
+    let afibFast = 0;       // 1-bit
+    let accumFastSnap = 0;  // 9-bit signed
+    let accumSlow = 0;      // 10-bit signed
+    let beatSlow = 0;       // 5-bit (0..15)
+    let afibSlow = 0;       // 1-bit
+    let afibFlag = 0;       // uo_out[0]
+    let outValid = 0;       // uo_out[1]
+    let anySpike = 0;       // uo_out[2]
+    let confidence = 2;     // 3-bit: 000..111
+
+    // Audio & Auto Stream States
+    let simAudioEnabled = false;
+    let autoStreamActive = false;
+    let autoInterval = null;
+    let currentBPM = 72;
+
+    // Canvas visualization buffers
+    const ECG_BUFFER_SIZE = 240;
+    const ecgBuffer = new Array(ECG_BUFFER_SIZE).fill(0);
+    const RASTER_BUFFER_SIZE = 120;
+    const rasterHistory = []; // array of 8-bit spikes
+    for (let i = 0; i < RASTER_BUFFER_SIZE; i++) rasterHistory.push([0, 0, 0, 0, 0, 0, 0, 0]);
+
+    // ECG wave phase generator
+    let ecgPhase = 0;
+    let nextBeatInterval = 833; // ms
+    let pendingRPeakType = null;
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function toggleSimAudio() {
+      simAudioEnabled = !simAudioEnabled;
+      const icon = document.getElementById('audio-icon');
+      const btn = document.getElementById('btn-audio-toggle');
+      if (icon) icon.textContent = simAudioEnabled ? 'volume_up' : 'volume_off';
+      if (btn) {
+        if (simAudioEnabled) btn.classList.add('text-amber-400', 'border-amber-500/50');
+        else btn.classList.remove('text-amber-400', 'border-amber-500/50');
+      }
+    }
+
+    // Hardware Step: Cycle-accurate Verilog emulation of tt_um_snn_afib_detector.v
+    function processHeartbeat(type) {
+      const now = performance.now();
+      const elapsedMs = Math.max(300, Math.min(2200, now - lastBeatTimestamp));
+      lastBeatTimestamp = now;
+
+      // 1. rr_features.v:
+      // In hardware, tick_count increments at 10 MHz. Pre-scaled tick_count[15:9] (div by 512).
+      // Mapping real-world elapsed time (ms) to 6-bit register [0..63]:
+      let rawScaledTick = 32;
+      if (type === 'normal') {
+        rawScaledTick = Math.max(28, Math.min(36, Math.round((elapsedMs / 1000) * 38) + (Math.floor(Math.random() * 3) - 1)));
+      } else if (type === 'afib') {
+        // High variation, chaotic short or long interval
+        rawScaledTick = Math.floor(Math.random() * 36) + 14; // rapid & chaotic
+      } else if (type === 'pvc') {
+        // Premature ectopic beat: short interval followed by pause
+        rawScaledTick = 16;
+      }
+
+      rrInterval = Math.min(63, Math.max(0, rawScaledTick));
+      rrDelta = Math.abs(rrInterval - rrPrev);
+      rrPrev = rrInterval;
+      asystoleFlag = false;
+
+      // Calculate displayed BPM:
+      currentBPM = Math.round(60000 / (rrInterval * 25.5));
+      if (isNaN(currentBPM) || currentBPM < 30) currentBPM = 72;
+
+      // 2. spike_encoder.v:
+      // wire [3:0] enc_interval = 4'd15 - rr_interval[5:2];
+      // wire [3:0] enc_delta = (rr_delta > 6'd15) ? 4'd15 : rr_delta[3:0];
+      const encInterval = Math.max(0, Math.min(15, 15 - (rrInterval >> 2)));
+      const encDelta = (rrDelta > 15) ? 15 : (rrDelta & 0x0F);
+
+      const gi = [
+        (encInterval >> 0) & 1,
+        (encInterval >> 1) & 1,
+        (encInterval >> 2) & 1,
+        (encInterval >> 3) & 1
+      ];
+
+      const gd = [
+        (encDelta >> 0) & 1,
+        (encDelta >> 1) & 1,
+        (encDelta >> 2) & 1,
+        (encDelta >> 3) & 1
+      ];
+
+      // 3. reservoir.v & lif_neuron.v:
+      const currentSpikes = [0, 0, 0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < 8; i++) {
+        let spikeIn = 0;
+        if (i < 4) {
+          spikeIn = gi[i];
+        } else if (i < 7) {
+          spikeIn = gd[i - 4];
+        } else {
+          // Neuron 7: input is gd[3] | spike_reg1
+          spikeIn = gd[3] | spikeReg1;
+        }
+
+        if (neuronPotentials[i] >= NEURONS[i].thresh) {
+          currentSpikes[i] = 1;
+          neuronPotentials[i] = 0;
+        } else {
+          currentSpikes[i] = 0;
+          // Arithmetic right-shift leak + synaptic integration:
+          // potential <= (potential >> 1) + (spike_in ? WEIGHT : 0)
+          const nextV = (neuronPotentials[i] >> 1) + (spikeIn ? NEURONS[i].weight : 0);
+          neuronPotentials[i] = Math.min(15, nextV);
+        }
+      }
+
+      // Latch recurrent flip-flop: spike_reg1 <= neuron 0 spike
+      spikeReg1 = currentSpikes[0];
+      neuronSpikes = currentSpikes;
+      anySpike = currentSpikes.some(s => s > 0) ? 1 : 0;
+
+      // 4. readout.v: Dual-Window Voting
+      let cycleSum = 0;
+      for (let i = 0; i < 8; i++) {
+        if (currentSpikes[i]) cycleSum += READOUT_WEIGHTS[i];
+      }
+
+      accumFast += cycleSum;
+      accumSlow += cycleSum;
+      beatFast++;
+      beatSlow++;
+
+      // Fast Window (8 beats)
+      if (beatFast >= 8) {
+        afibFast = (accumFast > -1) ? 1 : 0;
+        accumFastSnap = accumFast;
+        accumFast = 0;
+        beatFast = 0;
+      }
+
+      // Slow Window (16 beats)
+      if (beatSlow >= 16) {
+        afibSlow = (accumSlow > -2) ? 1 : 0;
+        accumSlow = 0;
+        beatSlow = 0;
+        afibFlag = (afibFast && afibSlow) ? 1 : 0;
+        outValid = 1;
+
+        // Confidence calculation from readout.v:
+        if (accumFastSnap >= 7) confidence = 7;
+        else if (accumFastSnap >= 3) confidence = 6;
+        else if (accumFastSnap >= -1) confidence = 5;
+        else if (accumFastSnap <= -9) confidence = 0;
+        else if (accumFastSnap <= -5) confidence = 1;
+        else confidence = 2;
+      } else {
+        outValid = 0;
+      }
+
+      // Visual flash on action potential
+      const flash = document.getElementById('spike-flash');
+      if (flash && anySpike) {
+        flash.style.opacity = '1';
+        setTimeout(() => { flash.style.opacity = '0'; }, 70);
+      }
+
+      // Audio blip if audio enabled
+      if (simAudioEnabled) {
+        if (type === 'afib') playBlip(680, 'sawtooth', 0.08, 0.04);
+        else playBlip(380, 'sine', 0.06, 0.02);
+      }
+
+      // Update UI Telemetry & Indicators
+      updateSimulatorUI(type);
+
+      // Reset asystole watch timer (>1.6s without beat)
+      clearTimeout(asystoleTimer);
+      asystoleTimer = setTimeout(() => {
+        triggerAsystole();
+      }, 1650);
+    }
+
+    function injectBeat(type) {
+      pendingRPeakType = type;
+      ecgPhase = 0.55; // Jump directly to QRS onset for immediate visual response
+    }
+
+    function triggerAsystole() {
+      asystoleFlag = true;
+      const statusEl = document.getElementById('sim-status');
+      const asystolePin = document.getElementById('sim-asystole-pin');
+      if (statusEl) statusEl.textContent = "FSM: ASYSTOLE ALARM (uio[0]=1) · >1.6s PAUSE";
+      if (asystolePin) {
+        asystolePin.textContent = "ALARM: PAUSE (>1.6s)";
+        asystolePin.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse";
+      }
+    }
+
+    function updateSimulatorUI(type) {
+      // Telemetry Bar
+      const powerEl = document.getElementById('sim-power');
+      const bpmEl = document.getElementById('sim-bpm');
+      const rrValEl = document.getElementById('sim-rr-val');
+      const deltaValEl = document.getElementById('sim-delta-val');
+      const statusEl = document.getElementById('sim-status');
+
+      if (powerEl) {
+        powerEl.textContent = "1.88 mW (Active 5µs)";
+        setTimeout(() => {
+          if (powerEl) powerEl.textContent = "8.4 nW (Idle)";
+        }, 140);
+      }
+      if (bpmEl) bpmEl.textContent = `${currentBPM} BPM`;
+      if (rrValEl) rrValEl.textContent = `${Math.round(rrInterval * 25.5)} ms [6'd${rrInterval}]`;
+      if (deltaValEl) deltaValEl.textContent = `${Math.round(rrDelta * 25.5)} ms [6'd${rrDelta}]`;
+
+      if (statusEl) {
+        statusEl.textContent = `FSM: ${outValid ? 'OUTPUT (10)' : 'RUN (01)'} · BEAT PROCESSED (${type.toUpperCase()})`;
+      }
+
+      // Recurrent Register Indicator
+      const recurrentEl = document.getElementById('sim-recurrent-flag');
+      if (recurrentEl) {
+        if (spikeReg1) {
+          recurrentEl.textContent = "spike_reg1 [ACTIVE]";
+          recurrentEl.className = "px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
+        } else {
+          recurrentEl.textContent = "spike_reg1 [OFF]";
+          recurrentEl.className = "px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+        }
+      }
+
+      // Update the 8 Neuron Cards
+      for (let i = 0; i < 8; i++) {
+        const vEl = document.getElementById(`neuron-v-${i}`);
+        const barEl = document.getElementById(`neuron-bar-${i}`);
+        const ledEl = document.getElementById(`neuron-led-${i}`);
+
+        if (vEl) vEl.textContent = neuronPotentials[i];
+        if (barEl) {
+          const pct = Math.min(100, Math.round((neuronPotentials[i] / 15) * 100));
+          barEl.style.width = `${pct}%`;
+        }
+        if (ledEl) {
+          if (neuronSpikes[i]) {
+            ledEl.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]";
+            setTimeout(() => {
+              if (ledEl) ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all";
+            }, 180);
+          } else {
+            ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all";
+          }
+        }
+      }
+
+      // Fast Window UI
+      const fastProgEl = document.getElementById('sim-fast-progress');
+      const fastAccumEl = document.getElementById('sim-accum-fast');
+      const fastMeterEl = document.getElementById('sim-fast-meter');
+      const fastStatusEl = document.getElementById('sim-fast-status');
+
+      if (fastProgEl) fastProgEl.textContent = `[${beatFast}/8 BEATS]`;
+      if (fastAccumEl) fastAccumEl.textContent = accumFast;
+      if (fastMeterEl) {
+        // Normalized -8 to +16 into 0% to 100%
+        const norm = Math.max(0, Math.min(100, Math.round(((accumFast + 8) / 24) * 100)));
+        fastMeterEl.style.width = `${norm}%`;
+      }
+      if (fastStatusEl) {
+        if (afibFast) {
+          fastStatusEl.textContent = "afib_fast: HIGH";
+          fastStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
+        } else {
+          fastStatusEl.textContent = "afib_fast: LOW";
+          fastStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+        }
+      }
+
+      // Slow Window UI
+      const slowProgEl = document.getElementById('sim-slow-progress');
+      const slowAccumEl = document.getElementById('sim-accum-slow');
+      const slowMeterEl = document.getElementById('sim-slow-meter');
+      const slowStatusEl = document.getElementById('sim-slow-status');
+
+      if (slowProgEl) slowProgEl.textContent = `[${beatSlow}/16 BEATS]`;
+      if (slowAccumEl) slowAccumEl.textContent = accumSlow;
+      if (slowMeterEl) {
+        const norm = Math.max(0, Math.min(100, Math.round(((accumSlow + 16) / 48) * 100)));
+        slowMeterEl.style.width = `${norm}%`;
+      }
+      if (slowStatusEl) {
+        if (afibSlow) {
+          slowStatusEl.textContent = "afib_slow: HIGH";
+          slowStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
+        } else {
+          slowStatusEl.textContent = "afib_slow: LOW";
+          slowStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+        }
+      }
+
+      // Pin Outputs
+      const afibFlagEl = document.getElementById('sim-afib-flag');
+      const outValidEl = document.getElementById('sim-out-valid');
+      const anySpikeEl = document.getElementById('sim-any-spike');
+      const confEl = document.getElementById('sim-confidence');
+      const asystolePin = document.getElementById('sim-asystole-pin');
+
+      if (afibFlagEl) {
+        if (afibFlag) {
+          afibFlagEl.textContent = "ALERT: AFIB DETECTED";
+          afibFlagEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/25 text-red-300 border border-red-500/50 animate-pulse";
+        } else {
+          afibFlagEl.textContent = "NORMAL SINUS";
+          afibFlagEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        }
+      }
+
+      if (outValidEl) outValidEl.textContent = outValid ? "1" : "0";
+      if (anySpikeEl) anySpikeEl.textContent = anySpike ? "1" : "0";
+      if (confEl) {
+        const pctMap = [0, 15, 30, 45, 60, 70, 85, 100];
+        confEl.textContent = `3'b${confidence.toString(2).padStart(3, '0')} (${pctMap[confidence]}%)`;
+      }
+      if (asystolePin && !asystoleFlag) {
+        asystolePin.textContent = "INACTIVE";
+        asystolePin.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+      }
+    }
+
+    function toggleAutoStream() {
+      autoStreamActive = !autoStreamActive;
+      const label = document.getElementById('auto-stream-label');
+      const btn = document.getElementById('btn-auto-stream');
+
+      if (autoStreamActive) {
+        if (label) label.textContent = "⏹ Stop Stream";
+        if (btn) btn.classList.add('border-amber-500', 'bg-amber-500/20');
+
+        let tick = 0;
+        autoInterval = setInterval(() => {
+          tick++;
+          // Generates a realistic pattern: alternating normal rhythm and AFib bursts
+          const isArrhythmia = (tick % 24 >= 10 && tick % 24 <= 19);
+          injectBeat(isArrhythmia ? 'afib' : 'normal');
+        }, 750);
+      } else {
+        if (label) label.textContent = "▶ Auto Stream";
+        if (btn) btn.classList.remove('border-amber-500', 'bg-amber-500/20');
+        if (autoInterval) clearInterval(autoInterval);
+      }
+    }
+
+    function resetSim() {
+      neuronPotentials = [0, 0, 0, 0, 0, 0, 0, 0];
+      neuronSpikes = [0, 0, 0, 0, 0, 0, 0, 0];
+      spikeReg1 = 0;
+      rrPrev = 32;
+      rrInterval = 32;
+      rrDelta = 0;
+      accumFast = 0;
+      beatFast = 0;
+      afibFast = 0;
+      accumFastSnap = 0;
+      accumSlow = 0;
+      beatSlow = 0;
+      afibSlow = 0;
+      afibFlag = 0;
+      outValid = 0;
+      anySpike = 0;
+      confidence = 2;
+      asystoleFlag = false;
+      currentBPM = 72;
+      ecgBuffer.fill(0);
+      for (let i = 0; i < RASTER_BUFFER_SIZE; i++) rasterHistory[i] = [0, 0, 0, 0, 0, 0, 0, 0];
+      updateSimulatorUI('normal');
+      const statusEl = document.getElementById('sim-status');
+      if (statusEl) statusEl.textContent = "FSM: RESET COMPLETE (rst_n asserted) · READY";
+    }
+
+    // ECG Waveform & Raster Oscilloscope Renderer
+    function renderOscilloscope() {
+      if (!ctx || !canvas) return;
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // CRT Channel Separator
+      const splitY = h * 0.58;
+      ctx.strokeStyle = '#21262d';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, splitY);
+      ctx.lineTo(w, splitY);
+      ctx.stroke();
+
+      // --- CHANNEL 1: ECG Waveform ---
+      // Generate instantaneous ECG sample
+      ecgPhase += 0.045;
+      let sample = 0;
+
+      // Check if we hit R-peak region
+      if (ecgPhase >= 0.65 && ecgPhase <= 0.75) {
+        // Q-wave dip then sharp R-peak
+        if (ecgPhase <= 0.68) sample = -0.25;
+        else if (ecgPhase <= 0.72) {
+          sample = 1.0; // Peak
+          if (pendingRPeakType) {
+            processHeartbeat(pendingRPeakType);
+            pendingRPeakType = null;
+          }
+        } else {
+          sample = -0.35; // S-wave dip
+        }
+      } else if (ecgPhase >= 0.85 && ecgPhase <= 1.05) {
+        // T-wave
+        sample = 0.22 * Math.sin(((ecgPhase - 0.85) / 0.2) * Math.PI);
+      } else if (ecgPhase >= 0.40 && ecgPhase <= 0.52) {
+        // P-wave
+        sample = 0.15 * Math.sin(((ecgPhase - 0.40) / 0.12) * Math.PI);
+      }
+
+      if (ecgPhase >= 1.4) {
+        ecgPhase = 0;
+        // In auto-mode or resting rhythm, if no pending injection, trigger normal beat
+        if (!autoStreamActive && !pendingRPeakType && (performance.now() - lastBeatTimestamp > 950)) {
+          pendingRPeakType = 'normal';
+        }
+      }
+
+      ecgBuffer.shift();
+      ecgBuffer.push(sample);
+
+      // Draw ECG trace
+      const ecgBaseline = splitY * 0.55;
+      const ecgAmp = splitY * 0.42;
+
+      ctx.shadowColor = '#10b981';
+      ctx.shadowBlur = 6;
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let i = 0; i < ecgBuffer.length; i++) {
+        const x = (i / (ecgBuffer.length - 1)) * w;
+        const y = ecgBaseline - (ecgBuffer[i] * ecgAmp);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Draw active scanner head on ECG
+      const headX = w;
+      const headY = ecgBaseline - (ecgBuffer[ecgBuffer.length - 1] * ecgAmp);
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(headX - 2, headY, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // --- CHANNEL 2: 8-Neuron Spike Raster Plot ---
+      // Shift raster buffer
+      rasterHistory.shift();
+      rasterHistory.push([...neuronSpikes]);
+
+      const rasterH = h - splitY - 8;
+      const rowH = rasterH / 8;
+
+      for (let n = 0; n < 8; n++) {
+        const rowY = splitY + 4 + (n * rowH) + (rowH * 0.5);
+        const isInterval = (n < 4);
+        const spikeColor = isInterval ? '#f59e0b' : '#38bdf8';
+
+        // Draw neuron raster line
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, rowY);
+        ctx.lineTo(w, rowY);
+        ctx.stroke();
+
+        // Draw spikes
+        for (let t = 0; t < rasterHistory.length; t++) {
+          if (rasterHistory[t][n]) {
+            const x = (t / (rasterHistory.length - 1)) * w;
+            ctx.fillStyle = spikeColor;
+            ctx.fillRect(x - 1.5, rowY - 3, 3, 6);
+          }
+        }
+      }
+
+      requestAnimationFrame(renderOscilloscope);
+    }
+
+    // Initialize Canvas on load
+    setTimeout(() => {
+      resizeCanvas();
+      requestAnimationFrame(renderOscilloscope);
+    }, 100);
+  </script>
+</body>
+</html>
