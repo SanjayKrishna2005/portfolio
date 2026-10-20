@@ -20,27 +20,53 @@
       theme: {
         extend: {
           colors: {
-            "surface": "#f9f9fa",
+            "surface": "#f9f8f6",
             "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f3f3f4",
-            "surface-container": "#eeeeef",
-            "surface-container-high": "#e8e8e9",
-            "surface-container-highest": "#e2e2e3",
-            "on-surface": "#1a1c1d",
-            "on-surface-variant": "#45474b",
-            "outline": "#76777b",
-            "outline-variant": "#d0d7de",
-            "primary": "#0d1117",
-            "primary-amber": "#d97706",
-            "amber-accent": "#f59e0b",
-            "amber-light": "#fef3c7",
-            "secondary": "#3a4d6b",
-            "dark-bg": "#0d1117",
-            "dark-surface": "#161b22",
-            "dark-surface-high": "#21262d",
-            "dark-border": "#30363d",
-            "dark-text": "#e6edf3",
-            "dark-text-muted": "#8b949e"
+            "surface-container-low": "#f4f3ef",
+            "surface-container": "#eceae4",
+            "surface-container-high": "#e4e1d9",
+            "surface-container-highest": "#dedad0",
+            "on-surface": "#1c1b18",
+            "on-surface-variant": "#4d4b45",
+            "outline": "#7f7c74",
+            "outline-variant": "#d4d0c7",
+            "primary": "#111215",
+            "primary-amber": "#e07a5f",
+            "amber-accent": "#e6c280",
+            "amber-light": "#fbeee8",
+            "secondary": "#4a5568",
+            "dark-bg": "#111215",
+            "dark-surface": "#191a1f",
+            "dark-surface-high": "#22232a",
+            "dark-border": "#2b2c34",
+            "dark-text": "#f7f4ee",
+            "dark-text-muted": "#a2a09c",
+            copper: {
+              300: '#f0aa95',
+              400: '#e89073',
+              500: '#e07a5f',
+              600: '#c8684d',
+              700: '#b0543c'
+            },
+            gold: {
+              300: '#f3d9a6',
+              400: '#eed08f',
+              500: '#e6c280',
+              600: '#caa35e'
+            },
+            amber: {
+              50: '#fdf9f7',
+              100: '#faeee8',
+              200: '#f5dcd2',
+              300: '#e6c280', // Wirebond Champagne Gold
+              400: '#e89073', // Light Copper
+              500: '#e07a5f', // Raw Copper (Primary Accent)
+              600: '#c8684d', // Deep Terracotta
+              700: '#b0543c',
+              800: '#944430',
+              900: '#7a3828',
+              950: '#2a1612'
+            }
           },
           fontFamily: {
             "headline-lg": ["EB Garamond", "serif"],
@@ -78,14 +104,14 @@
       letter-spacing: -0.04em;
     }
     ::selection {
-      background-color: #d97706;
+      background-color: #e07a5f;
       color: #ffffff;
     }
     .crt-grid {
       background-size: 20px 20px;
       background-image: 
-        linear-gradient(to right, rgba(217, 119, 6, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(217, 119, 6, 0.08) 1px, transparent 1px);
+        linear-gradient(to right, rgba(224, 122, 95, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(224, 122, 95, 0.08) 1px, transparent 1px);
     }
     @keyframes pulse-amber {
       0%, 100% { opacity: 1; transform: scale(1); }
@@ -115,8 +141,8 @@
       top: -4px;
       width: 100%;
       height: 3px;
-      background: #f59e0b;
-      box-shadow: 0 0 15px 3px rgba(245, 158, 11, 0.8), 0 0 30px 6px rgba(217, 119, 6, 0.4);
+      background: #e07a5f;
+      box-shadow: 0 0 15px 3px rgba(224, 122, 95, 0.8), 0 0 30px 6px rgba(200, 104, 77, 0.4);
       z-index: 99;
       pointer-events: none;
       opacity: 0;
@@ -141,9 +167,9 @@
       top: 0;
       height: 0%;
       width: 2px;
-      background: #d97706;
+      background: #e07a5f;
       transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 0 8px rgba(217, 119, 6, 0.6);
+      box-shadow: 0 0 8px rgba(224, 122, 95, 0.6);
     }
     .axon-card:hover::before {
       height: 100%;
@@ -178,17 +204,17 @@
       transition: text-shadow 0.2s ease;
     }
     #engineer-name-display:hover {
-      text-shadow: 0 0 20px rgba(217, 119, 6, 0.5), 0 0 2px rgba(217, 119, 6, 0.9);
+      text-shadow: 0 0 20px rgba(224, 122, 95, 0.5), 0 0 2px rgba(224, 122, 95, 0.9);
     }
     .glyph-stream {
       display: inline-block;
       font-family: 'Silkscreen', monospace;
-      color: #d97706;
+      color: #e07a5f;
       animation: glyphFlicker 0.12s infinite alternate;
     }
     @keyframes glyphFlicker {
       0% { opacity: 0.6; filter: blur(0px); }
-      100% { opacity: 1; filter: blur(0.4px); text-shadow: 0 0 8px rgba(217, 119, 6, 0.8); }
+      100% { opacity: 1; filter: blur(0.4px); text-shadow: 0 0 8px rgba(224, 122, 95, 0.8); }
     }
 
     /* Vintage Cassette Tape Reel Rotation */
@@ -798,28 +824,28 @@
       </div>
 
       <!-- Oscilloscope & Logic Analyzer Chassis Box -->
-      <div class="w-full bg-[#111418] rounded-md border border-amber-500/40 p-4 md:p-6 shadow-[4px_4px_0px_#d97706] text-white">
+      <div class="w-full bg-[#191a1f] rounded-md border border-amber-500/40 p-4 md:p-6 shadow-[4px_4px_0px_#b0543c] text-white">
         
         <!-- Top Status Telemetry -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#21262d] font-mono text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#2b2c34] font-mono text-xs">
           <div class="flex flex-wrap items-center gap-3">
             <span class="text-amber-400 font-bold tracking-wider flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-amber-400"></span>
               CLK: 10.0 MHz (PRESCALER 512×)
             </span>
-            <span class="text-[#8b949e]">|</span>
-            <span class="text-[#c9d1d9]" id="sim-status">FSM: RUN (01) · READY FOR R-PEAK</span>
+            <span class="text-[#a2a09c]">|</span>
+            <span class="text-[#f7f4ee]" id="sim-status">FSM: RUN (01) · READY FOR R-PEAK</span>
           </div>
           <div class="flex flex-wrap items-center gap-4 text-[11px]">
             <span class="text-amber-300">EST. POWER: <strong id="sim-power">8.4 nW (Idle)</strong></span>
-            <span class="text-[#8b949e]">HEART RATE: <strong class="text-white" id="sim-bpm">72 BPM</strong></span>
-            <span class="text-[#8b949e]">RR INT: <strong class="text-white" id="sim-rr-val">833 ms [6'd32]</strong></span>
-            <span class="text-[#8b949e]">ΔRR (HRV): <strong class="text-white" id="sim-delta-val">4 ms [6'd0]</strong></span>
+            <span class="text-[#a2a09c]">HEART RATE: <strong class="text-white" id="sim-bpm">72 BPM</strong></span>
+            <span class="text-[#a2a09c]">RR INT: <strong class="text-white" id="sim-rr-val">833 ms [6'd32]</strong></span>
+            <span class="text-[#a2a09c]">ΔRR (HRV): <strong class="text-white" id="sim-delta-val">4 ms [6'd0]</strong></span>
           </div>
         </div>
 
         <!-- Oscilloscope Waveform Canvas -->
-        <div class="relative w-full h-56 md:h-64 my-4 bg-[#080a0c] rounded border border-[#21262d] crt-grid overflow-hidden">
+        <div class="relative w-full h-56 md:h-64 my-4 bg-[#111215] rounded border border-[#2b2c34] crt-grid overflow-hidden">
           <canvas id="lif-canvas" class="w-full h-full block"></canvas>
           
           <div class="absolute left-3 top-2 font-mono text-[10px] text-amber-400/90 bg-black/75 px-1.5 py-0.5 rounded border border-amber-500/30 pointer-events-none flex items-center gap-1.5">
@@ -827,7 +853,7 @@
             CHAN 1: ECG ANALOG WAVEFORM (R-PEAK DETECTOR)
           </div>
 
-          <div class="absolute left-3 bottom-2 font-mono text-[10px] text-sky-400/90 bg-black/75 px-1.5 py-0.5 rounded border border-sky-500/30 pointer-events-none">
+          <div class="absolute left-3 bottom-2 font-mono text-[10px] text-amber-300/90 bg-black/75 px-1.5 py-0.5 rounded border border-amber-300/30 pointer-events-none">
             CHAN 2: 8-NEURON RESERVOIR SPIKE RASTER
           </div>
 
@@ -835,137 +861,137 @@
         </div>
 
         <!-- Middle Section: 8-LIF Neuron Reservoir Matrix -->
-        <div class="mb-5 bg-[#0a0d10] p-3.5 md:p-4 rounded border border-[#21262d]">
-          <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#21262d] text-xs font-mono">
+        <div class="mb-5 bg-[#14151a] p-3.5 md:p-4 rounded border border-[#2b2c34]">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#2b2c34] text-xs font-mono">
             <span class="text-amber-400 font-bold tracking-wider flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm text-amber-400">memory</span>
               8-LIF RESERVOIR SILICON MATRIX (4-BIT POTENTIALS · LEAK: V &gt;&gt; 1)
             </span>
             <div class="flex items-center gap-3 text-[11px]">
-              <span class="text-[#8b949e]">RECURRENT SYNAPSE (N0 &rarr; N7):</span>
-              <span id="sim-recurrent-flag" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">spike_reg1 [OFF]</span>
+              <span class="text-[#a2a09c]">RECURRENT SYNAPSE (N0 &rarr; N7):</span>
+              <span id="sim-recurrent-flag" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]">spike_reg1 [OFF]</span>
             </div>
           </div>
 
           <!-- The 8 Neurons Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 mt-3 text-xs font-mono">
             <!-- N0: RR Interval Bit 0 -->
-            <div id="neuron-card-0" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-0" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-amber-400 text-[11px]">N0 (RR[0])</span>
-                <span id="neuron-led-0" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span id="neuron-led-0" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=5 &middot; W=4</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+              <div class="text-[10px] text-[#a2a09c]">&theta;=5 &middot; W=4</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
                 <div id="neuron-bar-0" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-0" class="text-white">0</strong>/15</span>
                 <span class="text-amber-500/80">&rarr; reg1</span>
               </div>
             </div>
 
             <!-- N1: RR Interval Bit 1 -->
-            <div id="neuron-card-1" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-1" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-amber-400 text-[11px]">N1 (RR[1])</span>
-                <span id="neuron-led-1" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span id="neuron-led-1" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=5</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+              <div class="text-[10px] text-[#a2a09c]">&theta;=4 &middot; W=5</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
                 <div id="neuron-bar-1" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-1" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N2: RR Interval Bit 2 -->
-            <div id="neuron-card-2" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-2" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-amber-400 text-[11px]">N2 (RR[2])</span>
-                <span id="neuron-led-2" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span id="neuron-led-2" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=6 &middot; W=3</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+              <div class="text-[10px] text-[#a2a09c]">&theta;=6 &middot; W=3</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
                 <div id="neuron-bar-2" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-2" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N3: RR Interval Bit 3 -->
-            <div id="neuron-card-3" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-3" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-amber-400 text-[11px]">N3 (RR[3])</span>
-                <span id="neuron-led-3" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span id="neuron-led-3" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=6</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+              <div class="text-[10px] text-[#a2a09c]">&theta;=4 &middot; W=6</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
                 <div id="neuron-bar-3" class="h-full bg-amber-500 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-3" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N4: HRV Delta Bit 0 -->
-            <div id="neuron-card-4" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-4" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
-                <span class="font-bold text-sky-400 text-[11px]">N4 (Δ[0])</span>
-                <span id="neuron-led-4" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span class="font-bold text-amber-300 text-[11px]">N4 (Δ[0])</span>
+                <span id="neuron-led-4" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=3 &middot; W=5</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
-                <div id="neuron-bar-4" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              <div class="text-[10px] text-[#a2a09c]">&theta;=3 &middot; W=5</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-4" class="h-full bg-amber-300 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-4" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N5: HRV Delta Bit 1 -->
-            <div id="neuron-card-5" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-5" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
-                <span class="font-bold text-sky-400 text-[11px]">N5 (Δ[1])</span>
-                <span id="neuron-led-5" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span class="font-bold text-amber-300 text-[11px]">N5 (Δ[1])</span>
+                <span id="neuron-led-5" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=3 &middot; W=4</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
-                <div id="neuron-bar-5" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              <div class="text-[10px] text-[#a2a09c]">&theta;=3 &middot; W=4</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-5" class="h-full bg-amber-300 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-5" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N6: HRV Delta Bit 2 -->
-            <div id="neuron-card-6" class="bg-[#12161b] p-2 rounded border border-[#21262d] flex flex-col gap-1 transition-all">
+            <div id="neuron-card-6" class="bg-[#1c1d23] p-2 rounded border border-[#2b2c34] flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
-                <span class="font-bold text-sky-400 text-[11px]">N6 (Δ[2])</span>
-                <span id="neuron-led-6" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span class="font-bold text-amber-300 text-[11px]">N6 (Δ[2])</span>
+                <span id="neuron-led-6" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=4 &middot; W=6</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
-                <div id="neuron-bar-6" class="h-full bg-sky-500 transition-all duration-75" style="width: 0%"></div>
+              <div class="text-[10px] text-[#a2a09c]">&theta;=4 &middot; W=6</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
+                <div id="neuron-bar-6" class="h-full bg-amber-300 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-6" class="text-white">0</strong>/15</span>
               </div>
             </div>
 
             <!-- N7: HRV Delta Bit 3 + Recurrent Loop -->
-            <div id="neuron-card-7" class="bg-[#12161b] p-2 rounded border border-amber-500/40 flex flex-col gap-1 transition-all">
+            <div id="neuron-card-7" class="bg-[#1c1d23] p-2 rounded border border-amber-500/40 flex flex-col gap-1 transition-all">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-amber-300 text-[11px]">N7 (Δ|reg)</span>
-                <span id="neuron-led-7" class="w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all"></span>
+                <span id="neuron-led-7" class="w-2.5 h-2.5 rounded-full bg-[#353640] transition-all"></span>
               </div>
-              <div class="text-[10px] text-[#8b949e]">&theta;=2 &middot; W=3</div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden mt-1 relative">
+              <div class="text-[10px] text-[#a2a09c]">&theta;=2 &middot; W=3</div>
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden mt-1 relative">
                 <div id="neuron-bar-7" class="h-full bg-amber-400 transition-all duration-75" style="width: 0%"></div>
               </div>
-              <div class="flex justify-between text-[10px] text-[#8b949e]">
+              <div class="flex justify-between text-[10px] text-[#a2a09c]">
                 <span>V: <strong id="neuron-v-7" class="text-white">0</strong>/15</span>
                 <span class="text-amber-400 text-[9px] font-bold">&larr; reg1</span>
               </div>
@@ -978,59 +1004,59 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5 font-mono text-xs">
           
           <!-- Card 1: Fast Window -->
-          <div class="bg-[#0a0d10] p-3 rounded border border-[#21262d] flex flex-col justify-between">
+          <div class="bg-[#14151a] p-3 rounded border border-[#2b2c34] flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#2b2c34]">
                 <span>FAST WINDOW (8-BEAT)</span>
                 <span id="sim-fast-progress" class="text-white text-[11px]">[0/8 BEATS]</span>
               </div>
-              <p class="text-[11px] text-[#8b949e] mt-1.5 leading-snug">
+              <p class="text-[11px] text-[#a2a09c] mt-1.5 leading-snug">
                 Rapid transient detector. Evaluates signed sum of spikes against threshold &gt; -1.
               </p>
             </div>
             <div class="mt-3">
-              <div class="flex justify-between text-[10px] text-[#8b949e] mb-1">
+              <div class="flex justify-between text-[10px] text-[#a2a09c] mb-1">
                 <span>ACCUM_FAST: <strong id="sim-accum-fast" class="text-white">0</strong></span>
                 <span>THRESH: &gt; -1</span>
               </div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden">
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden">
                 <div id="sim-fast-meter" class="h-full bg-amber-500 transition-all duration-75" style="width: 50%"></div>
               </div>
               <div class="mt-2 text-right">
-                <span id="sim-fast-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">afib_fast: LOW</span>
+                <span id="sim-fast-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]">afib_fast: LOW</span>
               </div>
             </div>
           </div>
 
           <!-- Card 2: Slow Window -->
-          <div class="bg-[#0a0d10] p-3 rounded border border-[#21262d] flex flex-col justify-between">
+          <div class="bg-[#14151a] p-3 rounded border border-[#2b2c34] flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#2b2c34]">
                 <span>SLOW WINDOW (16-BEAT)</span>
                 <span id="sim-slow-progress" class="text-white text-[11px]">[0/16 BEATS]</span>
               </div>
-              <p class="text-[11px] text-[#8b949e] mt-1.5 leading-snug">
+              <p class="text-[11px] text-[#a2a09c] mt-1.5 leading-snug">
                 Sustained rhythm validator. Closes every 16 beats to suppress isolated PVC false-alarms.
               </p>
             </div>
             <div class="mt-3">
-              <div class="flex justify-between text-[10px] text-[#8b949e] mb-1">
+              <div class="flex justify-between text-[10px] text-[#a2a09c] mb-1">
                 <span>ACCUM_SLOW: <strong id="sim-accum-slow" class="text-white">0</strong></span>
                 <span>THRESH: &gt; -2</span>
               </div>
-              <div class="w-full bg-[#1a2027] h-2 rounded overflow-hidden">
+              <div class="w-full bg-[#24252e] h-2 rounded overflow-hidden">
                 <div id="sim-slow-meter" class="h-full bg-amber-500 transition-all duration-75" style="width: 50%"></div>
               </div>
               <div class="mt-2 text-right">
-                <span id="sim-slow-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">afib_slow: LOW</span>
+                <span id="sim-slow-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]">afib_slow: LOW</span>
               </div>
             </div>
           </div>
 
           <!-- Card 3: Silicon Pin Output -->
-          <div class="bg-[#0a0d10] p-3 rounded border border-amber-500/40 flex flex-col justify-between">
+          <div class="bg-[#14151a] p-3 rounded border border-amber-500/40 flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#21262d]">
+              <div class="flex items-center justify-between text-amber-400 font-bold pb-1.5 border-b border-[#2b2c34]">
                 <span>SILICON PINOUT (uo_out / uio_out)</span>
                 <span class="text-emerald-400 text-[10px] font-bold flex items-center gap-1">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ACTIVE
@@ -1038,26 +1064,26 @@
               </div>
               <div class="mt-2 flex flex-col gap-1.5">
                 <!-- AFIB FLAG -->
-                <div class="flex items-center justify-between p-1.5 rounded bg-[#12161b] border border-[#21262d]">
-                  <span class="text-[11px] font-bold text-[#c9d1d9]">uo[0] AFIB_FLAG:</span>
+                <div class="flex items-center justify-between p-1.5 rounded bg-[#1c1d23] border border-[#2b2c34]">
+                  <span class="text-[11px] font-bold text-[#f7f4ee]">uo[0] AFIB_FLAG:</span>
                   <span id="sim-afib-flag" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     NORMAL SINUS
                   </span>
                 </div>
                 <!-- OUT_VALID & ANY_SPIKE -->
-                <div class="flex items-center justify-between text-[10px] text-[#8b949e] px-1">
+                <div class="flex items-center justify-between text-[10px] text-[#a2a09c] px-1">
                   <span>uo[1] OUT_VALID: <strong id="sim-out-valid" class="text-white">0</strong></span>
                   <span>uo[2] ANY_SPIKE: <strong id="sim-any-spike" class="text-white">0</strong></span>
                 </div>
                 <!-- CONFIDENCE SCORE -->
-                <div class="flex items-center justify-between text-[10px] text-[#8b949e] px-1">
+                <div class="flex items-center justify-between text-[10px] text-[#a2a09c] px-1">
                   <span>uo[7:5] CONFIDENCE:</span>
                   <span id="sim-confidence" class="font-bold text-amber-400">3'b010 (30%)</span>
                 </div>
                 <!-- ASYSTOLE ALARM -->
-                <div class="flex items-center justify-between p-1.5 rounded bg-[#12161b] border border-[#21262d]">
-                  <span class="text-[11px] font-bold text-[#c9d1d9]">uio[0] ASYSTOLE:</span>
-                  <span id="sim-asystole-pin" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]">
+                <div class="flex items-center justify-between p-1.5 rounded bg-[#1c1d23] border border-[#2b2c34]">
+                  <span class="text-[11px] font-bold text-[#f7f4ee]">uio[0] ASYSTOLE:</span>
+                  <span id="sim-asystole-pin" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]">
                     INACTIVE
                   </span>
                 </div>
@@ -1068,11 +1094,11 @@
         </div>
 
         <!-- Controls Toolbar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#21262d] font-mono text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#2b2c34] font-mono text-xs">
           
           <!-- Injection Buttons -->
           <div class="flex flex-wrap items-center gap-2">
-            <button id="btn-normal-beat" onclick="injectBeat('normal')" class="bg-[#21262d] hover:bg-[#30363d] active:bg-amber-600 text-white py-2 px-3 rounded border border-[#30363d] hover:border-amber-400 transition-all flex items-center gap-1.5">
+            <button id="btn-normal-beat" onclick="injectBeat('normal')" class="bg-[#282931] hover:bg-[#353640] active:bg-amber-600 text-white py-2 px-3 rounded border border-[#353640] hover:border-amber-400 transition-all flex items-center gap-1.5">
               <span class="material-symbols-outlined text-[15px] text-emerald-400">favorite</span>
               Normal Beat (72 BPM)
             </button>
@@ -1082,7 +1108,7 @@
               AFib Burst (160 BPM, ΔRR)
             </button>
 
-            <button onclick="injectBeat('pvc')" class="bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] py-2 px-2.5 rounded border border-[#30363d] transition-all" title="Isolated premature ventricular contraction">
+            <button onclick="injectBeat('pvc')" class="bg-[#282931] hover:bg-[#353640] text-[#f7f4ee] py-2 px-2.5 rounded border border-[#353640] transition-all" title="Isolated premature ventricular contraction">
               Isolated PVC
             </button>
 
@@ -1090,18 +1116,18 @@
               Asystole (>1.6s)
             </button>
 
-            <button id="btn-auto-stream" onclick="toggleAutoStream()" class="bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] py-2 px-3 rounded border border-[#30363d] transition-all">
+            <button id="btn-auto-stream" onclick="toggleAutoStream()" class="bg-[#282931] hover:bg-[#353640] text-[#f7f4ee] py-2 px-3 rounded border border-[#353640] transition-all">
               <span id="auto-stream-label">&blacktriangleright; Auto Stream</span>
             </button>
           </div>
 
           <!-- Utilities & Reset -->
           <div class="flex items-center gap-3">
-            <button id="btn-audio-toggle" onclick="toggleSimAudio()" class="p-1.5 rounded bg-[#21262d] text-[#8b949e] hover:text-white transition-colors" title="Toggle Synthesizer Audio">
+            <button id="btn-audio-toggle" onclick="toggleSimAudio()" class="p-1.5 rounded bg-[#282931] text-[#a2a09c] hover:text-white transition-colors" title="Toggle Synthesizer Audio">
               <span id="audio-icon" class="material-symbols-outlined text-[17px]">volume_off</span>
             </button>
 
-            <button onclick="resetSim()" class="p-1.5 rounded bg-[#21262d] text-[#8b949e] hover:text-white transition-colors" title="Hardware Reset (rst_n = 0)">
+            <button onclick="resetSim()" class="p-1.5 rounded bg-[#282931] text-[#a2a09c] hover:text-white transition-colors" title="Hardware Reset (rst_n = 0)">
               <span class="material-symbols-outlined text-[17px]">restart_alt</span>
             </button>
           </div>
@@ -1155,7 +1181,7 @@
             <p>
               The biological Leaky Integrate-and-Fire (LIF) model defines membrane potential dynamics as continuous integration with exponential decay:
             </p>
-            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
               &tau;_m &middot; (dV/dt) = -(V - V_rest) + R_m &middot; I(t)
             </div>
             <p>
@@ -1164,7 +1190,7 @@
             <p>
               In Verilog, the entire neuron compiles to:
             </p>
-            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-emerald-400 overflow-x-auto">
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
 <pre>always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         potential &lt;= 4'd0;
@@ -1194,7 +1220,7 @@ end</pre>
             <p>
               To solve this within our 1,000-cell budget, we introduced a single 1-bit cross-coupling register: <code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded font-bold">spike_reg1</code>. On every incoming beat, <code class="font-mono text-xs">spike_reg1</code> latches the spike output of rate neuron <strong>N0</strong> and injects it as an additional excitation into delta neuron <strong>N7</strong> on the subsequent beat:
             </p>
-            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
 <pre>// In reservoir.v:
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) spike_reg1 &lt;= 1'b0;
@@ -1232,25 +1258,25 @@ lif_neuron #(.THRESHOLD(8'd2), .WEIGHT(3'd3)) n7 (
               Synthesized using Yosys and placed/routed with OpenLane against the <code class="font-mono text-xs">sky130_fd_sc_hd</code> standard cell library:
             </p>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-2 font-mono text-xs">
-              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
-                <div class="text-[#8b949e] text-[10px]">TOTAL CELL COUNT</div>
+              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
+                <div class="text-[#a2a09c] text-[10px]">TOTAL CELL COUNT</div>
                 <div class="text-xl font-bold text-amber-400 mt-1">959</div>
-                <div class="text-[10px] text-[#8b949e]">Tile Budget: 1,000</div>
+                <div class="text-[10px] text-[#a2a09c]">Tile Budget: 1,000</div>
               </div>
-              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
-                <div class="text-[#8b949e] text-[10px]">CORE UTILIZATION</div>
+              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
+                <div class="text-[#a2a09c] text-[10px]">CORE UTILIZATION</div>
                 <div class="text-xl font-bold text-amber-400 mt-1">48.7%</div>
-                <div class="text-[10px] text-[#8b949e]">Zero DRC violations</div>
+                <div class="text-[10px] text-[#a2a09c]">Zero DRC violations</div>
               </div>
-              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
-                <div class="text-[#8b949e] text-[10px]">OPERATING FREQ</div>
+              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
+                <div class="text-[#a2a09c] text-[10px]">OPERATING FREQ</div>
                 <div class="text-xl font-bold text-emerald-400 mt-1">10.0 MHz</div>
-                <div class="text-[10px] text-[#8b949e]">Setup Slack: +42.1 ns</div>
+                <div class="text-[10px] text-[#a2a09c]">Setup Slack: +42.1 ns</div>
               </div>
-              <div class="p-3 bg-[#0a0d10] rounded border border-[#21262d]">
-                <div class="text-[#8b949e] text-[10px]">QUIESCENT POWER</div>
+              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
+                <div class="text-[#a2a09c] text-[10px]">QUIESCENT POWER</div>
                 <div class="text-xl font-bold text-sky-400 mt-1">8.4 nW</div>
-                <div class="text-[10px] text-[#8b949e]">Between beats</div>
+                <div class="text-[10px] text-[#a2a09c]">Between beats</div>
               </div>
             </div>
             <p>
@@ -1291,7 +1317,7 @@ lif_neuron #(.THRESHOLD(8'd2), .WEIGHT(3'd3)) n7 (
             <p>
               To overcome this, we developed the <strong>Degree of Connectivity Index (DCI)</strong>: a topological matrix metric invariant under source/drain permutations:
             </p>
-            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
               W_DCI(u, v) = &sum;_{k=1}^{d} [ A^k(u, v) / (deg(u) &middot; deg(v)) ]
             </div>
             <p>
@@ -1317,7 +1343,7 @@ lif_neuron #(.THRESHOLD(8'd2), .WEIGHT(3'd3)) n7 (
             <p>
               Brute-forcing an input sequence across 76 flip-flops over 122 cycles would require exploring $2^{76 \times 122}$ states. Instead, we translated the recovered synthesizable Verilog directly into first-order propositional constraints for the <strong>Z3 SMT solver</strong>:
             </p>
-            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-emerald-400 overflow-x-auto">
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
 <pre>from z3 import *
 
 solver = Solver()
@@ -1344,7 +1370,7 @@ solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
             <p>
               Tracing the netlist logic on Pin 42 revealed a hardware zero-day:
             </p>
-            <p class="p-3 bg-[#0d1117] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+            <p class="p-3 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
               The layout engineer had optimized the anti-adjacency checking cone using a tree of 2-input XOR and AND gates, but had omitted the diagonal boundary condition at index (10, 10). Under specific multi-cycle input skew, an unconstrained race condition disabled the adjacency fault latch!
             </p>
             <p>
@@ -1372,7 +1398,7 @@ solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
             <p>
               Every computer we build is held hostage by a relentless metronome: the synchronous clock. In modern CMOS VLSI, dynamic power dissipation is governed by the charging and discharging of gate and wire capacitances:
             </p>
-            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
               P_{dynamic} = &alpha; &middot; C_{load} &middot; V_{dd}^2 &middot; f
             </div>
             <p>
@@ -1408,7 +1434,7 @@ solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
             <p>
               The average continuous power dissipation is calculated as:
             </p>
-            <div class="p-3 bg-[#0d1117] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
               P_{avg} = [ (5 &mu;s &middot; 1.88 mW) + (999,995 &mu;s &middot; 8.4 nW) ] / 1.0 s &approx; 17.8 nW
             </div>
             <p>
@@ -1467,7 +1493,7 @@ solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
             <p>
               Every multiply-accumulate operation in the NPU decomposes into a clean, gate-level spatial hierarchy:
             </p>
-            <div class="p-3.5 bg-[#0a0d10] rounded border border-[#21262d] font-mono text-xs text-amber-300 overflow-x-auto">
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
 <pre>Gate Primitives (Half-Adders, Full-Adders, AND Gates)
        │
        ▼
@@ -1489,7 +1515,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
             <p>
               The defining breakthrough of our systolic re-architecture is per-row precision scheduling:
             </p>
-            <p class="p-3 bg-[#0d1117] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+            <p class="p-3 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
               When weights are broadcast into the mesh, each row latches its own mode configuration tag <code>{sx, sy, mode}</code> simultaneously with its weight operands. Row 0 can process INT8 for a high-precision sensitive channel, while Row 3 simultaneously computes INT2 for a noise-tolerant feature map on the exact same clock cycle.
             </p>
             <p>
@@ -1681,7 +1707,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
   </main>
 
   <!-- RETRO MINI AUDIO & LAB CONTROLLER DOCK -->
-  <aside aria-label="Audio player widget" class="fixed bottom-4 left-4 z-50 flex items-center bg-[#eaecef] dark:bg-[#161b22] border border-[#d0d7de] dark:border-[#30363d] p-2 gap-3 shadow-[2px_2px_0px_#0d1117] dark:shadow-[2px_2px_0px_#d97706] text-on-surface dark:text-dark-text select-none rounded-sm">
+  <aside aria-label="Audio player widget" class="fixed bottom-4 left-4 z-50 flex items-center bg-[#eaecef] dark:bg-[#191a1f] border border-[#d0d7de] dark:border-[#2b2c34] p-2 gap-3 shadow-[2px_2px_0px_#111215] dark:shadow-[2px_2px_0px_#b0543c] text-on-surface dark:text-dark-text select-none rounded-sm">
     <!-- Dark Mode Toggle Button -->
     <button id="theme-toggle-btn" aria-label="Toggle Night Mode" class="w-6 h-6 flex items-center justify-center bg-surface-container dark:bg-dark-surface-high border border-outline-variant dark:border-dark-border hover:bg-amber-500 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 transition-colors text-on-surface-variant dark:text-dark-text-muted" type="button" onclick="toggleDarkMode()">
       <span class="material-symbols-outlined text-[14px]" id="theme-icon">dark_mode</span>
@@ -1699,7 +1725,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         <span class="text-on-surface-variant dark:text-dark-text-muted text-[10px]" id="audio-artist">Sanjay Krishna</span>
       </div>
       <!-- Linear Track Bar with Square Thumb -->
-      <div class="w-24 h-1 bg-[#d0d7de] dark:bg-[#30363d] relative flex items-center cursor-pointer" onclick="cycleSynthTone()">
+      <div class="w-24 h-1 bg-[#d0d7de] dark:bg-[#2b2c34] relative flex items-center cursor-pointer" onclick="cycleSynthTone()">
         <div id="audio-bar" class="h-full bg-amber-600 dark:bg-amber-500 w-1/3 transition-all duration-300"></div>
         <div id="audio-thumb" class="w-2 h-2 bg-amber-600 dark:bg-amber-500 absolute left-1/3 -translate-x-1/2"></div>
       </div>
@@ -2205,7 +2231,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           y3: isHorizontal ? startY + seg2 : startY + seg1,
           pulseProgress: Math.random(),
           pulseSpeed: 0.002 + Math.random() * 0.003,
-          color: Math.random() > 0.3 ? '#d97706' : '#3a4d6b'
+          color: Math.random() > 0.4 ? '#e07a5f' : '#e6c280'
         });
       }
     }
@@ -2255,7 +2281,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           glowBoost = 1 + (150 - dist) / 30;
         }
 
-        bgCtx.fillStyle = '#f59e0b';
+        bgCtx.fillStyle = '#e07a5f';
         bgCtx.globalAlpha = pulseAlpha * glowBoost;
         bgCtx.beginPath();
         bgCtx.arc(px, py, 2 * glowBoost, 0, Math.PI * 2);
@@ -2293,7 +2319,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
 
       clockCtx.clearRect(0, 0, w, h);
       const isDark = document.documentElement.classList.contains('dark');
-      clockCtx.strokeStyle = isDark ? '#f59e0b' : '#d97706';
+      clockCtx.strokeStyle = isDark ? '#e07a5f' : '#c8684d';
       clockCtx.lineWidth = 1.4;
 
       const speed = clockIdx === 2 ? 0.35 : (clockIdx === 1 ? 0.18 : 0.08);
@@ -2448,7 +2474,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         }
 
         const resLine = document.createElement('p');
-        resLine.className = "text-[#8b949e]";
+        resLine.className = "text-[#a2a09c]";
         resLine.innerHTML = res;
         output.appendChild(resLine);
         output.scrollTop = output.scrollHeight;
@@ -3089,7 +3115,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           recurrentEl.className = "px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
         } else {
           recurrentEl.textContent = "spike_reg1 [OFF]";
-          recurrentEl.className = "px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+          recurrentEl.className = "px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]";
         }
       }
 
@@ -3106,12 +3132,12 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         }
         if (ledEl) {
           if (neuronSpikes[i]) {
-            ledEl.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#f59e0b]";
+            ledEl.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#e07a5f]";
             setTimeout(() => {
-              if (ledEl) ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all";
+              if (ledEl) ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#353640] transition-all";
             }, 180);
           } else {
-            ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#30363d] transition-all";
+            ledEl.className = "w-2.5 h-2.5 rounded-full bg-[#353640] transition-all";
           }
         }
       }
@@ -3134,7 +3160,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           fastStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
         } else {
           fastStatusEl.textContent = "afib_fast: LOW";
-          fastStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+          fastStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]";
         }
       }
 
@@ -3156,7 +3182,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           slowStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/30 text-amber-300 border border-amber-500/50";
         } else {
           slowStatusEl.textContent = "afib_slow: LOW";
-          slowStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+          slowStatusEl.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]";
         }
       }
 
@@ -3185,7 +3211,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       }
       if (asystolePin && !asystoleFlag) {
         asystolePin.textContent = "INACTIVE";
-        asystolePin.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#21262d] text-[#8b949e]";
+        asystolePin.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-[#282931] text-[#a2a09c]";
       }
     }
 
@@ -3256,7 +3282,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
 
       // CRT Channel Separator
       const splitY = h * 0.58;
-      ctx.strokeStyle = '#21262d';
+      ctx.strokeStyle = '#2b2c34';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, splitY);
@@ -3288,9 +3314,9 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       const baselineY = splitY * 0.54;
       const ampY = splitY * 0.42;
 
-      ctx.shadowColor = '#10b981';
+      ctx.shadowColor = '#e07a5f';
       ctx.shadowBlur = 6;
-      ctx.strokeStyle = '#10b981';
+      ctx.strokeStyle = '#e07a5f';
       ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let i = 0; i < ecgBuffer.length; i++) {
@@ -3305,7 +3331,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       // Scanner head
       const headX = w;
       const headY = baselineY - (ecgBuffer[ecgBuffer.length - 1] * ampY);
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#f7f4ee';
       ctx.beginPath();
       ctx.arc(headX - 2, headY, 2.5, 0, Math.PI * 2);
       ctx.fill();
@@ -3320,7 +3346,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       for (let n = 0; n < 8; n++) {
         const rowY = splitY + 4 + (n * rowH) + (rowH * 0.5);
         const isInterval = (n < 4);
-        const spikeColor = isInterval ? '#f59e0b' : '#38bdf8';
+        const spikeColor = isInterval ? '#e07a5f' : '#e6c280';
 
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
