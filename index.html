@@ -245,7 +245,7 @@
 
   <!-- TOP APP BAR -->
   <header class="w-full bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant/60 dark:border-dark-border/80 transition-colors">
-    <div class="w-full px-margin-mobile md:px-margin py-3 flex justify-between items-center max-w-[1200px] mx-auto relative z-10">
+    <div class="w-full px-4 sm:px-8 md:px-12 lg:px-16 py-3 flex justify-between items-center max-w-[1440px] mx-auto relative z-10">
       
       <!-- Left Navigation Cluster (Switches Pages) -->
       <nav class="flex items-center gap-3.5 md:gap-7">
@@ -295,17 +295,17 @@
   </header>
 
   <!-- MAIN CANVAS CONTAINER -->
-  <main class="w-full max-w-[1100px] mx-auto px-margin-mobile md:px-margin flex-1 flex flex-col pt-8 md:pt-12 relative z-10">
+  <main class="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 flex-1 flex flex-col pt-8 md:pt-12 relative z-10">
 
     <!-- ========================================== -->
     <!-- PAGE 1: HOME (Hook, Twenty Watts, Bio)    -->
     <!-- ========================================== -->
     <section id="page-home" class="page-view active w-full relative">
       
-      <!-- Reference-Style Ambient Bleed Hero Portrait (Right Side, Soft Gradient Left & Bottom Fade) -->
-      <div id="hero-portrait-container" class="hidden sm:block absolute right-0 top-0 w-[340px] md:w-[420px] lg:w-[480px] h-[520px] md:h-[620px] pointer-events-none z-10 select-none hero-portrait-frame">
+      <!-- Ambient Bleed Hero Portrait (Anchored to Right Corner with Soft Fade Left & Bottom) -->
+      <div id="hero-portrait-container" class="hidden sm:block absolute right-0 top-0 w-[420px] md:w-[500px] lg:w-[600px] xl:w-[680px] h-[580px] md:h-[680px] lg:h-[780px] pointer-events-none z-10 select-none hero-portrait-frame">
         <img id="user-portrait-img" 
-             src="photo.jpg" 
+             src="photo.jpeg" 
              onerror="handlePhotoFallback(this)" 
              alt="Sanjay Krishna" 
              class="w-full h-full object-cover object-top hero-portrait-img" />
@@ -315,7 +315,7 @@
       <div class="mb-10 select-none relative z-20">
         
         <!-- Mode Subtitle & Manual Morph Trigger -->
-        <div class="flex items-center justify-between max-w-[620px] mb-2.5 font-label-meta text-[11px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">
+        <div class="flex items-center justify-between max-w-[820px] lg:max-w-[880px] mb-2.5 font-label-meta text-[11px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
             <span id="morph-mode-label">AI HARDWARE ARCHITECT · SILICON RESEARCHER</span>
@@ -343,7 +343,7 @@
       <!-- Mobile Portrait Fallback (Centered with soft bottom fade) -->
       <div id="mobile-portrait-container" class="sm:hidden mb-6 flex justify-start">
         <div class="w-44 h-52 relative overflow-hidden mobile-portrait-frame">
-          <img src="photo.jpg" 
+          <img src="photo.jpeg" 
                onerror="handlePhotoFallback(this)" 
                alt="Sanjay Krishna" 
                class="w-full h-full object-cover object-top" />
@@ -351,7 +351,7 @@
       </div>
 
       <!-- Narrative Section -->
-      <div class="flex flex-col gap-6 text-on-surface dark:text-dark-text font-body-lg text-body-lg leading-relaxed max-w-[680px] lg:max-w-[720px] relative z-20">
+      <div class="flex flex-col gap-6 text-on-surface dark:text-dark-text font-body-lg text-body-lg leading-relaxed max-w-[780px] lg:max-w-[880px] xl:max-w-[960px] relative z-20">
         
         <p class="text-2xl sm:text-3xl font-medium text-primary dark:text-white font-headline-lg">
           Hi, I’m <span class="text-amber-600 dark:text-amber-400 font-bold">Sanjay Krishna</span>.
@@ -1841,9 +1841,15 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       history.pushState(null, null, `#${pageId}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // If switching to simulator, trigger resize
-      if (pageId === 'simulator' && typeof resizeCanvas === 'function') {
-        setTimeout(resizeCanvas, 50);
+      // If switching to simulator, trigger resize and UI refresh
+      if (pageId === 'simulator') {
+        setTimeout(() => {
+          if (typeof resizeCanvas === 'function') resizeCanvas();
+          if (typeof updateSimulatorUI === 'function') updateSimulatorUI('normal');
+        }, 50);
+        setTimeout(() => {
+          if (typeof resizeCanvas === 'function') resizeCanvas();
+        }, 200);
       }
     }
 
@@ -2854,15 +2860,20 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
     const rasterHistory = []; // array of 8-bit spikes
     for (let i = 0; i < RASTER_BUFFER_SIZE; i++) rasterHistory.push([0, 0, 0, 0, 0, 0, 0, 0]);
 
-    // ECG wave phase generator
+    // ECG wave phase generator & visual buffers
     let ecgPhase = 0;
-    let nextBeatInterval = 833; // ms
-    let pendingRPeakType = null;
 
     function resizeCanvas() {
-      if (!canvas) return;
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+      if (!canvas || !canvas.parentElement) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const parentW = Math.floor(rect.width || canvas.parentElement.clientWidth);
+      const parentH = Math.floor(rect.height || canvas.parentElement.clientHeight);
+      if (parentW > 0 && parentH > 0) {
+        if (canvas.width !== parentW || canvas.height !== parentH) {
+          canvas.width = parentW;
+          canvas.height = parentH;
+        }
+      }
     }
     window.addEventListener('resize', resizeCanvas);
 
@@ -2877,6 +2888,20 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       }
     }
 
+    // Injects an instantaneous visible QRS spike directly into the ECG buffer
+    function injectWaveformSpike(amp = 1.0) {
+      const len = ecgBuffer.length;
+      if (len > 8) {
+        ecgBuffer[len - 7] = -0.15 * amp;
+        ecgBuffer[len - 6] = -0.30 * amp;  // Q dip
+        ecgBuffer[len - 5] = 1.15 * amp;   // Sharp R peak
+        ecgBuffer[len - 4] = 0.50 * amp;
+        ecgBuffer[len - 3] = -0.45 * amp;  // S dip
+        ecgBuffer[len - 2] = -0.12 * amp;
+        ecgBuffer[len - 1] = 0.05 * amp;
+      }
+    }
+
     // Hardware Step: Cycle-accurate Verilog emulation of tt_um_snn_afib_detector.v
     function processHeartbeat(type) {
       const now = performance.now();
@@ -2884,17 +2909,17 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       lastBeatTimestamp = now;
 
       // 1. rr_features.v:
-      // In hardware, tick_count increments at 10 MHz. Pre-scaled tick_count[15:9] (div by 512).
-      // Mapping real-world elapsed time (ms) to 6-bit register [0..63]:
+      // Prescaled tick_count[15:9] (divide 10 MHz by 512).
+      // 6-bit register [0..63] mapping:
       let rawScaledTick = 32;
       if (type === 'normal') {
-        rawScaledTick = Math.max(28, Math.min(36, Math.round((elapsedMs / 1000) * 38) + (Math.floor(Math.random() * 3) - 1)));
+        rawScaledTick = Math.max(28, Math.min(36, 32 + (Math.floor(Math.random() * 5) - 2)));
       } else if (type === 'afib') {
-        // High variation, chaotic short or long interval
-        rawScaledTick = Math.floor(Math.random() * 36) + 14; // rapid & chaotic
+        // High variation, chaotic interval
+        rawScaledTick = Math.floor(Math.random() * 38) + 12;
       } else if (type === 'pvc') {
-        // Premature ectopic beat: short interval followed by pause
-        rawScaledTick = 16;
+        // Ectopic premature beat
+        rawScaledTick = 15;
       }
 
       rrInterval = Math.min(63, Math.max(0, rawScaledTick));
@@ -2907,8 +2932,8 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       if (isNaN(currentBPM) || currentBPM < 30) currentBPM = 72;
 
       // 2. spike_encoder.v:
-      // wire [3:0] enc_interval = 4'd15 - rr_interval[5:2];
-      // wire [3:0] enc_delta = (rr_delta > 6'd15) ? 4'd15 : rr_delta[3:0];
+      // enc_interval = 15 - rr_interval[5:2]
+      // enc_delta = (rr_delta > 15) ? 15 : rr_delta[3:0]
       const encInterval = Math.max(0, Math.min(15, 15 - (rrInterval >> 2)));
       const encDelta = (rrDelta > 15) ? 15 : (rrDelta & 0x0F);
 
@@ -2941,7 +2966,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
 
         if (neuronPotentials[i] >= NEURONS[i].thresh) {
           currentSpikes[i] = 1;
-          neuronPotentials[i] = 0;
+          neuronPotentials[i] = 0; // Reset
         } else {
           currentSpikes[i] = 0;
           // Arithmetic right-shift leak + synaptic integration:
@@ -2998,7 +3023,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       const flash = document.getElementById('spike-flash');
       if (flash && anySpike) {
         flash.style.opacity = '1';
-        setTimeout(() => { flash.style.opacity = '0'; }, 70);
+        setTimeout(() => { if (flash) flash.style.opacity = '0'; }, 70);
       }
 
       // Audio blip if audio enabled
@@ -3007,7 +3032,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         else playBlip(380, 'sine', 0.06, 0.02);
       }
 
-      // Update UI Telemetry & Indicators
+      // Update UI Telemetry & Indicators immediately
       updateSimulatorUI(type);
 
       // Reset asystole watch timer (>1.6s without beat)
@@ -3017,9 +3042,10 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       }, 1650);
     }
 
+    // Direct injection with instant hardware reaction
     function injectBeat(type) {
-      pendingRPeakType = type;
-      ecgPhase = 0.55; // Jump directly to QRS onset for immediate visual response
+      processHeartbeat(type);
+      injectWaveformSpike(type === 'pvc' ? 1.4 : 1.0);
     }
 
     function triggerAsystole() {
@@ -3033,7 +3059,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       }
     }
 
-    function updateSimulatorUI(type) {
+    function updateSimulatorUI(type = 'normal') {
       // Telemetry Bar
       const powerEl = document.getElementById('sim-power');
       const bpmEl = document.getElementById('sim-bpm');
@@ -3099,7 +3125,6 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       if (fastProgEl) fastProgEl.textContent = `[${beatFast}/8 BEATS]`;
       if (fastAccumEl) fastAccumEl.textContent = accumFast;
       if (fastMeterEl) {
-        // Normalized -8 to +16 into 0% to 100%
         const norm = Math.max(0, Math.min(100, Math.round(((accumFast + 8) / 24) * 100)));
         fastMeterEl.style.width = `${norm}%`;
       }
@@ -3176,10 +3201,10 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         let tick = 0;
         autoInterval = setInterval(() => {
           tick++;
-          // Generates a realistic pattern: alternating normal rhythm and AFib bursts
-          const isArrhythmia = (tick % 24 >= 10 && tick % 24 <= 19);
+          // Generates a realistic clinical rhythm: alternating normal beats and AFib bursts
+          const isArrhythmia = (tick % 24 >= 8 && tick % 24 <= 17);
           injectBeat(isArrhythmia ? 'afib' : 'normal');
-        }, 750);
+        }, 720);
       } else {
         if (label) label.textContent = "▶ Auto Stream";
         if (btn) btn.classList.remove('border-amber-500', 'bg-amber-500/20');
@@ -3216,7 +3241,13 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
 
     // ECG Waveform & Raster Oscilloscope Renderer
     function renderOscilloscope() {
+      // Loop stays alive permanently via requestAnimationFrame
+      requestAnimationFrame(renderOscilloscope);
+
       if (!ctx || !canvas) return;
+
+      // Auto-resize canvas whenever parent is visible
+      resizeCanvas();
       const w = canvas.width;
       const h = canvas.height;
       if (w === 0 || h === 0) return;
@@ -3233,45 +3264,29 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       ctx.stroke();
 
       // --- CHANNEL 1: ECG Waveform ---
-      // Generate instantaneous ECG sample
       ecgPhase += 0.045;
       let sample = 0;
 
-      // Check if we hit R-peak region
-      if (ecgPhase >= 0.65 && ecgPhase <= 0.75) {
-        // Q-wave dip then sharp R-peak
-        if (ecgPhase <= 0.68) sample = -0.25;
-        else if (ecgPhase <= 0.72) {
-          sample = 1.0; // Peak
-          if (pendingRPeakType) {
-            processHeartbeat(pendingRPeakType);
-            pendingRPeakType = null;
-          }
-        } else {
-          sample = -0.35; // S-wave dip
-        }
-      } else if (ecgPhase >= 0.85 && ecgPhase <= 1.05) {
-        // T-wave
-        sample = 0.22 * Math.sin(((ecgPhase - 0.85) / 0.2) * Math.PI);
-      } else if (ecgPhase >= 0.40 && ecgPhase <= 0.52) {
-        // P-wave
-        sample = 0.15 * Math.sin(((ecgPhase - 0.40) / 0.12) * Math.PI);
-      }
-
-      if (ecgPhase >= 1.4) {
+      // Gentle P and T waves
+      if (ecgPhase >= 0.32 && ecgPhase <= 0.44) {
+        sample = 0.12 * Math.sin(((ecgPhase - 0.32) / 0.12) * Math.PI);
+      } else if (ecgPhase >= 0.70 && ecgPhase <= 0.90) {
+        sample = 0.20 * Math.sin(((ecgPhase - 0.70) / 0.20) * Math.PI);
+      } else if (ecgPhase >= 1.25) {
         ecgPhase = 0;
-        // In auto-mode or resting rhythm, if no pending injection, trigger normal beat
-        if (!autoStreamActive && !pendingRPeakType && (performance.now() - lastBeatTimestamp > 950)) {
-          pendingRPeakType = 'normal';
+        // Background resting sinus heartbeat if idle for > 1.3s
+        if (!autoStreamActive && !asystoleFlag && (performance.now() - lastBeatTimestamp > 1300)) {
+          processHeartbeat('normal');
+          injectWaveformSpike(0.9);
         }
       }
 
       ecgBuffer.shift();
       ecgBuffer.push(sample);
 
-      // Draw ECG trace
-      const ecgBaseline = splitY * 0.55;
-      const ecgAmp = splitY * 0.42;
+      // Draw ECG phosphor trace
+      const baselineY = splitY * 0.54;
+      const ampY = splitY * 0.42;
 
       ctx.shadowColor = '#10b981';
       ctx.shadowBlur = 6;
@@ -3280,23 +3295,22 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       ctx.beginPath();
       for (let i = 0; i < ecgBuffer.length; i++) {
         const x = (i / (ecgBuffer.length - 1)) * w;
-        const y = ecgBaseline - (ecgBuffer[i] * ecgAmp);
+        const y = baselineY - (ecgBuffer[i] * ampY);
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Draw active scanner head on ECG
+      // Scanner head
       const headX = w;
-      const headY = ecgBaseline - (ecgBuffer[ecgBuffer.length - 1] * ecgAmp);
+      const headY = baselineY - (ecgBuffer[ecgBuffer.length - 1] * ampY);
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(headX - 2, headY, 2.5, 0, Math.PI * 2);
       ctx.fill();
 
       // --- CHANNEL 2: 8-Neuron Spike Raster Plot ---
-      // Shift raster buffer
       rasterHistory.shift();
       rasterHistory.push([...neuronSpikes]);
 
@@ -3308,7 +3322,6 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         const isInterval = (n < 4);
         const spikeColor = isInterval ? '#f59e0b' : '#38bdf8';
 
-        // Draw neuron raster line
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -3316,7 +3329,6 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         ctx.lineTo(w, rowY);
         ctx.stroke();
 
-        // Draw spikes
         for (let t = 0; t < rasterHistory.length; t++) {
           if (rasterHistory[t][n]) {
             const x = (t / (rasterHistory.length - 1)) * w;
@@ -3325,15 +3337,14 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
           }
         }
       }
-
-      requestAnimationFrame(renderOscilloscope);
     }
 
-    // Initialize Canvas on load
+    // Initialize Simulator on startup
     setTimeout(() => {
       resizeCanvas();
+      updateSimulatorUI('normal');
       requestAnimationFrame(renderOscilloscope);
-    }, 100);
+    }, 60);
   </script>
 </body>
 </html>
