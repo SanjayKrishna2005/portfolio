@@ -13,3 +13,11 @@ Thumbs.db
 *~
 .vscode/
 .idea/
+
+# Independent Project Repositories (do not track in portfolio repo)
+NIR/
+PSMAC_NPU/
+Reverse-Engineer-an-AISC-Jane-Street-Challenge/
+SobelEdgeDetector/
+vspace-280326-demo/
+
