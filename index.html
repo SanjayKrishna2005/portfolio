@@ -363,7 +363,7 @@
         </div>
 
         <!-- Narrative Section -->
-        <div class="flex flex-col gap-4 sm:gap-6 text-on-surface dark:text-dark-text font-body-lg text-body-lg leading-relaxed mt-1 sm:mt-0">
+        <div class="flex flex-col gap-5 sm:gap-6 text-on-surface dark:text-dark-text font-body-lg text-body-lg leading-relaxed mt-1 sm:mt-0">
         
         <p class="text-xl sm:text-2xl md:text-3xl font-medium text-primary dark:text-white font-headline-lg">
           Hi, I’m <span class="text-amber-600 dark:text-amber-400 font-bold">Sanjay Krishna</span>.
@@ -373,19 +373,19 @@
           I have a favourite chip, and it isn’t made of silicon. It’s the one you’re using to read this sentence.
         </p>
 
-        <p>
+        <p class="text-sm sm:text-base leading-relaxed text-on-surface/90 dark:text-dark-text/90">
           Your brain runs on about <strong class="text-primary dark:text-white font-semibold">twenty watts</strong>, less than a dim light bulb. It learns without anyone writing the rules, and it only spends energy on things that actually matter. No chip I’ll ever build comes close. But I can’t stop trying to steal one small trick at a time, and that’s basically what this whole site is about.
         </p>
 
-        <p class="italic text-on-surface dark:text-dark-text border-l-2 border-amber-500 pl-4 py-1 text-base sm:text-lg">
+        <p class="italic text-on-surface dark:text-dark-text border-l-2 border-amber-500 pl-4 py-1 text-sm sm:text-base">
           Each spike fades as it spreads, then everything goes quiet. That’s the trick I keep borrowing.
         </p>
 
-        <p>
+        <p class="text-sm sm:text-base leading-relaxed text-on-surface/90 dark:text-dark-text/90">
           One of my chips is a <strong class="text-primary dark:text-white font-semibold">heart monitor with no processor</strong>. Eight tiny neurons sit completely quiet until a heartbeat arrives, and they wake up only when something looks off. Another is a <strong class="text-primary dark:text-white font-semibold">neural network accelerator</strong> that decides, on its own, how hard it needs to think about each part of a problem. I also built an <strong class="text-primary dark:text-white font-semibold">edge detector</strong> that’s allowed to be a little bit wrong, because being slightly wrong turned out to be much cheaper. And once, for fun, I took a <strong class="text-primary dark:text-white font-semibold">chip puzzle with no labels at all</strong>, rebuilt its logic from the layout, and found a bug that let a wrong answer unlock the prize.
         </p>
 
-        <p>
+        <p class="text-sm sm:text-base leading-relaxed text-on-surface/90 dark:text-dark-text/90">
           When I’m not staring at chip layouts, I’m watching movies. I watch a lot of them. And yes, I’m a huge <span class="cursor-pointer font-medium hover:text-amber-600 dark:hover:text-amber-400 underline decoration-amber-500/60 underline-offset-4 transition-colors" onclick="triggerBreakingBadEasterEgg()" title="Chemistry is the study of change...">Breaking Bad</span> fan.
         </p>
 
@@ -501,17 +501,20 @@
             959 / 1,000 standard cells (0.012 mm² core) · Sub-10 nW idle floor · Multiplier-free Leaky Integrate-and-Fire · 15,924 ECG windows verified
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              <strong>The brain trick:</strong> The brain doesn’t run a 100 MHz polling loop waiting for input; neurons sit quiet and only spend energy when something actually happens. Today’s wearable monitors wake a full processor every few seconds to run heavy calculations, draining batteries and missing brief, transient Atrial Fibrillation episodes between sleeps.
-            </p>
-            <p>
-              <strong>What the chip does:</strong> It has <em>no processor at all</em>. Instead, eight tiny Leaky Integrate-and-Fire (LIF) artificial neurons are etched directly into silicon. The entire chip sleeps at sub-10 nW between heartbeats. When an R-peak pulse arrives, it runs a 5-stage pipeline in microseconds (measuring the RR interval, converting to binary spike trains, feeding the reservoir, and computing a 2-of-3 triple-window majority vote) before instantly returning to sleep.
-            </p>
-            <p class="text-on-surface-variant dark:text-dark-text-muted">
-              <strong>What surprised me:</strong> Fitting the full classifier into 959 cells required ditching multipliers entirely and relying on a single recurrent feedback register (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">spike_reg1</code>). In normal rhythm, beats are consistent and the register stays quiet. In AFib, chaotic beat intervals compound across cycles — sustained irregularity is self-reinforcing. Validated on 15,924 clinical ECG windows from the MIT-BIH Arrhythmia Database with zero timing violations (0 ns WNS).
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Wearable battery drain vs. transient AFib:</strong> Most wearable monitors wake a full CPU every few seconds to run heavy calculations, draining battery while missing brief, transient Atrial Fibrillation episodes between sleep cycles.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Zero-processor neuromorphic silicon:</strong> Eight Leaky Integrate-and-Fire neurons etched into silicon sleep at sub-10 nW between heartbeats, executing a 5-stage classification pipeline in microseconds upon R-peak arrival before returning to deep sleep.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Self-reinforcing memory in 959 cells:</strong> Eliminated multipliers entirely; a single 1-bit feedback flip-flop (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">spike_reg1</code>) compounds erratic intervals across cycles—validated across 15,924 clinical ECG windows with zero timing violations.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
@@ -522,11 +525,11 @@
             <span class="text-outline-variant">·</span>
             <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('simulator')">launch_lif_simulator</button>
             <span class="text-outline-variant">·</span>
-            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('blog')">read_tapeout_essay</button>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openBlogPost('snn-959-cells')">read_tapeout_article</button>
           </div>
         </article>
 
-        <!-- Project 2: 16x16 Systolic NPU + INTERACTIVE SYSTOLIC WAVEFRONT ANIMATION -->
+        <!-- Project 2: 16x16 Systolic NPU -->
         <article class="axon-card flex flex-col gap-2 border-b border-outline-variant/60 dark:border-dark-border pb-10 pl-3">
           <div class="flex flex-wrap items-baseline justify-between gap-2">
             <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold tracking-tight">
@@ -541,113 +544,20 @@
             Row-concurrent bit-fusion (INT8 / INT4 / INT2) · Gate-level arithmetic (no DSP IP) · 1.23 mm² · 135.8 mW @ 166 MHz · 2.51 TOPS/W
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              <strong>The hardware evolution:</strong> The first working version (v1) arranged 16 independent tiles in a 4×4 grid. Each tile carried its own private weight and activation memory ports. It was simple to verify, but 16 separate ports meant 16× memory bandwidth and 16× SRAM area waste. In v2, I tore down the memory architecture and rebuilt it into a weight-stationary systolic array with a unified Global Buffer, streaming activations left-to-right with per-row skew.
-            </p>
-            <p>
-              <strong>Why row-concurrent precision matters:</strong> Systolic broadcasting opened the door to row-concurrent bit-fusion: each row latches its own precision mode alongside its weights. In the same clock cycle, Row 0 can compute INT8 while Row 1 computes packed INT4 or INT2, with zero reconfiguration downtime between rows. Every multiplier was built strictly from gate-level half-adders and full-adders — no Verilog <code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">*</code> operator, no vendor IP.
-            </p>
-
-            <!-- INTERACTIVE SYSTOLIC ARRAY WAVEFRONT VISUALIZER -->
-            <div class="my-3 p-4 bg-surface-container dark:bg-dark-surface rounded border border-outline-variant/60 dark:border-dark-border">
-              <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-outline-variant/40 dark:border-dark-border text-xs font-label-meta">
-                <span class="font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-amber-500 status-pulse"></span>
-                  LIVE SYSTOLIC WAVEFRONT DATAFLOW (CYCLE <span id="systolic-cycle">0</span>)
-                </span>
-                <div class="flex items-center gap-2">
-                  <button onclick="stepSystolicArray()" class="bg-primary dark:bg-amber-500 text-white dark:text-gray-900 px-2 py-0.5 rounded text-[10px] font-bold hover:bg-amber-600 transition-colors">
-                    Step Clock ⏭
-                  </button>
-                  <button id="btn-systolic-auto" onclick="toggleSystolicAuto()" class="bg-surface dark:bg-dark-surface-high border border-outline-variant px-2 py-0.5 rounded text-[10px] hover:border-amber-500 transition-colors">
-                    ▶ Auto Wavefront
-                  </button>
-                </div>
-              </div>
-
-              <!-- 4x4 Systolic Mesh Grid -->
-              <div class="mt-3 grid grid-cols-4 gap-2 text-center font-mono text-[11px]">
-                <div id="pe-0-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,0] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.4</span>
-                </div>
-                <div id="pe-0-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,1] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.1</span>
-                </div>
-                <div id="pe-0-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,2] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.5</span>
-                </div>
-                <div id="pe-0-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[0,3] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.8</span>
-                </div>
-
-                <div id="pe-1-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,0] INT4</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.2</span>
-                </div>
-                <div id="pe-1-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,1] INT4</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.8</span>
-                </div>
-                <div id="pe-1-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,2] INT4</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.4</span>
-                </div>
-                <div id="pe-1-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-cyan-600 dark:text-cyan-400 block font-bold">PE[1,3] INT4</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.0</span>
-                </div>
-
-                <div id="pe-2-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,0] INT2</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.0</span>
-                </div>
-                <div id="pe-2-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,1] INT2</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-1.0</span>
-                </div>
-                <div id="pe-2-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,2] INT2</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.0</span>
-                </div>
-                <div id="pe-2-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-purple-600 dark:text-purple-400 block font-bold">PE[2,3] INT2</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=1.0</span>
-                </div>
-
-                <div id="pe-3-0" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,0] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.5</span>
-                </div>
-                <div id="pe-3-1" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,1] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-0.3</span>
-                </div>
-                <div id="pe-3-2" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,2] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=0.9</span>
-                </div>
-                <div id="pe-3-3" class="p-2 rounded bg-surface dark:bg-dark-surface-high border border-outline-variant/60 transition-all duration-200">
-                  <span class="text-[9px] text-amber-600 dark:text-amber-400 block font-bold">PE[3,3] INT8</span>
-                  <span class="pe-val text-xs text-on-surface dark:text-dark-text font-bold">W=-1.2</span>
-                </div>
-              </div>
-              
-              <div class="mt-2.5 flex items-center justify-between text-[10px] font-label-meta text-on-surface-variant dark:text-dark-text-muted">
-                <span>Activations stream &rarr; from West</span>
-                <span class="text-amber-600 dark:text-amber-400 font-semibold" id="systolic-status">Wavefront idle</span>
-                <span>Partial sums accumulate &darr; to South</span>
-              </div>
-            </div>
-
-            <p class="text-on-surface-variant dark:text-dark-text-muted">
-              <strong>Results:</strong> Taken through the complete Cadence Suite ASIC flow (Synthesis, CTS, PnR, ECO pin access, DRC/LVS) to clean GDSII signoff on a 45nm library. Passed 2,588 bit-exact verification assertions. Co-simulated with Python on ResNet-20/CIFAR-10, demonstrating >91% accuracy under dynamic precision scaling with 34% energy savings.
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">The memory bandwidth bottleneck:</strong> Earlier tile architectures used 16 private ports, wasting 16× memory bandwidth and SRAM area. Standard NPUs also lock compute to fixed bitwidths, wasting silicon area during quantized inference.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Weight-stationary systolic mesh:</strong> Re-architected with a unified Global Buffer streaming activations left-to-right with per-row skew, built from gate-level adders on Cadence 45nm (1.23 mm², 135.8 mW @ 166 MHz, 2.51 TOPS/W).</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Row-concurrent precision on the fly:</strong> Zero vendor DSP IP (no Verilog <code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">*</code> operator); Row 0 computes INT8 while Row 1 computes packed INT4 or INT2 simultaneously on the exact same clock cycle without pipeline stalls, passing 2,588 bit-exact assertions to clean GDSII signoff.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
@@ -657,7 +567,10 @@
             <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('assets/img/bit_decomposition_hierarchy.png', 'Sub-bit Fusion Multiplier Hierarchy')">bit_fusion_core</button>
             <span class="text-outline-variant">·</span>
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="assets/docs/EVOLUTION.md" target="_blank">evolution_notes.md</a>
+            <span class="text-outline-variant">·</span>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openBlogPost('psmac-systolic-npu')">read_npu_article</button>
           </div>
+        </article>
         </article>
 
         <!-- Project 3: ReGDS-SKY130 Jane Street ASIC Reverse Engineering -->
@@ -675,24 +588,27 @@
             GDSII mask polygons to behavioral Verilog · Degree of Connectivity Index (DCI) · Z3 SMT solver · Jane Street ASIC Challenge
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              <strong>The challenge:</strong> When you open a raw GDSII layout, all net names, cell boundaries, and bus structures are gone. You’re left with hundreds of thousands of flattened metal, diffusion, and poly polygons. Traditional graph matching fails because MOSFET Source and Drain are layout-symmetric, producing false negatives.
-            </p>
-            <p>
-              <strong>The solution:</strong> I built a layout-to-RTL pipeline that extracts SPICE with Magic VLSI, applies a symmetric Degree of Connectivity Index (<span class="font-mono text-xs">W_DCI</span>) matrix for topological graph matching, and reconstructs verifiable structural Verilog. We recovered all 76 flip-flops and 1,287 nets of the Jane Street Silicon ASIC challenge.
-            </p>
-            <p class="text-on-surface-variant dark:text-dark-text-muted">
-              <strong>The Silicon Zero-Day:</strong> By modeling the circuit across 122 cycles in the Z3 SMT solver, we discovered the 122-bit key to print the true flag: <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">(* TWO STARS *)</code>. More excitingly, Z3 found a physical coverage bug in the chip’s anti-adjacency logic: a solution with 3 illegal vertically touching stars still drove <code class="font-mono text-xs">success = 1</code> in silicon! We also proved 7 Easter eggs, including an unreachable ROM state (<code class="font-mono text-xs">NOT TOUCH</code>).
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">The planar CMOS symmetry trap:</strong> Flattened GDSII layouts strip all net names and cell boundaries. Traditional graph matching fails because MOSFET Source and Drain terminals are layout-symmetric, causing rampant false-negative mismatches.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">DCI matrix &amp; SMT logic unrolling:</strong> Formulated the Degree of Connectivity Index (<span class="font-mono text-xs">W_DCI</span>) matrix invariant under terminal swaps (100% cell recovery across 76 flip-flops and 1,287 nets), then unrolled 122 cycles into the Z3 SMT solver.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Silicon zero-day discovery:</strong> Z3 discovered a physical anti-adjacency logic flaw where an illegal puzzle with 3 touching stars still drove <code class="font-mono text-xs font-bold text-emerald-500">success = 1</code> in silicon, while also uncovering 7 hidden Easter eggs.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
             <span class="text-outline-variant">·</span>
             <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openMediaModal('assets/img/layout.png', 'Jane Street Silicon Layout & Physical Polygons')">silicon_layout.png</button>
             <span class="text-outline-variant">·</span>
-            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="navigateTo('blog')">read_reversing_essay</button>
+            <button class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" onclick="openBlogPost('jane-street-reversing')">read_reversing_article</button>
           </div>
         </article>
 
@@ -711,14 +627,20 @@
             224 spectral bands (932–1720 nm) · Deterministic 20.94 µs latency · >40× software speedup · 92.5% 5-class sorting
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              In industrial recycling, sorting plastics (PE, PP, PET, PS, PVC) on a fast conveyor belt cannot wait for slow PC-based numerical algorithms. Working as a research intern at CSIR-CEERI, I architected a hardware streaming DSP pipeline on a Xilinx Artix-7 (XC7A100T) directly coupled to a SPECIM FX17e hyperspectral camera capturing 224 channels at 200 FPS.
-            </p>
-            <p>
-              Implemented pipelined Verilog datapaths for Savitzky-Golay FIR filtering, baseline subtraction, and Standard Normal Variate (SNV) normalization. Mapped fixed-point Support Vector Machine (SVM) inference onto DSP48E1 slices with a single-cycle combinational Argmax tree. Reached a deterministic classification speed of 47,600 spectra/sec (20.94 µs latency) with 92.5% accuracy across 500,000 noisy samples.
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Conveyor belt throughput vs. slow PCs:</strong> Industrial recycling requires classifying 224 spectral bands in real time to sort plastics (PE, PP, PET, PS, PVC); software-based PC algorithms cannot keep pace with conveyor speeds.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Hardware streaming DSP on Artix-7:</strong> Built a pipelined Verilog datapath for Savitzky-Golay FIR filtering, SNV normalization, and parallel SVM inference on DSP48E1 slices with a single-cycle Argmax tree.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Deterministic 20.94 µs latency:</strong> Achieved 47,600 spectra/sec (&gt;40&times; faster than software) with 92.5% sorting accuracy across 500,000 noisy samples at CSIR-CEERI.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
@@ -742,14 +664,20 @@
             256×256 real-time grayscale · Compressor-based approximate multiplication · Bounded error for direct PPA reduction
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              Human vision doesn’t need 100% mathematical precision at every pixel to detect edges. At NIT Trichy, I explored trading bounded numerical precision for direct area and dynamic switching energy reductions. Replaced standard FPGA DSP multipliers with custom compressor-based approximate multipliers (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">AppMul_8bit.v</code>) and carry-select adders.
-            </p>
-            <p>
-              Wrapped the math into a streaming 3×3 pixel window buffer using shift registers and synchronous FIFOs. Validated through self-checking testbenches and MATLAB golden-model comparisons, demonstrating substantial power reduction with zero perceptible degradation on standard benchmark images.
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Wasted energy on imperceptible precision:</strong> Conventional edge detectors waste significant area and dynamic switching energy computing 100% bit-exact arithmetic that human vision cannot distinguish.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Compressor-based approximate multipliers:</strong> Replaced FPGA DSP multipliers with custom approximate multiplier circuits (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">AppMul_8bit.v</code>) and carry-select adders inside a streaming 3&times;3 pixel window buffer.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Bounded error for real power savings:</strong> Verified against MATLAB golden models, demonstrating substantial power and area reductions with zero perceptible visual degradation on 256&times;256 real-time video.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
@@ -771,14 +699,20 @@
             32-node Ring Oscillator PUF · BCH fuzzy extractor · On-the-fly 128-bit key generation · PRESENT-128 cipher
           </div>
 
-          <div class="flex flex-col gap-3 font-body-md text-on-surface dark:text-dark-text mt-2 leading-relaxed">
-            <p>
-              Every chip has microscopic manufacturing variations that are as unique as a fingerprint. Instead of storing cryptographic keys in flash memory where they can be physically decapped and probed, this design uses silicon variability to generate keys on demand.
-            </p>
-            <p>
-              Designed a 32-node Ring Oscillator Physical Unclonable Function (RO-PUF) paired with a BCH fuzzy extractor to reconstruct a clean 128-bit key on the fly. Enforced strict Vivado TCL floorplanning constraints to symmetrically pair oscillator slices, eliminating systematic routing bias across the FPGA fabric and ensuring zero persistent key footprint on power-off.
-            </p>
-          </div>
+          <ul class="flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text mt-3 leading-relaxed text-sm sm:text-[15px]">
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Flash key vulnerability to physical probing:</strong> Cryptographic keys stored in non-volatile flash or EEPROM can be extracted through chemical decapping, micro-probing, and power analysis.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Nanoscale silicon fingerprint:</strong> Designed a 32-node Ring Oscillator PUF paired with a BCH fuzzy extractor to reconstruct a clean 128-bit key on demand, paired with PRESENT-128 encryption.</p>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 flex-shrink-0"></span>
+              <p><strong class="text-primary dark:text-white font-semibold">Zero persistent key footprint:</strong> Enforced strict Vivado TCL floorplanning to symmetrically match oscillator slices, eliminating systematic routing bias. When power cuts, the key vanishes completely.</p>
+            </li>
+          </ul>
 
           <div class="flex flex-wrap items-center gap-4 mt-3 font-label-meta text-xs">
             <a class="text-primary dark:text-amber-400 underline underline-offset-4 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-gray-900 font-semibold px-1 py-0.5 transition-colors" href="https://github.com/SanjayKrishna2005" target="_blank" rel="noopener noreferrer">github_repo</a>
@@ -805,9 +739,17 @@
         <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
           [ tt_um_snn_afib_detector · TINY TAPEOUT 09 · CYCLE-ACCURATE VERILOG EMULATOR ]
         </p>
-        <p class="font-body-md text-on-surface dark:text-dark-text mt-3 max-w-3xl leading-relaxed">
-          An interactive, cycle-accurate hardware emulator of my physical silicon submitted on Tiny Tapeout 09 (<span class="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">SkyWater 130nm ASIC</span>). It directly models the 16-bit tick prescaler, RR interval &amp; HRV feature extraction, 8-LIF neuron reservoir with power-of-2 arithmetic leak (<code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">potential &gt;&gt; 1</code>), 1-beat recurrent memory (<code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded">spike_reg1</code>), and dual-window (8-beat FAST &amp; 16-beat SLOW) majority voting classifier.
-        </p>
+        <div class="mt-3 max-w-3xl flex flex-col gap-2.5 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm sm:text-[15px]">
+          <p>
+            An interactive, cycle-accurate hardware emulator of physical silicon submitted on Tiny Tapeout 09 (<span class="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">SkyWater 130nm ASIC</span>). It directly executes the synthesizable Verilog datapath in browser runtime.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs font-label-meta pt-1">
+            <span class="bg-surface-container dark:bg-dark-surface px-2 py-1 rounded border border-outline-variant/60 dark:border-dark-border text-on-surface dark:text-dark-text">16-bit Tick Prescaler</span>
+            <span class="bg-surface-container dark:bg-dark-surface px-2 py-1 rounded border border-outline-variant/60 dark:border-dark-border text-on-surface dark:text-dark-text">8-LIF Neuron Reservoir</span>
+            <span class="bg-surface-container dark:bg-dark-surface px-2 py-1 rounded border border-outline-variant/60 dark:border-dark-border text-on-surface dark:text-dark-text">Zero Multipliers (<code class="text-amber-600 dark:text-amber-400 font-bold">potential &gt;&gt; 1</code>)</span>
+            <span class="bg-surface-container dark:bg-dark-surface px-2 py-1 rounded border border-outline-variant/60 dark:border-dark-border text-on-surface dark:text-dark-text">Dual-Window Voting (8/16-beat)</span>
+          </div>
+        </div>
       </div>
 
       <!-- Oscilloscope & Logic Analyzer Chassis Box -->
@@ -1125,59 +1067,158 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- PAGE 4: BLOG (Technical Essays)           -->
-    <!-- ========================================== -->
-    <!-- ========================================== -->
-    <!-- PAGE 4: BLOG (Technical Essays)           -->
+    <!-- PAGE 4: BLOG (Technical Articles)         -->
     <!-- ========================================== -->
     <section id="page-blog" class="page-view w-full">
-      <div class="mb-10">
-        <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
-          Blog
-        </h2>
-        <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
-          [ ARCHITECTURE LOGS &middot; TAPEOUT POST-MORTEMS &middot; HARDWARE &amp; SILICON ESSAYS ]
-        </p>
-      </div>
 
-      <div class="flex flex-col gap-12">
+      <!-- ============================================================ -->
+      <!-- 1. BLOG INDEX VIEW (Overview & Clickable Article Cards)      -->
+      <!-- ============================================================ -->
+      <div id="blog-index" class="w-full">
+        <div class="mb-10">
+          <h2 class="text-3xl md:text-5xl bitmap-header text-primary dark:text-white font-bold">
+            Blog
+          </h2>
+          <p class="font-label-meta text-xs text-amber-700 dark:text-amber-400 mt-2 tracking-wider">
+            [ ARCHITECTURE LOGS &middot; TAPEOUT POST-MORTEMS &middot; HARDWARE &amp; SILICON ARTICLES ]
+          </p>
+        </div>
 
-        <!-- ============================================================ -->
-        <!-- BLOG POST 1: Tiny Tapeout Microarchitecture in 959 Cells    -->
-        <!-- ============================================================ -->
-        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
-          <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
+        <div class="grid grid-cols-1 gap-8">
+          
+          <!-- Card 1: SNN AFib Detector -->
+          <div class="axon-card p-5 sm:p-6 rounded-lg bg-surface-container-low dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border hover:border-amber-500/60 transition-all flex flex-col gap-3 group">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-label-meta">
+              <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">Tiny Tapeout 09 &middot; SkyWater 130nm</span>
+              <span class="text-on-surface-variant dark:text-dark-text-muted">OCTOBER 2026 &middot; ~6 MIN READ</span>
+            </div>
+            <h3 onclick="openBlogPost('snn-959-cells')" class="text-xl sm:text-2xl font-bold font-headline-sm text-primary dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 cursor-pointer transition-colors leading-snug">
               Micro-Architecture in 959 Standard Cells: Designing an Asynchronous Neuromorphic SNN on Tiny Tapeout 09
             </h3>
-            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">OCTOBER 2026</span>
-          </div>
-          
-          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
-            SkyWater 130nm (sky130_fd_sc_hd) &middot; 1&times;1 Tile Area (160&times;100 &mu;m) &middot; 24 Pins &middot; Zero DSP Multipliers
-          </div>
-
-          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
-            <p>
-              On Tiny Tapeout, you don’t get an endless sea of gates. You get a single standardized tile: approximately <strong>1,000 standard cells</strong> and exactly 24 I/O pins (8 dedicated digital inputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">ui_in</code>, 8 dedicated outputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uo_out</code>, and 8 bidirectional pins <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uio</code>). When designing my cardiac event monitor (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">tt_um_snn_afib_detector</code>), conventional machine learning approaches were dead on arrival. A single 8-bit digital multiplier consumes 150 to 220 standard cells in SkyWater 130nm, and a tiny 64-byte SRAM macro or register file consumes the entire tile by itself.
+            <p class="text-sm sm:text-base text-on-surface/90 dark:text-dark-text/90 leading-relaxed font-body-md">
+              How do you fit a full cardiac arrhythmia classifier into a strict 1,000-cell ASIC tile with no multipliers and zero SRAM? By exploiting physical right-shift wiring for free leaky decay and a single 1-bit recurrent flip-flop that turns sustained AFib into a self-reinforcing cascade.
             </p>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              1. The Power-of-2 Integer Leaky Integrate-and-Fire Formulation
-            </h4>
-            <p>
-              The biological Leaky Integrate-and-Fire (LIF) model defines membrane potential dynamics as continuous integration with exponential decay:
-            </p>
-            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
-              &tau;_m &middot; (dV/dt) = -(V - V_rest) + R_m &middot; I(t)
+            <div class="pt-2 flex items-center justify-between">
+              <button onclick="openBlogPost('snn-959-cells')" class="inline-flex items-center gap-1.5 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors">
+                Read Article &rarr;
+              </button>
+              <span class="text-[11px] font-mono text-on-surface-variant dark:text-dark-text-muted">Sub-10 nW Idle &middot; 959 Cells</span>
             </div>
-            <p>
-              In digital silicon, evaluating exponential functions requires either lookup tables (LUTs) or iterative Taylor series expansions—both completely unaffordable. Instead, we quantized the neuron's membrane potential into a compact 4-bit unsigned register (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">reg [3:0] potential</code>, bounded between 0 and 15) and replaced exponential integration with an <strong>arithmetic right-shift by 1</strong> (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">potential &gt;&gt; 1</code>).
+          </div>
+
+          <!-- Card 2: Jane Street ASIC Reversing -->
+          <div class="axon-card p-5 sm:p-6 rounded-lg bg-surface-container-low dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border hover:border-amber-500/60 transition-all flex flex-col gap-3 group">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-label-meta">
+              <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">Silicon CTF &middot; Reverse Engineering</span>
+              <span class="text-on-surface-variant dark:text-dark-text-muted">SEPTEMBER 2026 &middot; ~8 MIN READ</span>
+            </div>
+            <h3 onclick="openBlogPost('jane-street-reversing')" class="text-xl sm:text-2xl font-bold font-headline-sm text-primary dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 cursor-pointer transition-colors leading-snug">
+              Reverse Engineering a Physical ASIC Layout: Extracting Zero-Days with Graph Isomorphism and Z3 SMT Solving
+            </h3>
+            <p class="text-sm sm:text-base text-on-surface/90 dark:text-dark-text/90 leading-relaxed font-body-md">
+              When handed raw, flattened GDSII semiconductor masks with zero netlists or labels, planar transistor symmetry breaks traditional graph matching. Here is how the Degree of Connectivity Index (DCI) and first-order SMT logic uncovered a hardware zero-day inside an ASIC.
             </p>
-            <p>
-              In Verilog, the entire neuron compiles to:
+            <div class="pt-2 flex items-center justify-between">
+              <button onclick="openBlogPost('jane-street-reversing')" class="inline-flex items-center gap-1.5 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors">
+                Read Article &rarr;
+              </button>
+              <span class="text-[11px] font-mono text-on-surface-variant dark:text-dark-text-muted">76 DFFs &middot; Z3 SMT Solver</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Twenty Watts Physics -->
+          <div class="axon-card p-5 sm:p-6 rounded-lg bg-surface-container-low dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border hover:border-amber-500/60 transition-all flex flex-col gap-3 group">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-label-meta">
+              <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">Computer Architecture &middot; Physics of Compute</span>
+              <span class="text-on-surface-variant dark:text-dark-text-muted">AUGUST 2026 &middot; ~5 MIN READ</span>
+            </div>
+            <h3 onclick="openBlogPost('twenty-watts-physics')" class="text-xl sm:text-2xl font-bold font-headline-sm text-primary dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 cursor-pointer transition-colors leading-snug">
+              Why 20 Watts of Warm Tissue Beats Megawatts of Cold Silicon
+            </h3>
+            <p class="text-sm sm:text-base text-on-surface/90 dark:text-dark-text/90 leading-relaxed font-body-md">
+              Clock distribution trees burn up to 50% of an ASIC's dynamic power before a single mathematical operation executes. Why biological neural wetware achieves superhuman compute density on 20 Watts, and how event-driven sparsity translates directly to silicon.
             </p>
-            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
+            <div class="pt-2 flex items-center justify-between">
+              <button onclick="openBlogPost('twenty-watts-physics')" class="inline-flex items-center gap-1.5 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors">
+                Read Article &rarr;
+              </button>
+              <span class="text-[11px] font-mono text-on-surface-variant dark:text-dark-text-muted">Event-Driven Sparsity &middot; Zero Quiescence</span>
+            </div>
+          </div>
+
+          <!-- Card 4: PSMAC Systolic NPU -->
+          <div class="axon-card p-5 sm:p-6 rounded-lg bg-surface-container-low dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border hover:border-amber-500/60 transition-all flex flex-col gap-3 group">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-label-meta">
+              <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">Edge AI Accelerators &middot; Cadence 45nm</span>
+              <span class="text-on-surface-variant dark:text-dark-text-muted">JULY 2026 &middot; ~7 MIN READ</span>
+            </div>
+            <h3 onclick="openBlogPost('psmac-systolic-npu')" class="text-xl sm:text-2xl font-bold font-headline-sm text-primary dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 cursor-pointer transition-colors leading-snug">
+              Precision-Scalable Systolic Compute: Microarchitecting the PSMAC 4&times;4 NPU from Gate Primitives
+            </h3>
+            <p class="text-sm sm:text-base text-on-surface/90 dark:text-dark-text/90 leading-relaxed font-body-md">
+              Breaking out of vendor black-box DSP blocks: How to synthesize a weight-stationary 2D systolic mesh from raw full-adders and half-adders with runtime row-concurrent precision scaling (INT8, INT4, INT2) without stalling pipeline execution.
+            </p>
+            <div class="pt-2 flex items-center justify-between">
+              <button onclick="openBlogPost('psmac-systolic-npu')" class="inline-flex items-center gap-1.5 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 transition-colors">
+                Read Article &rarr;
+              </button>
+              <span class="text-[11px] font-mono text-on-surface-variant dark:text-dark-text-muted">135.8 mW @ 166 MHz &middot; 2.51 TOPS/W</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- 2. ARTICLE 1: SNN AFib Detector ASIC                         -->
+      <!-- ============================================================ -->
+      <article id="blog-article-snn-959-cells" class="blog-article-view hidden max-w-4xl mx-auto w-full">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="pb-6 mb-8 border-b border-outline-variant/60 dark:border-dark-border flex flex-wrap items-center justify-between gap-4">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <span class="text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+            Blog / SNN in 959 Cells
+          </span>
+        </div>
+
+        <!-- Article Header -->
+        <header class="mb-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3 text-xs font-label-meta">
+            <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">TINY TAPEOUT 09 &middot; SKYWATER 130NM</span>
+            <span class="text-outline-variant">&middot;</span>
+            <span class="text-on-surface-variant dark:text-dark-text-muted">OCTOBER 2026 &middot; ~6 MIN READ</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-headline-sm font-bold text-primary dark:text-white leading-tight">
+            Micro-Architecture in 959 Standard Cells: Designing an Asynchronous Neuromorphic SNN on Tiny Tapeout 09
+          </h1>
+          <p class="font-mono text-xs text-amber-700 dark:text-amber-400 mt-3 tracking-wide">
+            SkyWater 130nm (sky130_fd_sc_hd) &middot; 1&times;1 Tile Area (160&times;100 &mu;m) &middot; 24 Pins &middot; Zero DSP Multipliers
+          </p>
+        </header>
+
+        <div class="space-y-6 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+          <p>
+            On Tiny Tapeout, you don’t get an endless sea of gates. You get a single standardized tile: approximately <strong>1,000 standard cells</strong> and exactly 24 I/O pins (8 dedicated digital inputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">ui_in</code>, 8 dedicated outputs <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uo_out</code>, and 8 bidirectional pins <code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">uio</code>). When designing my cardiac event monitor (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">tt_um_snn_afib_detector</code>), conventional machine learning approaches were dead on arrival. A single 8-bit digital multiplier consumes 150 to 220 standard cells in SkyWater 130nm, and a tiny 64-byte SRAM macro or register file consumes the entire tile by itself.
+          </p>
+
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            1. The Power-of-2 Integer Leaky Integrate-and-Fire Formulation
+          </h3>
+          <p>
+            The biological Leaky Integrate-and-Fire (LIF) model defines membrane potential dynamics as continuous integration with exponential decay:
+          </p>
+          <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+            &tau;_m &middot; (dV/dt) = -(V - V_rest) + R_m &middot; I(t)
+          </div>
+          <p>
+            In digital silicon, evaluating exponential functions requires either lookup tables (LUTs) or iterative Taylor series expansions—both completely unaffordable. Instead, we quantized the neuron's membrane potential into a compact 4-bit unsigned register (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">reg [3:0] potential</code>, bounded between 0 and 15) and replaced exponential integration with an <strong>arithmetic right-shift by 1</strong> (<code class="font-mono text-xs bg-surface-container dark:bg-dark-surface px-1">potential &gt;&gt; 1</code>).
+          </p>
+          <p>
+            In Verilog, the entire neuron compiles to:
+          </p>
+          <div class="p-4 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
 <pre>always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         potential &lt;= 4'd0;
@@ -1193,21 +1234,21 @@
         end
     end
 end</pre>
-            </div>
-            <p>
-              Because an arithmetic right-shift in hardware is literally free (it is implemented purely via wire routing without a single logic gate), the entire neuron synthesis cost collapsed to <strong>just 24 standard cells</strong>—composed only of a 4-bit ripple adder and four D-flip-flops.
-            </p>
+          </div>
+          <p>
+            Because an arithmetic right-shift in hardware is literally free (it is implemented purely via wire routing without a single logic gate), the entire neuron synthesis cost collapsed to <strong>just 24 standard cells</strong>—composed only of a 4-bit ripple adder and four D-flip-flops.
+          </p>
 
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              2. Temporal Recurrence from a Single 1-Bit Flip-Flop
-            </h4>
-            <p>
-              Arrhythmias like Atrial Fibrillation are defined by high beat-to-beat variability (&Delta;RR) sustained across multiple cardiac cycles. A conventional Recurrent Neural Network (RNN) requires an $8 \times 8$ weight matrix (64 multiplications and 64 memory registers).
-            </p>
-            <p>
-              To solve this within our 1,000-cell budget, we introduced a single 1-bit cross-coupling register: <code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded font-bold">spike_reg1</code>. On every incoming beat, <code class="font-mono text-xs">spike_reg1</code> latches the spike output of rate neuron <strong>N0</strong> and injects it as an additional excitation into delta neuron <strong>N7</strong> on the subsequent beat:
-            </p>
-            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            2. Temporal Recurrence from a Single 1-Bit Flip-Flop
+          </h3>
+          <p>
+            Arrhythmias like Atrial Fibrillation are defined by high beat-to-beat variability (&Delta;RR) sustained across multiple cardiac cycles. A conventional Recurrent Neural Network (RNN) requires an $8 \times 8$ weight matrix (64 multiplications and 64 memory registers).
+          </p>
+          <p>
+            To solve this within our 1,000-cell budget, we introduced a single 1-bit cross-coupling register: <code class="font-mono text-xs bg-amber-500/10 dark:bg-amber-400/10 text-amber-700 dark:text-amber-300 px-1 py-0.5 rounded font-bold">spike_reg1</code>. On every incoming beat, <code class="font-mono text-xs">spike_reg1</code> latches the spike output of rate neuron <strong>N0</strong> and injects it as an additional excitation into delta neuron <strong>N7</strong> on the subsequent beat:
+          </p>
+          <div class="p-4 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
 <pre>// In reservoir.v:
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) spike_reg1 &lt;= 1'b0;
@@ -1221,116 +1262,140 @@ lif_neuron #(.THRESHOLD(8'd2), .WEIGHT(3'd3)) n7 (
     .spike_in(gd[3] | spike_reg1), 
     .spike_out(s[7])
 );</pre>
-            </div>
-            <p>
-              This single feedback wire introduces rich temporal hysteresis: when a rapid ectopic beat triggers N0, its memory is preserved into the next beat cycle, sensitizing N7 to fire if the subsequent beat exhibits high variability. A sustained arrhythmic episode creates a self-reinforcing cascade, while isolated premature contractions decay without false alarming.
-            </p>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              3. Dual-Window Majority Voting (<code class="font-mono text-sm">readout.v</code>)
-            </h4>
-            <p>
-              To eliminate false alarms caused by noisy electrode contacts or isolated Premature Ventricular Contractions (PVCs), the readout module implements a two-tiered coincidence detector:
-            </p>
-            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
-              <li><strong>FAST Window (8 beats)</strong>: Rapid transient filter. Accumulates signed synaptic votes across 8 consecutive beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_fast &gt; -1</code>, asserts <code class="font-mono text-xs">afib_fast = 1</code>.</li>
-              <li><strong>SLOW Window (16 beats)</strong>: Sustained rhythm confirmation. Accumulates signed votes across 16 beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_slow &gt; -2</code>, asserts <code class="font-mono text-xs">afib_slow = 1</code>.</li>
-              <li><strong>Majority Coincidence Gate</strong>: The final output alarm is gated by strict logical coincidence: <code class="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">afib_flag &lt;= afib_fast &amp; afib_slow</code>. A transient spike burst cannot trigger the alarm unless confirmed by the 16-beat slow baseline.</li>
-            </ul>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              4. Physical Silicon Telemetry &amp; OpenLane Synthesis Results
-            </h4>
-            <p>
-              Synthesized using Yosys and placed/routed with OpenLane against the <code class="font-mono text-xs">sky130_fd_sc_hd</code> standard cell library:
-            </p>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-2 font-mono text-xs">
-              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
-                <div class="text-[#a2a09c] text-[10px]">TOTAL CELL COUNT</div>
-                <div class="text-xl font-bold text-amber-400 mt-1">959</div>
-                <div class="text-[10px] text-[#a2a09c]">Tile Budget: 1,000</div>
-              </div>
-              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
-                <div class="text-[#a2a09c] text-[10px]">CORE UTILIZATION</div>
-                <div class="text-xl font-bold text-amber-400 mt-1">48.7%</div>
-                <div class="text-[10px] text-[#a2a09c]">Zero DRC violations</div>
-              </div>
-              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
-                <div class="text-[#a2a09c] text-[10px]">OPERATING FREQ</div>
-                <div class="text-xl font-bold text-emerald-400 mt-1">10.0 MHz</div>
-                <div class="text-[10px] text-[#a2a09c]">Setup Slack: +42.1 ns</div>
-              </div>
-              <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34]">
-                <div class="text-[#a2a09c] text-[10px]">QUIESCENT POWER</div>
-                <div class="text-xl font-bold text-sky-400 mt-1">8.4 nW</div>
-                <div class="text-[10px] text-[#a2a09c]">Between beats</div>
-              </div>
-            </div>
-            <p>
-              By ruthlessly eliminating floating-point arithmetic and taking advantage of physical right-shift wiring, the entire neuromorphic pipeline fit with 41 cells to spare, meeting all timing and physical design constraints.
-            </p>
           </div>
-        </article>
+          <p>
+            This single feedback wire introduces rich temporal hysteresis: when a rapid ectopic beat triggers N0, its memory is preserved into the next beat cycle, sensitizing N7 to fire if the subsequent beat exhibits high variability. A sustained arrhythmic episode creates a self-reinforcing cascade, while isolated premature contractions decay without false alarming.
+          </p>
 
-        <!-- ============================================================ -->
-        <!-- BLOG POST 2: Jane Street ASIC SMT Solving                   -->
-        <!-- ============================================================ -->
-        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
-          <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
-              Reverse Engineering a Physical ASIC Layout: Extracting Zero-Days with Graph Isomorphism and Z3 SMT Solving
-            </h3>
-            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">SEPTEMBER 2026</span>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            3. Dual-Window Majority Voting (<code class="font-mono text-base">readout.v</code>)
+          </h3>
+          <p>
+            To eliminate false alarms caused by noisy electrode contacts or isolated Premature Ventricular Contractions (PVCs), the readout module implements a two-tiered coincidence detector:
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+            <li><strong>FAST Window (8 beats)</strong>: Rapid transient filter. Accumulates signed synaptic votes across 8 consecutive beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_fast &gt; -1</code>, asserts <code class="font-mono text-xs">afib_fast = 1</code>.</li>
+            <li><strong>SLOW Window (16 beats)</strong>: Sustained rhythm confirmation. Accumulates signed votes across 16 beats. If <code class="font-mono text-xs text-amber-600 dark:text-amber-400">accum_slow &gt; -2</code>, asserts <code class="font-mono text-xs">afib_slow = 1</code>.</li>
+            <li><strong>Majority Coincidence Gate</strong>: The final output alarm is gated by strict logical coincidence: <code class="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">afib_flag &lt;= afib_fast &amp; afib_slow</code>. A transient spike burst cannot trigger the alarm unless confirmed by the 16-beat slow baseline.</li>
+          </ul>
+
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            4. Physical Silicon Telemetry &amp; OpenLane Synthesis Results
+          </h3>
+          <p>
+            Synthesized using Yosys and placed/routed with OpenLane against the <code class="font-mono text-xs">sky130_fd_sc_hd</code> standard cell library:
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-3 font-mono text-xs">
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34]">
+              <div class="text-[#a2a09c] text-[10px]">TOTAL CELL COUNT</div>
+              <div class="text-xl font-bold text-amber-400 mt-1">959</div>
+              <div class="text-[10px] text-[#a2a09c]">Tile Budget: 1,000</div>
+            </div>
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34]">
+              <div class="text-[#a2a09c] text-[10px]">CORE UTILIZATION</div>
+              <div class="text-xl font-bold text-amber-400 mt-1">48.7%</div>
+              <div class="text-[10px] text-[#a2a09c]">Zero DRC violations</div>
+            </div>
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34]">
+              <div class="text-[#a2a09c] text-[10px]">OPERATING FREQ</div>
+              <div class="text-xl font-bold text-emerald-400 mt-1">10.0 MHz</div>
+              <div class="text-[10px] text-[#a2a09c]">Setup Slack: +42.1 ns</div>
+            </div>
+            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34]">
+              <div class="text-[#a2a09c] text-[10px]">QUIESCENT POWER</div>
+              <div class="text-xl font-bold text-sky-400 mt-1">8.4 nW</div>
+              <div class="text-[10px] text-[#a2a09c]">Between beats</div>
+            </div>
           </div>
-          
-          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+          <p>
+            By ruthlessly eliminating floating-point arithmetic and taking advantage of physical right-shift wiring, the entire neuromorphic pipeline fit with 41 cells to spare, meeting all timing and physical design constraints.
+          </p>
+        </div>
+
+        <!-- Article Bottom Navigation -->
+        <div class="pt-8 mt-12 border-t border-outline-variant/60 dark:border-dark-border flex items-center justify-between">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <button onclick="openBlogPost('jane-street-reversing')" class="inline-flex items-center gap-1 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:underline">
+            Next: Jane Street ASIC Reversing &rarr;
+          </button>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- 3. ARTICLE 2: Jane Street ASIC Reverse Engineering          -->
+      <!-- ============================================================ -->
+      <article id="blog-article-jane-street-reversing" class="blog-article-view hidden max-w-4xl mx-auto w-full">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="pb-6 mb-8 border-b border-outline-variant/60 dark:border-dark-border flex flex-wrap items-center justify-between gap-4">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <span class="text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+            Blog / Jane Street ASIC Reverse Engineering
+          </span>
+        </div>
+
+        <!-- Article Header -->
+        <header class="mb-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3 text-xs font-label-meta">
+            <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">SILICON CTF &middot; REVERSE ENGINEERING</span>
+            <span class="text-outline-variant">&middot;</span>
+            <span class="text-on-surface-variant dark:text-dark-text-muted">SEPTEMBER 2026 &middot; ~8 MIN READ</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-headline-sm font-bold text-primary dark:text-white leading-tight">
+            Reverse Engineering a Physical ASIC Layout: Extracting Zero-Days with Graph Isomorphism and Z3 SMT Solving
+          </h1>
+          <p class="font-mono text-xs text-amber-700 dark:text-amber-400 mt-3 tracking-wide">
             Jane Street ASIC CTF &middot; Flattened GDSII Polygons &middot; Degree of Connectivity Index (DCI) &middot; SMT Constraint Unrolling
+          </p>
+        </header>
+
+        <div class="space-y-6 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+          <p>
+            Layout polygons tell no lies, but they speak in pure geometry. In the Jane Street ASIC Reverse Engineering Challenge, participants were handed an opaque, flattened GDSII database: raw 2D polygon streams across semiconductor layers (Diffusion, Polysilicon, Contacts, Metal1, Metal2). There were no schematic netlists, no standard cell boundary markers, no pin labels, and no clock tree documentation.
+          </p>
+
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            1. The Source-Drain Permutation Dilemma in Netlist Extraction
+          </h3>
+          <p>
+            Decompiling geometry back into a transistor netlist is conceptually straightforward: wherever Polysilicon crosses Diffusion, a MOSFET channel exists. Contacts link diffusion regions to metal routing wires.
+          </p>
+          <p>
+            However, when applying standard sub-graph isomorphism algorithms (like VF2 or the Weisfeiler-Lehman kernel) to classify extracted transistor groups into standard gates (NAND, NOR, XOR, DFF), matching broke down completely. Why? In planar CMOS, MOSFET Source and Drain terminals are <strong>geometrically and physically symmetric</strong>. In an extracted netlist, the designation of which terminal is source and which is drain is completely non-deterministic.
+          </p>
+          <p>
+            To overcome this, we developed the <strong>Degree of Connectivity Index (DCI)</strong>: a topological matrix metric invariant under source/drain permutations:
+          </p>
+          <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+            W_DCI(u, v) = &sum;_{k=1}^{d} [ A^k(u, v) / (deg(u) &middot; deg(v)) ]
           </div>
+          <p>
+            Because the DCI edge-weight tensor treats the bilateral channel conductance as an unordered pair while weighting neighboring interconnect degrees, it produces an identical topological fingerprint regardless of terminal swaps. With DCI, our automated netlist classifier achieved <strong>100% gate recovery accuracy</strong> across all standard cells in the ASIC core.
+          </p>
 
-          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
-            <p>
-              Layout polygons tell no lies, but they speak in pure geometry. In the Jane Street ASIC Reverse Engineering Challenge, participants were handed an opaque, flattened GDSII database: raw 2D polygon streams across semiconductor layers (Diffusion, Polysilicon, Contacts, Metal1, Metal2). There were no schematic netlists, no standard cell boundary markers, no pin labels, and no clock tree documentation.
-            </p>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            2. Recovering the 76-State Sequential Machine
+          </h3>
+          <p>
+            Once standard cell boundaries were resolved, topological traversal isolated <strong>76 D-type flip-flops</strong> clocked by a balanced H-tree clock network. Tracing the combinational cones of logic revealed that the hardware implemented a sequential puzzle checker for an $11 \times 11$ Star Battle grid puzzle. The state machine took a stream of serial coordinates across 122 clock cycles, sequentially verifying:
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+            <li>Exactly two stars per row.</li>
+            <li>Exactly two stars per column.</li>
+            <li>Exactly two stars per irregular 11-cell polyomino region.</li>
+            <li>The anti-adjacency constraint: no two stars may touch, even diagonally.</li>
+          </ul>
 
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              1. The Source-Drain Permutation Dilemma in Netlist Extraction
-            </h4>
-            <p>
-              Decompiling geometry back into a transistor netlist is conceptually straightforward: wherever Polysilicon crosses Diffusion, a MOSFET channel exists. Contacts link diffusion regions to metal routing wires.
-            </p>
-            <p>
-              However, when applying standard sub-graph isomorphism algorithms (like VF2 or the Weisfeiler-Lehman kernel) to classify extracted transistor groups into standard gates (NAND, NOR, XOR, DFF), matching broke down completely. Why? In planar CMOS, MOSFET Source and Drain terminals are <strong>geometrically and physically symmetric</strong>. In an extracted netlist, the designation of which terminal is source and which is drain is completely non-deterministic.
-            </p>
-            <p>
-              To overcome this, we developed the <strong>Degree of Connectivity Index (DCI)</strong>: a topological matrix metric invariant under source/drain permutations:
-            </p>
-            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
-              W_DCI(u, v) = &sum;_{k=1}^{d} [ A^k(u, v) / (deg(u) &middot; deg(v)) ]
-            </div>
-            <p>
-              Because the DCI edge-weight tensor treats the bilateral channel conductance as an unordered pair while weighting neighboring interconnect degrees, it produces an identical topological fingerprint regardless of terminal swaps. With DCI, our automated netlist classifier achieved <strong>100% gate recovery accuracy</strong> across all standard cells in the ASIC core.
-            </p>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              2. Recovering the 76-State Sequential Machine
-            </h4>
-            <p>
-              Once standard cell boundaries were resolved, topological traversal isolated <strong>76 D-type flip-flops</strong> clocked by a balanced H-tree clock network. Tracing the combinational cones of logic revealed that the hardware implemented a sequential puzzle checker for an $11 \times 11$ Star Battle grid puzzle. The state machine took a stream of serial coordinates across 122 clock cycles, sequentially verifying:
-            </p>
-            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
-              <li>Exactly two stars per row.</li>
-              <li>Exactly two stars per column.</li>
-              <li>Exactly two stars per irregular 11-cell polyomino region.</li>
-              <li>The anti-adjacency constraint: no two stars may touch, even diagonally.</li>
-            </ul>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              3. Unrolling 122 Clock Cycles into First-Order SMT Logic
-            </h4>
-            <p>
-              Brute-forcing an input sequence across 76 flip-flops over 122 cycles would require exploring $2^{76 \times 122}$ states. Instead, we translated the recovered synthesizable Verilog directly into first-order propositional constraints for the <strong>Z3 SMT solver</strong>:
-            </p>
-            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            3. Unrolling 122 Clock Cycles into First-Order SMT Logic
+          </h3>
+          <p>
+            Brute-forcing an input sequence across 76 flip-flops over 122 cycles would require exploring $2^{76 \times 122}$ states. Instead, we translated the recovered synthesizable Verilog directly into first-order propositional constraints for the <strong>Z3 SMT solver</strong>:
+          </p>
+          <div class="p-4 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-emerald-400 overflow-x-auto">
 <pre>from z3 import *
 
 solver = Solver()
@@ -1346,141 +1411,189 @@ for t in range(122):
 # Initial reset state & target success assertion:
 for i in range(76): solver.add(Q[0][i] == False)
 solver.add(Q[122][PIN_SUCCESS] == True) # Assert VALID_OUT = 1</pre>
-            </div>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              4. The Silicon Zero-Day
-            </h4>
-            <p>
-              When Z3 returned <code class="font-mono text-xs text-emerald-400">SAT</code> in under 4 seconds, we expected the model to output the canonical mathematical solution to the 11&times;11 Star Battle puzzle. Instead, the input vector revealed an <em>impossible puzzle state</em>: three stars were clustered directly adjacent to one another in the lower right quadrant.
-            </p>
-            <p>
-              Tracing the netlist logic on Pin 42 revealed a hardware zero-day:
-            </p>
-            <p class="p-3 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
-              The layout engineer had optimized the anti-adjacency checking cone using a tree of 2-input XOR and AND gates, but had omitted the diagonal boundary condition at index (10, 10). Under specific multi-cycle input skew, an unconstrained race condition disabled the adjacency fault latch!
-            </p>
-            <p>
-              The chip didn’t care about human game rules; it only cared about its physical gate equations. The SMT solver exploited this physical logic flaw, asserting <code class="font-mono text-xs font-bold text-emerald-400">SUCCESS = 1</code> in physical silicon using a completely invalid puzzle configuration.
-            </p>
           </div>
-        </article>
 
-        <!-- ============================================================ -->
-        <!-- BLOG POST 3: Physics of 20 Watts                             -->
-        <!-- ============================================================ -->
-        <article class="axon-card flex flex-col gap-4 border-b border-outline-variant/60 dark:border-dark-border pb-12 pl-3">
-          <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
-              Why 20 Watts of Warm Tissue Beats Megawatts of Cold Silicon
-            </h3>
-            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">AUGUST 2026</span>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            4. The Silicon Zero-Day
+          </h3>
+          <p>
+            When Z3 returned <code class="font-mono text-xs text-emerald-400">SAT</code> in under 4 seconds, we expected the model to output the canonical mathematical solution to the 11&times;11 Star Battle puzzle. Instead, the input vector revealed an <em>impossible puzzle state</em>: three stars were clustered directly adjacent to one another in the lower right quadrant.
+          </p>
+          <p>
+            Tracing the netlist logic on Pin 42 revealed a hardware zero-day:
+          </p>
+          <p class="p-4 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+            The layout engineer had optimized the anti-adjacency checking cone using a tree of 2-input XOR and AND gates, but had omitted the diagonal boundary condition at index (10, 10). Under specific multi-cycle input skew, an unconstrained race condition disabled the adjacency fault latch!
+          </p>
+          <p>
+            The chip didn’t care about human game rules; it only cared about its physical gate equations. The SMT solver exploited this physical logic flaw, asserting <code class="font-mono text-xs font-bold text-emerald-400">SUCCESS = 1</code> in physical silicon using a completely invalid puzzle configuration.
+          </p>
+        </div>
+
+        <!-- Article Bottom Navigation -->
+        <div class="pt-8 mt-12 border-t border-outline-variant/60 dark:border-dark-border flex items-center justify-between">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <button onclick="openBlogPost('twenty-watts-physics')" class="inline-flex items-center gap-1 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:underline">
+            Next: Twenty Watts Physics &rarr;
+          </button>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- 4. ARTICLE 3: Physics of 20 Watts                             -->
+      <!-- ============================================================ -->
+      <article id="blog-article-twenty-watts-physics" class="blog-article-view hidden max-w-4xl mx-auto w-full">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="pb-6 mb-8 border-b border-outline-variant/60 dark:border-dark-border flex flex-wrap items-center justify-between gap-4">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <span class="text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+            Blog / Why 20 Watts Beats Cold Silicon
+          </span>
+        </div>
+
+        <!-- Article Header -->
+        <header class="mb-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3 text-xs font-label-meta">
+            <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">COMPUTER ARCHITECTURE &middot; THERMODYNAMICS</span>
+            <span class="text-outline-variant">&middot;</span>
+            <span class="text-on-surface-variant dark:text-dark-text-muted">AUGUST 2026 &middot; ~5 MIN READ</span>
           </div>
-          
-          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-headline-sm font-bold text-primary dark:text-white leading-tight">
+            Why 20 Watts of Warm Tissue Beats Megawatts of Cold Silicon
+          </h1>
+          <p class="font-mono text-xs text-amber-700 dark:text-amber-400 mt-3 tracking-wide">
             Thermodynamics of Compute &middot; Clock Tree Dissipation &middot; Event-Driven Sparsity &middot; Zero-Quiescent Silicon
+          </p>
+        </header>
+
+        <div class="space-y-6 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+          <p>
+            Every computer we build is held hostage by a relentless metronome: the synchronous clock. In modern CMOS VLSI, dynamic power dissipation is governed by the charging and discharging of gate and wire capacitances:
+          </p>
+          <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+            P_{dynamic} = &alpha; &middot; C_{load} &middot; V_{dd}^2 &middot; f
           </div>
+          <p>
+            In high-performance GPUs and AI accelerators running at 2.5 to 3.5 GHz, billions of transistors switch billions of times every second. Even when processing sparse matrix operands or waiting for high-latency HBM3e memory fetches, the clock tree keeps toggling. Clock distribution networks—composed of massive H-trees, resonant clock buffers, and low-skew repeaters—account for <strong>35% to 50% of an ASIC’s entire dynamic power budget</strong> before any actual math occurs.
+          </p>
 
-          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
-            <p>
-              Every computer we build is held hostage by a relentless metronome: the synchronous clock. In modern CMOS VLSI, dynamic power dissipation is governed by the charging and discharging of gate and wire capacitances:
-            </p>
-            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
-              P_{dynamic} = &alpha; &middot; C_{load} &middot; V_{dd}^2 &middot; f
-            </div>
-            <p>
-              In high-performance GPUs and AI accelerators running at 2.5 to 3.5 GHz, billions of transistors switch billions of times every second. Even when processing sparse matrix operands or waiting for high-latency HBM3e memory fetches, the clock tree keeps toggling. Clock distribution networks—composed of massive H-trees, resonant clock buffers, and low-skew repeaters—account for <strong>35% to 50% of an ASIC’s entire dynamic power budget</strong> before any actual math occurs.
-            </p>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            1. The Biological Contrast: 86 Billion Neurons on 20 Watts
+          </h3>
+          <p>
+            The human brain contains approximately 86 billion neurons and over 100 trillion synaptic connections. It performs continuous, multimodal perception, sensorimotor coordination, and online learning on an energy budget of approximately <strong>20 Watts</strong>—less power than a dim incandescent bulb.
+          </p>
+          <p>
+            It achieves this extraordinary efficiency through three physical principles:
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+            <li><strong>Extreme Activity Sparsity (&alpha; &ll; 0.001)</strong>: In the cerebral cortex, fewer than 1% of neurons are active at any given millisecond. The remaining 99% sit completely silent at their resting membrane potential (-70 mV), drawing negligible metabolic energy.</li>
+            <li><strong>Event-Driven Communication</strong>: Biological sensors do not transmit synchronous video frames. The human retina emits zero spikes if the visual scene is static; ganglion cells fire only when a localized contrast or illumination gradient occurs.</li>
+            <li><strong>Analog Physics as Free Computation</strong>: Biology does not implement 64-bit floating-point ALUs to compute exponential decay or leaky summation. Membrane capacitance and ion channel conductances ($Na^+/K^+$ pump kinetics) perform continuous integration and decay as inherent physical properties of wet lipid bilayers.</li>
+          </ul>
 
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              1. The Biological Contrast: 86 Billion Neurons on 20 Watts
-            </h4>
-            <p>
-              The human brain contains approximately 86 billion neurons and over 100 trillion synaptic connections. It performs continuous, multimodal perception, sensorimotor coordination, and online learning on an energy budget of approximately <strong>20 Watts</strong>—less power than a dim incandescent bulb.
-            </p>
-            <p>
-              It achieves this extraordinary efficiency through three physical principles:
-            </p>
-            <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
-              <li><strong>Extreme Activity Sparsity (&alpha; &ll; 0.001)</strong>: In the cerebral cortex, fewer than 1% of neurons are active at any given millisecond. The remaining 99% sit completely silent at their resting membrane potential (-70 mV), drawing negligible metabolic energy.</li>
-              <li><strong>Event-Driven Communication</strong>: Biological sensors do not transmit synchronous video frames. The human retina emits zero spikes if the visual scene is static; ganglion cells fire only when a localized contrast or illumination gradient occurs.</li>
-              <li><strong>Analog Physics as Free Computation</strong>: Biology does not implement 64-bit floating-point ALUs to compute exponential decay or leaky summation. Membrane capacitance and ion channel conductances ($Na^+/K^+$ pump kinetics) perform continuous integration and decay as inherent physical properties of wet lipid bilayers.</li>
-            </ul>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              2. Translating the Principle to Silicon (<code class="font-mono text-sm">tt_um_snn_afib_detector</code>)
-            </h4>
-            <p>
-              In our Tiny Tapeout 09 chip, we copied this exact event-driven sparsity:
-            </p>
-            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
-              <li>Between heartbeats, the LIF reservoir and feature extractors are clock-gated into deep sleep. Measured quiescent leakage is <strong>8.4 nW</strong>.</li>
-              <li>When an R-peak pulse arrives, the pipeline executes for only <strong>5 microseconds</strong>, consuming 1.88 mW of active dynamic power.</li>
-              <li>It instantly transitions back to sleep for the remaining 999,995 microseconds of the cardiac cycle.</li>
-            </ul>
-            <p>
-              The average continuous power dissipation is calculated as:
-            </p>
-            <div class="p-3 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
-              P_{avg} = [ (5 &mu;s &middot; 1.88 mW) + (999,995 &mu;s &middot; 8.4 nW) ] / 1.0 s &approx; 17.8 nW
-            </div>
-            <p>
-              By contrast, a conventional ARM Cortex-M0+ running an ECG classification routine at 48 MHz consumes approximately 5 mW continuous power—nearly <strong>300,000&times; more energy</strong> for the exact same clinical diagnostic result.
-            </p>
-            <p>
-              True energy efficiency does not come from shrinking transistors to 2nm; it comes from learning when to let silicon stay quiet.
-            </p>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            2. Translating the Principle to Silicon (<code class="font-mono text-base">tt_um_snn_afib_detector</code>)
+          </h3>
+          <p>
+            In our Tiny Tapeout 09 chip, we copied this exact event-driven sparsity:
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+            <li>Between heartbeats, the LIF reservoir and feature extractors are clock-gated into deep sleep. Measured quiescent leakage is <strong>8.4 nW</strong>.</li>
+            <li>When an R-peak pulse arrives, the pipeline executes for only <strong>5 microseconds</strong>, consuming 1.88 mW of active dynamic power.</li>
+            <li>It instantly transitions back to sleep for the remaining 999,995 microseconds of the cardiac cycle.</li>
+          </ul>
+          <p>
+            The average continuous power dissipation is calculated as:
+          </p>
+          <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+            P_{avg} = [ (5 &mu;s &middot; 1.88 mW) + (999,995 &mu;s &middot; 8.4 nW) ] / 1.0 s &approx; 17.8 nW
           </div>
-        </article>
+          <p>
+            By contrast, a conventional ARM Cortex-M0+ running an ECG classification routine at 48 MHz consumes approximately 5 mW continuous power—nearly <strong>300,000&times; more energy</strong> for the exact same clinical diagnostic result.
+          </p>
+          <p>
+            True energy efficiency does not come from shrinking transistors to 2nm; it comes from learning when to let silicon stay quiet.
+          </p>
+        </div>
 
-        <!-- ============================================================ -->
-        <!-- BLOG POST 4: Precision-Scalable Systolic NPU                -->
-        <!-- ============================================================ -->
-        <article class="axon-card flex flex-col gap-4 pl-3">
-          <div class="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 class="font-headline-sm text-2xl md:text-3xl text-primary dark:text-white font-bold tracking-tight">
-              Precision-Scalable Systolic Compute: Microarchitecting the PSMAC 4&times;4 NPU from Gate Primitives
-            </h3>
-            <span class="font-label-sm text-xs font-mono text-secondary dark:text-amber-400">JULY 2026</span>
+        <!-- Article Bottom Navigation -->
+        <div class="pt-8 mt-12 border-t border-outline-variant/60 dark:border-dark-border flex items-center justify-between">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <button onclick="openBlogPost('psmac-systolic-npu')" class="inline-flex items-center gap-1 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:underline">
+            Next: PSMAC Systolic NPU &rarr;
+          </button>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- 5. ARTICLE 4: Precision-Scalable Systolic NPU                -->
+      <!-- ============================================================ -->
+      <article id="blog-article-psmac-systolic-npu" class="blog-article-view hidden max-w-4xl mx-auto w-full">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="pb-6 mb-8 border-b border-outline-variant/60 dark:border-dark-border flex flex-wrap items-center justify-between gap-4">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <span class="text-xs font-label-meta text-on-surface-variant dark:text-dark-text-muted">
+            Blog / PSMAC Systolic NPU
+          </span>
+        </div>
+
+        <!-- Article Header -->
+        <header class="mb-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3 text-xs font-label-meta">
+            <span class="text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider">EDGE AI ACCELERATORS &middot; CADENCE 45NM</span>
+            <span class="text-outline-variant">&middot;</span>
+            <span class="text-on-surface-variant dark:text-dark-text-muted">JULY 2026 &middot; ~7 MIN READ</span>
           </div>
-          
-          <div class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-mono tracking-wide">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-headline-sm font-bold text-primary dark:text-white leading-tight">
+            Precision-Scalable Systolic Compute: Microarchitecting the PSMAC 4&times;4 NPU from Gate Primitives
+          </h1>
+          <p class="font-mono text-xs text-amber-700 dark:text-amber-400 mt-3 tracking-wide">
             Weight-Stationary Systolic Array &middot; Spatial Bit-Slicing (SBB/BBU/RFU) &middot; Per-Row Runtime Precision (INT8/4/2)
-          </div>
+          </p>
+        </header>
 
-          <div class="space-y-4 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
-            <p>
-              When designing neural network accelerators, the industry standard is to instantiate black-box DSP blocks provided by FPGA vendors or standard cell ASIC synthesis libraries. But black-box multipliers lock you into fixed precisions: an INT16 multiplier computing an INT4 dot product wastes 75% of its silicon area and switching energy.
-            </p>
-            <p>
-              In our custom NPU project (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">PSMAC_NPU</code>), we designed a 4&times;4 weight-stationary systolic MAC array entirely from gate primitives—half-adders and full-adders—supporting <strong>per-row runtime reconfigurable INT8 / INT4 / INT2 precision</strong>.
-            </p>
+        <div class="space-y-6 font-body-md text-on-surface dark:text-dark-text leading-relaxed text-sm md:text-base">
+          <p>
+            When designing neural network accelerators, the industry standard is to instantiate black-box DSP blocks provided by FPGA vendors or standard cell ASIC synthesis libraries. But black-box multipliers lock you into fixed precisions: an INT16 multiplier computing an INT4 dot product wastes 75% of its silicon area and switching energy.
+          </p>
+          <p>
+            In our custom NPU project (<code class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">PSMAC_NPU</code>), we designed a 4&times;4 weight-stationary systolic MAC array entirely from gate primitives—half-adders and full-adders—supporting <strong>per-row runtime reconfigurable INT8 / INT4 / INT2 precision</strong>.
+          </p>
 
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              1. Architectural Evolution: Independent Tiles (v1) &rarr; Weight-Stationary Systolic (v2)
-            </h4>
-            <p>
-              Our initial implementation (v1) arranged 16 independent Processing Elements (PEs) in a 4&times;4 grid. Each tile had dedicated local SRAM ports for weights and activations, computing independent vector dot products.
-            </p>
-            <p>
-              While simple to verify, v1 hit an immediate architectural wall: 16 separate memory read ports consumed <strong>16&times; the memory bandwidth</strong> and silicon area of a shared bus. Neighboring tiles were reading identical or shifted activation streams, yet paying the full energy penalty of SRAM wordline charging on every cycle.
-            </p>
-            <p>
-              In version 2, we completely re-architected the system into a <strong>2D weight-stationary systolic mesh</strong>:
-            </p>
-            <ul class="list-disc list-inside space-y-1.5 ml-2 text-on-surface-variant dark:text-dark-text-muted">
-              <li><strong>Weights Stationary in Mesh</strong>: Weights are broadcast row-by-row into PEs, where they latch and remain resident across hundreds of streaming cycles. Settle latency is strictly fixed at 7 cycles.</li>
-              <li><strong>Activations Stream Left &rarr; Right</strong>: Activations $X$ are skewed diagonally (Row $i$ delayed by $i$ clock cycles) and propagated across horizontal registers. Every PE reuses the exact activation value its left neighbor used one cycle earlier.</li>
-              <li><strong>Partial Sums Flow Top &rarr; Bottom</strong>: Accumulators flow down each column, integrating partial sums with zero external memory traffic.</li>
-            </ul>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            1. Architectural Evolution: Independent Tiles (v1) &rarr; Weight-Stationary Systolic (v2)
+          </h3>
+          <p>
+            Our initial implementation (v1) arranged 16 independent Processing Elements (PEs) in a 4&times;4 grid. Each tile had dedicated local SRAM ports for weights and activations, computing independent vector dot products.
+          </p>
+          <p>
+            While simple to verify, v1 hit an immediate architectural wall: 16 separate memory read ports consumed <strong>16&times; the memory bandwidth</strong> and silicon area of a shared bus. Neighboring tiles were reading identical or shifted activation streams, yet paying the full energy penalty of SRAM wordline charging on every cycle.
+          </p>
+          <p>
+            In version 2, we completely re-architected the system into a <strong>2D weight-stationary systolic mesh</strong>:
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-on-surface-variant dark:text-dark-text-muted">
+            <li><strong>Weights Stationary in Mesh</strong>: Weights are broadcast row-by-row into PEs, where they latch and remain resident across hundreds of streaming cycles. Settle latency is strictly fixed at 7 cycles.</li>
+            <li><strong>Activations Stream Left &rarr; Right</strong>: Activations $X$ are skewed diagonally (Row $i$ delayed by $i$ clock cycles) and propagated across horizontal registers. Every PE reuses the exact activation value its left neighbor used one cycle earlier.</li>
+            <li><strong>Partial Sums Flow Top &rarr; Bottom</strong>: Accumulators flow down each column, integrating partial sums with zero external memory traffic.</li>
+          </ul>
 
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              2. Bottom-Up Arithmetic Hierarchy: SBB &rarr; BBU &rarr; RFU
-            </h4>
-            <p>
-              Every multiply-accumulate operation in the NPU decomposes into a clean, gate-level spatial hierarchy:
-            </p>
-            <div class="p-3.5 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            2. Bottom-Up Arithmetic Hierarchy: SBB &rarr; BBU &rarr; RFU
+          </h3>
+          <p>
+            Every multiply-accumulate operation in the NPU decomposes into a clean, gate-level spatial hierarchy:
+          </p>
+          <div class="p-4 bg-[#14151a] rounded border border-[#2b2c34] font-mono text-xs text-amber-300 overflow-x-auto">
 <pre>Gate Primitives (Half-Adders, Full-Adders, AND Gates)
        │
        ▼
@@ -1491,27 +1604,36 @@ Bit-Block Unit (BBU): 4 coupled SBBs with sign-extension logic
        │
        ▼
 Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes</pre>
-            </div>
-            <p>
-              Because precision is structural rather than an emulated software mode, switching a row from INT8 to INT4 doubles its throughput without increasing power density.
-            </p>
-
-            <h4 class="font-headline-sm text-lg text-primary dark:text-white font-bold pt-2 text-amber-800 dark:text-amber-300">
-              3. Per-Row Runtime Precision Scheduling
-            </h4>
-            <p>
-              The defining breakthrough of our systolic re-architecture is per-row precision scheduling:
-            </p>
-            <p class="p-3 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
-              When weights are broadcast into the mesh, each row latches its own mode configuration tag <code>{sx, sy, mode}</code> simultaneously with its weight operands. Row 0 can process INT8 for a high-precision sensitive channel, while Row 3 simultaneously computes INT2 for a noise-tolerant feature map on the exact same clock cycle.
-            </p>
-            <p>
-              The entire design was verified across <strong>2,588 directed, protocol, and constrained-random assertion checks</strong>, proving deterministic streaming latency ($\text{vec\_len} + 8$ cycles) with zero arithmetic overflows.
-            </p>
           </div>
-        </article>
+          <p>
+            Because precision is structural rather than an emulated software mode, switching a row from INT8 to INT4 doubles its throughput without increasing power density.
+          </p>
 
-      </div>
+          <h3 class="font-headline-sm text-xl text-primary dark:text-white font-bold pt-4 text-amber-800 dark:text-amber-300 border-b border-outline-variant/40 dark:border-dark-border pb-2">
+            3. Per-Row Runtime Precision Scheduling
+          </h3>
+          <p>
+            The defining breakthrough of our systolic re-architecture is per-row precision scheduling:
+          </p>
+          <p class="p-4 bg-[#14151a] rounded border-l-2 border-amber-500 font-mono text-xs text-amber-200">
+            When weights are broadcast into the mesh, each row latches its own mode configuration tag <code>{sx, sy, mode}</code> simultaneously with its weight operands. Row 0 can process INT8 for a high-precision sensitive channel, while Row 3 simultaneously computes INT2 for a noise-tolerant feature map on the exact same clock cycle.
+          </p>
+          <p>
+            The entire design was verified across <strong>2,588 directed, protocol, and constrained-random assertion checks</strong>, proving deterministic streaming latency ($\text{vec\_len} + 8$ cycles) with zero arithmetic overflows.
+          </p>
+        </div>
+
+        <!-- Article Bottom Navigation -->
+        <div class="pt-8 mt-12 border-t border-outline-variant/60 dark:border-dark-border flex items-center justify-between">
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-surface-container dark:bg-dark-surface border border-outline-variant/60 dark:border-dark-border text-xs font-label-meta font-bold text-primary dark:text-white hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            &larr; Back
+          </button>
+          <button onclick="showBlogIndex()" class="inline-flex items-center gap-1 text-xs font-label-meta font-bold text-amber-700 dark:text-amber-400 hover:underline">
+            Back to Article List &uarr;
+          </button>
+        </div>
+      </article>
+
     </section>
 
     <!-- ========================================== -->
@@ -1532,25 +1654,47 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         <!-- Research Internships -->
         <div class="flex flex-col gap-8">
           <!-- CSIR-CEERI -->
-          <div class="axon-card flex flex-col gap-2 border-l-2 border-amber-500 pl-4 py-1">
-            <div class="text-on-surface dark:text-dark-text font-medium text-lg">
-              <span class="font-bold text-primary dark:text-white">CSIR-CEERI, Chennai</span> — Research Intern
-              <span class="font-label-meta text-xs text-on-surface-variant dark:text-dark-text-muted ml-2">May 2026 – June 2026</span>
+          <div class="axon-card flex flex-col gap-3 border-l-2 border-amber-500 pl-4 py-1.5 bg-surface-container-low/40 dark:bg-dark-surface/30 rounded-r">
+            <div class="text-on-surface dark:text-dark-text font-medium text-lg flex flex-wrap items-baseline justify-between gap-1">
+              <span><span class="font-bold text-primary dark:text-white">CSIR-CEERI, Chennai</span> — Research Intern</span>
+              <span class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-bold">May 2026 – June 2026</span>
             </div>
-            <p class="text-on-surface dark:text-dark-text font-body-md text-sm leading-relaxed">
-              Accelerated real-time hyperspectral NIR plastic sorting by >40× over PC software, reaching a deterministic 20.94 µs latency (47.6k spectra/s) using pipelined Verilog on an Artix-7 FPGA. Built streaming Savitzky-Golay FIR filtering, SNV normalization, and parallel SVM inference on DSP48E1 slices for 92.5% sorting accuracy.
-            </p>
+            <ul class="flex flex-col gap-2 text-xs sm:text-sm font-body-md text-on-surface dark:text-dark-text leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Objective:</strong> Real-time spectroscopic classification of plastics (PE, PP, PET, PS, PVC) directly coupled to a SPECIM FX17e hyperspectral camera at 200 FPS.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Hardware Pipeline:</strong> Designed pipelined Verilog streaming datapaths for Savitzky-Golay FIR filtering, SNV normalization, and parallel SVM inference on Artix-7 DSP48E1 slices.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Outcome:</strong> &gt;40&times; software speedup reaching a deterministic 20.94 &mu;s latency (47.6k spectra/s) with 92.5% sorting accuracy across 500k samples.</span>
+              </li>
+            </ul>
           </div>
 
           <!-- NIT Trichy -->
-          <div class="axon-card flex flex-col gap-2 border-l-2 border-amber-500 pl-4 py-1">
-            <div class="text-on-surface dark:text-dark-text font-medium text-lg">
-              <span class="font-bold text-primary dark:text-white">Department of ECE, NIT Trichy</span> — Research Intern
-              <span class="font-label-meta text-xs text-on-surface-variant dark:text-dark-text-muted ml-2">May 2025 – June 2025</span>
+          <div class="axon-card flex flex-col gap-3 border-l-2 border-amber-500 pl-4 py-1.5 bg-surface-container-low/40 dark:bg-dark-surface/30 rounded-r">
+            <div class="text-on-surface dark:text-dark-text font-medium text-lg flex flex-wrap items-baseline justify-between gap-1">
+              <span><span class="font-bold text-primary dark:text-white">Department of ECE, NIT Trichy</span> — Research Intern</span>
+              <span class="font-label-meta text-xs text-amber-700 dark:text-amber-400 font-bold">May 2025 – June 2025</span>
             </div>
-            <p class="text-on-surface dark:text-dark-text font-body-md text-sm leading-relaxed">
-              Designed compressor-based approximate multipliers for a prioritized Sobel edge detector, trading bounded precision loss for reduced multiplier area and dynamic switching power. Closed verification with self-checking FPGA testbenches and MATLAB golden-model comparisons.
-            </p>
+            <ul class="flex flex-col gap-2 text-xs sm:text-sm font-body-md text-on-surface dark:text-dark-text leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Objective:</strong> Power-aware edge detection trading bounded mathematical precision loss for area and dynamic switching power reductions.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Hardware Architecture:</strong> Custom compressor-based approximate multipliers (<code class="bg-surface-container dark:bg-dark-surface px-1 py-0.5 rounded text-xs font-mono">AppMul_8bit.v</code>) and carry-select adders inside a streaming 3&times;3 pixel window buffer.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                <span><strong class="text-primary dark:text-white font-medium">Verification:</strong> Closed verification with self-checking FPGA testbenches and MATLAB golden-model comparisons with zero perceptible visual degradation.</span>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -1814,7 +1958,7 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
     // --- 1. PAGE ROUTING SYSTEM & LITHOGRAPHY STEPPER BEAM SCAN ---
     const pages = ['home', 'projects', 'simulator', 'blog', 'experience', 'contact'];
 
-    function navigateTo(pageId) {
+    function navigateTo(pageId, pushHash = true) {
       if (!pages.includes(pageId)) pageId = 'home';
 
       // Trigger Lithography Stepper Beam wipe animation
@@ -1850,8 +1994,17 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
         }
       });
 
+      // If navigating to blog overview directly, reset to blog index
+      if (pageId === 'blog') {
+        const blogIndex = document.getElementById('blog-index');
+        if (blogIndex) blogIndex.classList.remove('hidden');
+        document.querySelectorAll('.blog-article-view').forEach(a => a.classList.add('hidden'));
+      }
+
       // Update URL hash
-      history.pushState(null, null, `#${pageId}`);
+      if (pushHash) {
+        history.pushState(null, null, `#${pageId}`);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       // If switching to simulator, trigger resize and UI refresh
@@ -1866,9 +2019,67 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       }
     }
 
+    // Dedicated Blog SPA Article Navigation
+    function openBlogPost(slug) {
+      // 1. Activate the blog section if not active
+      const blogPage = document.getElementById('page-blog');
+      const isBlogActive = blogPage && blogPage.classList.contains('active');
+      if (!isBlogActive) {
+        navigateTo('blog', false);
+      }
+
+      // 2. Hide the blog index
+      const blogIndex = document.getElementById('blog-index');
+      if (blogIndex) blogIndex.classList.add('hidden');
+
+      // 3. Hide all article views
+      document.querySelectorAll('.blog-article-view').forEach(a => a.classList.add('hidden'));
+
+      // 4. Show the selected article
+      const target = document.getElementById(`blog-article-${slug}`);
+      if (target) {
+        target.classList.remove('hidden');
+      }
+
+      // 5. Update browser hash and scroll to top
+      history.pushState(null, null, `#blog/${slug}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showBlogIndex() {
+      // Hide all articles
+      document.querySelectorAll('.blog-article-view').forEach(a => a.classList.add('hidden'));
+
+      // Show blog index
+      const blogIndex = document.getElementById('blog-index');
+      if (blogIndex) blogIndex.classList.remove('hidden');
+
+      // Update URL hash
+      history.pushState(null, null, '#blog');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     window.addEventListener('popstate', () => {
       const hash = window.location.hash.replace('#', '');
-      navigateTo(hash || 'home');
+      if (hash.startsWith('blog/')) {
+        const slug = hash.replace('blog/', '');
+        openBlogPost(slug);
+      } else if (hash === 'blog') {
+        navigateTo('blog', false);
+        showBlogIndex();
+      } else {
+        navigateTo(hash || 'home', false);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash.startsWith('blog/')) {
+        const slug = hash.replace('blog/', '');
+        openBlogPost(slug);
+      } else if (hash && pages.includes(hash)) {
+        navigateTo(hash, false);
+      }
     });
 
     // --- 1.1 MONOLITHIC TITLE DUAL-MORPH ENGINE (SANJAY KRISHNA <-> TWENTY WATTS) ---
@@ -2328,45 +2539,6 @@ Reconfigurable Functional Unit (RFU): Steers INT8, dual-INT4, or quad-INT2 modes
       requestAnimationFrame(animateClockWaveform);
     }
 
-    // --- 4. INTERACTIVE SYSTOLIC ARRAY WAVEFRONT VISUALIZER ---
-    let systolicCycle = 0;
-    let systolicAutoInterval = null;
-
-    function stepSystolicArray() {
-      systolicCycle++;
-      document.getElementById('systolic-cycle').textContent = systolicCycle;
-      const statusEl = document.getElementById('systolic-status');
-
-      const activeDiag = systolicCycle % 7;
-      statusEl.textContent = `Wavefront active on diagonal k = ${activeDiag}`;
-
-      for (let r = 0; r < 4; r++) {
-        for (let c = 0; c < 4; c++) {
-          const pe = document.getElementById(`pe-${r}-${c}`);
-          if (r + c === activeDiag) {
-            pe.classList.add('ring-2', 'ring-amber-500', 'bg-amber-100', 'dark:bg-amber-950/80', 'scale-[1.04]');
-            pe.classList.remove('bg-surface', 'dark:bg-dark-surface-high');
-          } else {
-            pe.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-100', 'dark:bg-amber-950/80', 'scale-[1.04]');
-            pe.classList.add('bg-surface', 'dark:bg-dark-surface-high');
-          }
-        }
-      }
-
-      playBlip(300 + activeDiag * 80, 'triangle', 0.05, 0.03);
-    }
-
-    function toggleSystolicAuto() {
-      const btn = document.getElementById('btn-systolic-auto');
-      if (systolicAutoInterval) {
-        clearInterval(systolicAutoInterval);
-        systolicAutoInterval = null;
-        btn.textContent = "▶ Auto Wavefront";
-      } else {
-        btn.textContent = "⏹ Stop Wavefront";
-        systolicAutoInterval = setInterval(stepSystolicArray, 420);
-      }
-    }
 
     // --- 5. MULTIMETER CHIP PROBE & PIN INTERACTION ---
     function playMultimeterTone() {
